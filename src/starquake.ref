@@ -1,0 +1,6 @@
+[Game]
+Game=Starquake
+Copyright=(c) 1985 Stephen Crow, 2023 Ritchie Swann (this disassembly)
+
+[OtherCode:Loading system]
+Source=starquake_loader.skool

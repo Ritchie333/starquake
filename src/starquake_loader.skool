@@ -1,0 +1,193 @@
+; Main entry point
+;
+; The BASIC is:
+;
+; .
+;
+; 10 RANDOMIZE USR ( PEEK 23635 + 256 * PEEK 23636 + 87 )
+;
+; On a freshly reset Spectrum, #HTML( <a href="https://skoolkid.github.io/rom/asm/5C53.html">PROG</a> ) is #N$5CCB, making the entry point here.
+c$5D22 NOP           ;
+ $5D23 LD HL,($5C53) ; { Add #N$7F to PROG, which should be #N$5D4A.
+ $5D26 LD DE,$007F   ;
+ $5D29 ADD HL,DE     ; }
+ $5D2A LD DE,$AC50   ; Set the destination to #R$AC50.
+ $5D2D LD B,$C6      ; #N$C6 byte to copy.
+*$5D2F LD A,(HL)     ; { Copy the byte.
+ $5D30 LD (DE),A     ; }
+ $5D31 INC HL        ; { Increase both pointers.
+ $5D32 INC DE        ; }
+ $5D33 DJNZ $5D2F    ; Loop while there is still more to copy.
+ $5D35 XOR A         ; Set #REGa to 0 in order to set some flags.
+ $5D36 LD ($5C48),A  ; Set the border colour to 0. #HTML(<a href="https://skoolkid.github.io/rom/asm/5C48.html">BORDERCR</a>)
+ $5D39 LD ($5C8D),A  ; Set the paper and ink colour to 0. #HTML(<a href="https://skoolkid.github.io/rom/asm/5C8D.html">ATTR-P</a>)
+ $5D3C LD ($5C8E),A  ; Set no transparent colour mask. #HTML(<a href="https://skoolkid.github.io/rom/asm/5C8E.html">MASK-P</a>)
+ $5D3F LD HL,$AC72   ; { Push the entry point to the loading system on the stack twice.
+ $5D42 PUSH HL       ;
+ $5D43 PUSH HL       ; }
+ $5D44 LD BC,$5E1A   ; { Do a "CLEAR 24090" using the #HTML( <a href="https://skoolkid.github.io/rom/asm/1EAC.html">ROM routine</a> ). 
+ $5D47 JP $1EAF      ; Because of the previous PUSH instructions, the call in the ROM will return to #R$AC72. }
+
+i$5D4A
+
+; Load an edge from tape
+;
+; Used by the routine at #R$AC72.
+;
+; B Timing constant
+; C Border colour (bits 0-2) and previous edge-type (bit 5)
+;
+; This is mostly a copy of the routine at #HTML( <a href="https://skoolkid.github.io/rom/asm/05E3.html">LD_EDGE_2</a> )
+@label=LD_EDGE_2
+c$AC50 CALL $AC54    ; {In effect call #R$AC54 twice, returning in between if
+ $AC53 RET NC        ; there is an error.}
+; This entry point is used by the routine at #R$AC72.
+@label=LD_EDGE_1
+@ignoreua
+*$AC54 LD A,$16      ; {Wait 358 T states before entering the sampling loop.
+*$AC56 DEC A         ;
+ $AC57 JR NZ,$AC56   ;
+ $AC59 AND A         ; }
+; The sampling loop is now entered. The value in the #REGb register is
+; incremented for each pass; 'time-up' is given when #REGb reaches zero.
+*$AC5A INC B         ; Count each pass.
+ $AC5B RET Z         ; Return carry reset and zero set if 'time-up'.
+ $AC5C LD A,$7F      ; {Read from port &7FFE, i.e. BREAK and EAR.
+ $AC5E IN A,($FE)    ; }
+ $AC60 RRA           ; Shift the byte.
+ $AC61 RET NC        ; Return carry reset and zero reset if BREAK was pressed.
+ $AC62 XOR C         ; {Now test the byte against the 'last edge-type'; jump
+ $AC63 AND $20       ; back unless it has changed.
+ $AC65 JR Z,$AC5A    ; }
+; A new 'edge' has been found within the time period allowed for the search. So
+; change the border colour and set the carry flag.
+ $AC67 LD A,C        ; {Change the 'last edge-type' and border colour.
+ $AC68 CPL           ;
+ $AC69 LD C,A        ; }
+ $AC6A AND $01       ; Ensure the border is blue / black.
+                     ; This is later modified to AND $08, changing the border colour continously.
+ $AC6C OR $08        ; Signal 'MIC off'.
+ $AC6E OUT ($FE),A   ; Change the border colour.
+ $AC70 SCF           ; {Signal the successful search before returning.
+ $AC71 RET           ; }
+
+; Loader entry point
+;
+; Used by the routine at #R$5D22. This is mostly a copy of the ROM routine #HTML( <a href="https://skoolkid.github.io/rom/asm/0556.html">LD_BYTES</a> ).
+c$AC72 LD A,$FF      ; Set the expected flag byte.
+ $AC74 LD DE,$C000   ; { Set the start and length to cover all of the RAM.
+ $AC77 LD IX,$4000   ; }
+ $AC7B INC D         ; This resets the zero flag. (#REGd cannot hold +#N$FF).
+ $AC7C EX AF,AF'     ; The #REGa register holds &00 for a header and &FF for a
+                     ; block of data. The carry flag is reset for verifying and
+                     ; set for loading.
+ $AC7D DEC D         ; Restore #REGd to its original value.
+ $AC7E DI            ; The maskable interrupt is now disabled.
+ $AC7F LD A,$0B      ; { The border is made magenta.
+ $AC81 OUT ($FE),A   ; }
+ $AC83 LD HL,$0000   ; { Put #N$0000 on the stack, so a bad load will
+ $AC86 PUSH HL       ; reset the machine. }
+ $AC87 IN A,($FE)    ; Make an initial read of port '254'.
+ $AC89 RRA           ; { Rotate the byte obtained but keep only the EAR bit.
+ $AC8A AND $20       ; }
+ $AC8C OR $03        ; Signal magenta border.
+ $AC8E LD C,A        ; Store the value in the #REGc register (&23 for 'off' and
+                     ; &03 for 'on' - the present EAR state).
+ $AC8F CP A          ; Set the zero flag.
+; The first stage of reading a tape involves showing that a pulsing signal
+; actually exists (i.e. 'on/off' or 'off/on' edges).
+*$AC90 RET NZ        ; Return if the BREAK key is being pressed.
+*$AC91 CALL $AC54    ; { Return with the carry flag reset if there is no 'edge'
+ $AC94 JR NC,$AC90   ; within approx. 14,000 T states. But if an 'edge' is
+                     ; found the border will go blue. }
+ $AC96 LD HL,$0415   ; { The length of this waiting period will be almost one
+@label=LD_WAIT
+*$AC99 DJNZ $AC99    ; second in duration.
+ $AC9B DEC HL        ;
+ $AC9C LD A,H        ;
+ $AC9D OR L          ;
+ $AC9E JR NZ,$AC99   ; }
+ $ACA0 CALL $AC50    ; { Continue only if two edges are found within the allowed
+ $ACA3 JR NC,$AC90   ; time period. }
+; Now accept only a 'leader signal'.
+@label=LD_LEADER
+*$ACA5 LD B,$9C      ; The timing constant.
+ $ACA7 CALL $AC50    ; {Continue only if two edges are found within the allowed
+ $ACAA JR NC,$AC90   ; time period.}
+ $ACAC LD A,$C6      ; {However the edges must have been found within about
+ $ACAE CP B          ; 3,000 T states of each other.
+ $ACAF JR NC,$AC91   ; }
+ $ACB1 INC H         ; {Count the pair of edges in the #REGh register until
+ $ACB2 JR NZ,$ACA5   ; '256' pairs have been found.}
+; After the leader come the 'off' and 'on' parts of the sync pulse.
+@label=LD_SYNC
+*$ACB4 LD B,$C9      ; The timing constant.
+ $ACB6 CALL $AC54    ; {Every edge is considered until two edges are found
+ $ACB9 JR NC,$AC90   ; close together - these will be the start and finishing
+ $ACBB LD A,B        ; edges of the 'off' sync pulse.
+ $ACBC CP $D4        ;
+ $ACBE JR NC,$ACB4   ; }
+ $ACC0 CALL $AC54    ; {The finishing edge of the 'on' pulse must exist.
+ $ACC3 RET NC        ; (Return carry flag reset.)}
+; The bytes of the header or the program/data block can now be loaded or
+; verified. But the first byte is the type flag.
+ $ACC4 LD A,C        ; {The border colours from now on will be blue and black.
+ $ACC5 XOR $03       ;
+ $ACC7 LD C,A        ; }
+ $ACC8 LD H,$00      ; Initialise the 'parity matching' byte to zero.
+ $ACCA LD B,$B0      ; Set the timing constant for the flag byte.
+ $ACCC JR $ACEC      ; Jump forward into the byte loading loop.
+; The byte loading loop is used to fetch the bytes one at a time. The flag byte
+; is first. This is followed by the data bytes and the last byte is the
+; 'parity' byte.
+@label=LD_LOOP
+*$ACCE EX AF,AF'     ; Fetch the flags.
+ $ACCF JR NZ,$ACD6   ; Jump forward only when handling the first byte.
+ $ACD1 LD (IX+$00),L ; Make the actual load when required.
+ $ACD4 JR $ACE0      ; Jump forward to load the next byte.
+@label=LD_FLAG
+*$ACD6 RL C          ; Keep the carry flag in a safe place temporarily.
+ $ACD8 XOR L         ; {Return now if the type flag does not match the first
+ $ACD9 RET NZ        ; byte on the tape. (Carry flag reset.)}
+ $ACDA LD A,C        ; {Restore the carry flag now.
+ $ACDB RRA           ;
+ $ACDC LD C,A        ; }
+ $ACDD INC DE        ; {Increase the counter to compensate for its 'decrease'
+ $ACDE JR $ACE2      ; after the jump.}
+; A new byte can now be collected from the tape.
+@label=LD_NEXT
+*$ACE0 INC IX        ; Increase the 'destination'.
+*$ACE2 LD A,L        ;
+ $ACE3 AND $01       ; Ensure the border is blue / black.
+                     ; This is later changed to AND $07.
+ $ACE5 XOR C         ;
+ $ACE6 LD C,A        ;
+ $ACE7 XOR A         ;
+@label=LD_DEC
+ $ACE8 DEC DE        ; Decrease the 'counter'.
+ $ACE9 EX AF,AF'     ; Save the flags.
+ $ACEA LD B,$B2      ; Set the timing constant.
+@label=LD_MARKER
+*$ACEC LD L,$01      ; Clear the 'object' register apart from a 'marker' bit.
+; The following loop is used to build up a byte in the #REGl register.
+@label=LD_8_BITS
+*$ACEE CALL $AC50    ; Find the length of the 'off' and 'on' pulses of the next bit.
+ $ACF1 RET NC        ; Return if the time period is exceeded. (Carry flag reset.)
+ $ACF2 LD A,$CB      ; {Compare the length against approx. 2,400 T states,
+ $ACF4 CP B          ; resetting the carry flag for a '0' and setting it for a '1'.}
+ $ACF5 RL L          ; Include the new bit in the #REGl register.
+ $ACF7 LD B,$B0      ; Set the timing constant for the next bit.
+ $ACF9 JP NC,$ACEE   ; Jump back whilst there are still bits to be fetched.
+ $ACFC LD A,H        ; {Fetch the 'parity matching' byte and include the new
+ $ACFD XOR L         ; byte.}
+ $ACFE LD H,A        ; Save it once again.
+; Passes round the loop are made until the 'counter' reaches zero. At that
+; point the 'parity matching' byte should be holding zero.
+ $ACFF LD A,D        ; {Make a further pass if the #REGde register pair does
+ $AD00 OR E          ; not hold zero.
+ $AD01 JR NZ,$ACCE   ; }
+ $AD03 LD A,H        ; Fetch the 'parity matching' byte.
+ $AD04 CP $01        ; {Reset the machine if the value is zero.
+ $AD06 JP NC,$0000   ; }
+ $AD09 JP $0000      ; This is later changed to JP #N$5E24, which starts the game.
+
