@@ -12,5 +12,12 @@ RefFiles=map.ref
 [Page:Rooms]
 SectionPrefix=Rooms
 
+[Page:Screens]
+SectionPrefix=Screens
+
 [Index:Graphics:Graphics]
+Screens
 Rooms
+
+[Screens:Loading screen]
+#HTML( #R$4000<br><img src="images/scr/loading.png"/>)
