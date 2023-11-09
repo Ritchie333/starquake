@@ -1845,8 +1845,27 @@ T $CFDB Now teleporting message
 C $CFEE
 T $D010 Invalid teleport code message
 C $D027
-t $D031 Teleport codes
-c $D0A0
+
+g $D031 Current teleport code
+T $D031
+t $D036 Teleport codes
+W $D03B,2
+W $D042,2
+W $D049,2
+W $D050,2
+W $D057,2
+W $D05E,2
+W $D065,2
+W $D06C,2
+W $D073,2
+W $D07A,2
+W $D081,2
+W $D088,2
+W $D08F,2
+W $D096,2
+W $D09D,2
+
+c $D09F
 T $D0D2
 C $D0DE
 c $D2A6

@@ -8901,7 +8901,7 @@ c$A7FC JR $A80A      ;
 
 ; Routine at A7FE
 ;
-; Used by the routine at #R$D0A0.
+; Used by the routine at #R$D09F.
 c$A7FE JP $AA02      ;
 
 ; Routine at A801
@@ -11633,7 +11633,7 @@ c$CB58 LD HL,$DD30                                                      ;
  $CB87 LD ($DD31),A                                                     ;
 *$CB8A LD HL,$96FC                                                      ;
  $CB8D LD B,$16                                                         ;
-; This entry point is used by the routine at #R$D0A0.
+; This entry point is used by the routine at #R$D09F.
 *$CB8F PUSH BC                                                          ;
  $CB90 LD C,(HL)                                                        ;
  $CB91 INC HL                                                           ;
@@ -11966,7 +11966,7 @@ c$CE2C PUSH BC                   ;
 
 ; Routine at CE68
 ;
-; Used by the routines at #R$C549, #R$CC5A, #R$CCF1, #R$CE2C and #R$D0A0.
+; Used by the routines at #R$C549, #R$CC5A, #R$CCF1, #R$CE2C and #R$D09F.
 c$CE68 PUSH DE       ;
  $CE69 LD L,A        ;
  $CE6A LD H,$00      ;
@@ -12143,13 +12143,46 @@ $CFC7 POP DE                                                                    
  $D02C DJNZ $D00A                                                                           ;
  $D02E JP $CC4B                                                                             ;
 
-; Teleport codes
-t$D031 DEFM "EXIALVEROX(",$00,"RAMIX",$1F,$00,"TULSAB",$00,"ASOIC",$96,$00,"DELTA",$A2,$00,"QUAKE",$D5,$00,"ALGOL!",$01,"EXIALW",$01,"KYZI"
- $D072 DEFM "A|",$01,"ULTRA",$B1,$01,"IRAGE",$C9,$01,"OKTUP",$CD,$01,"SONIQ",$D6,$01,"AMIGA",$F3,$01,"AMAHA",$FA,$01,$FE
+; Current teleport code
+g$D031 DEFM "EXIAL"
 
-; Routine at D0A0
-c$D0A0 LD C,$20                                    ;
- $D0A2 LD (HL),H                                   ;
+; Teleport codes
+t$D036 DEFM "VEROX"
+ $D03B DEFW $0028
+ $D03D DEFM "RAMIX"
+ $D042 DEFW $001F
+ $D044 DEFM "TULSA"
+ $D049 DEFW $0042
+ $D04B DEFM "ASOIC"
+ $D050 DEFW $0096
+ $D052 DEFM "DELTA"
+ $D057 DEFW $00A2
+ $D059 DEFM "QUAKE"
+ $D05E DEFW $00D5
+ $D060 DEFM "ALGOL"
+ $D065 DEFW $0121
+ $D067 DEFM "EXIAL"
+ $D06C DEFW $0157
+ $D06E DEFM "KYZIA"
+ $D073 DEFW $017C
+ $D075 DEFM "ULTRA"
+ $D07A DEFW $01B1
+ $D07C DEFM "IRAGE"
+ $D081 DEFW $01C9
+ $D083 DEFM "OKTUP"
+ $D088 DEFW $01CD
+ $D08A DEFM "SONIQ"
+ $D08F DEFW $01D6
+ $D091 DEFM "AMIGA"
+ $D096 DEFW $01F3
+ $D098 DEFM "AMAHA"
+ $D09D DEFW $01FA
+
+; Routine at D09F
+;
+; Used by the routine at #R$CE82.
+c$D09F CP $0E                                      ;
+ $D0A1 JR NZ,$D117                                 ;
  $D0A3 LD A,($DD29)                                ;
  $D0A6 CP $10                                      ;
  $D0A8 JP NZ,$D1A6                                 ;
@@ -12452,7 +12485,7 @@ c$D0A0 LD C,$20                                    ;
 
 ; Routine at D2A6
 ;
-; Used by the routines at #R$C54C and #R$D0A0.
+; Used by the routines at #R$C54C and #R$D09F.
 c$D2A6 LD E,$2D      ;
  $D2A8 LD HL,$94E9   ;
 *$D2AB LD A,(HL)     ;
@@ -12470,7 +12503,7 @@ c$D2A6 LD E,$2D      ;
 
 ; Routine at D2B9
 ;
-; Used by the routine at #R$D0A0.
+; Used by the routine at #R$D09F.
 c$D2B9 XOR A         ;
  $D2BA OUT ($FE),A   ;
  $D2BC DEC A         ;
@@ -12728,7 +12761,7 @@ c$D422 JP $D521      ;
 
 ; Routine at D425
 ;
-; Used by the routines at #R$64A0, #R$A426, #R$A66C, #R$CC5A, #R$CCF1, #R$D0A0
+; Used by the routines at #R$64A0, #R$A426, #R$A66C, #R$CC5A, #R$CCF1, #R$D09F
 ; and #R$D5FD.
 c$D425 CALL $D521                                                                                                                            ;
  $D428 LD A,($D2CC)                                                                                                                          ;
@@ -13209,7 +13242,7 @@ b$D7BD DEFB $00,$00,$00
 ; Routine at D7C0
 ;
 ; Used by the routines at #R$5FF4, #R$6233, #R$67C7, #R$A01B, #R$A66C, #R$C35E,
-; #R$C5BD, #R$CC14, #R$CC5A, #R$CCF1, #R$CE82, #R$D0A0 and #R$D5FD.
+; #R$C5BD, #R$CC14, #R$CC5A, #R$CCF1, #R$CE82, #R$D09F and #R$D5FD.
 c$D7C0 PUSH HL        ;
  $D7C1 PUSH BC        ;
  $D7C2 PUSH DE        ;
@@ -13462,7 +13495,7 @@ c$D8B1 LD B,$06      ;
 
 ; Routine at D97B
 ;
-; Used by the routines at #R$CC5A and #R$D0A0.
+; Used by the routines at #R$CC5A and #R$D09F.
 c$D97B LD H,A        ;
  $D97C LD A,B        ;
  $D97D RRCA          ;
@@ -13710,7 +13743,7 @@ b$DB19 DEFB $04,$02,$00,$00,$00,$00,$00,$00
 ; Routine at DB24
 ;
 ; Used by the routines at #R$A66C, #R$AA30, #R$C4E5, #R$CC5A, #R$CCF1, #R$CDFE,
-; #R$CE2C, #R$D0A0, #R$D425 and #R$D5FD.
+; #R$CE2C, #R$D09F, #R$D425 and #R$D5FD.
 c$DB24 PUSH HL       ;
  $DB25 PUSH DE       ;
  $DB26 PUSH BC       ;
@@ -13790,7 +13823,7 @@ b$DB7D DEFB $00,$00,$00,$00,$00,$00,$00,$00
 
 ; Routine at DB88
 ;
-; Used by the routines at #R$A66C, #R$C5BD and #R$D0A0.
+; Used by the routines at #R$A66C, #R$C5BD and #R$D09F.
 c$DB88 OR $80        ;
  $DB8A PUSH HL       ;
  $DB8B PUSH DE       ;
