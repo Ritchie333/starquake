@@ -91,7 +91,7 @@ class StarquakeHtmlWriter(HtmlWriter):
         return self.handle_image( frame, fName, cwd )
 
     def print_room_data( self, cwd, addr, fName ):
-        bg = self.make_background( rows = 24, cols = 32 )
+        bg = self.make_background( rows = 18, cols = 32 )
         x = 0
         y = 0
         for i in range( 0, 3 ):
