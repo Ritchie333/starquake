@@ -1,0 +1,579 @@
+[Rooms:Map] 
+#HTML( <table>
+<tr>
+<td><img src="./images/room_0.png" width=64px /></td>
+<td><img src="./images/room_1.png" width=64px /></td>
+<td><img src="./images/room_2.png" width=64px /></td>
+<td><img src="./images/room_3.png" width=64px /></td>
+<td><img src="./images/room_4.png" width=64px /></td>
+<td><img src="./images/room_5.png" width=64px /></td>
+<td><img src="./images/room_6.png" width=64px /></td>
+<td><img src="./images/room_7.png" width=64px /></td>
+<td><img src="./images/room_8.png" width=64px /></td>
+<td><img src="./images/room_9.png" width=64px /></td>
+<td><img src="./images/room_a.png" width=64px /></td>
+<td><img src="./images/room_b.png" width=64px /></td>
+<td><img src="./images/room_c.png" width=64px /></td>
+<td><img src="./images/room_d.png" width=64px /></td>
+<td><img src="./images/room_e.png" width=64px /></td>
+<td><img src="./images/room_f.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_10.png" width=64px /></td>
+<td><img src="./images/room_11.png" width=64px /></td>
+<td><img src="./images/room_12.png" width=64px /></td>
+<td><img src="./images/room_13.png" width=64px /></td>
+<td><img src="./images/room_14.png" width=64px /></td>
+<td><img src="./images/room_15.png" width=64px /></td>
+<td><img src="./images/room_16.png" width=64px /></td>
+<td><img src="./images/room_17.png" width=64px /></td>
+<td><img src="./images/room_18.png" width=64px /></td>
+<td><img src="./images/room_19.png" width=64px /></td>
+<td><img src="./images/room_1a.png" width=64px /></td>
+<td><img src="./images/room_1b.png" width=64px /></td>
+<td><img src="./images/room_1c.png" width=64px /></td>
+<td><img src="./images/room_1d.png" width=64px /></td>
+<td><img src="./images/room_1e.png" width=64px /></td>
+<td><img src="./images/room_1f.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_20.png" width=64px /></td>
+<td><img src="./images/room_21.png" width=64px /></td>
+<td><img src="./images/room_22.png" width=64px /></td>
+<td><img src="./images/room_23.png" width=64px /></td>
+<td><img src="./images/room_24.png" width=64px /></td>
+<td><img src="./images/room_25.png" width=64px /></td>
+<td><img src="./images/room_26.png" width=64px /></td>
+<td><img src="./images/room_27.png" width=64px /></td>
+<td><img src="./images/room_28.png" width=64px /></td>
+<td><img src="./images/room_29.png" width=64px /></td>
+<td><img src="./images/room_2a.png" width=64px /></td>
+<td><img src="./images/room_2b.png" width=64px /></td>
+<td><img src="./images/room_2c.png" width=64px /></td>
+<td><img src="./images/room_2d.png" width=64px /></td>
+<td><img src="./images/room_2e.png" width=64px /></td>
+<td><img src="./images/room_2f.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_30.png" width=64px /></td>
+<td><img src="./images/room_31.png" width=64px /></td>
+<td><img src="./images/room_32.png" width=64px /></td>
+<td><img src="./images/room_33.png" width=64px /></td>
+<td><img src="./images/room_34.png" width=64px /></td>
+<td><img src="./images/room_35.png" width=64px /></td>
+<td><img src="./images/room_36.png" width=64px /></td>
+<td><img src="./images/room_37.png" width=64px /></td>
+<td><img src="./images/room_38.png" width=64px /></td>
+<td><img src="./images/room_39.png" width=64px /></td>
+<td><img src="./images/room_3a.png" width=64px /></td>
+<td><img src="./images/room_3b.png" width=64px /></td>
+<td><img src="./images/room_3c.png" width=64px /></td>
+<td><img src="./images/room_3d.png" width=64px /></td>
+<td><img src="./images/room_3e.png" width=64px /></td>
+<td><img src="./images/room_3f.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_40.png" width=64px /></td>
+<td><img src="./images/room_41.png" width=64px /></td>
+<td><img src="./images/room_42.png" width=64px /></td>
+<td><img src="./images/room_43.png" width=64px /></td>
+<td><img src="./images/room_44.png" width=64px /></td>
+<td><img src="./images/room_45.png" width=64px /></td>
+<td><img src="./images/room_46.png" width=64px /></td>
+<td><img src="./images/room_47.png" width=64px /></td>
+<td><img src="./images/room_48.png" width=64px /></td>
+<td><img src="./images/room_49.png" width=64px /></td>
+<td><img src="./images/room_4a.png" width=64px /></td>
+<td><img src="./images/room_4b.png" width=64px /></td>
+<td><img src="./images/room_4c.png" width=64px /></td>
+<td><img src="./images/room_4d.png" width=64px /></td>
+<td><img src="./images/room_4e.png" width=64px /></td>
+<td><img src="./images/room_4f.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_50.png" width=64px /></td>
+<td><img src="./images/room_51.png" width=64px /></td>
+<td><img src="./images/room_52.png" width=64px /></td>
+<td><img src="./images/room_53.png" width=64px /></td>
+<td><img src="./images/room_54.png" width=64px /></td>
+<td><img src="./images/room_55.png" width=64px /></td>
+<td><img src="./images/room_56.png" width=64px /></td>
+<td><img src="./images/room_57.png" width=64px /></td>
+<td><img src="./images/room_58.png" width=64px /></td>
+<td><img src="./images/room_59.png" width=64px /></td>
+<td><img src="./images/room_5a.png" width=64px /></td>
+<td><img src="./images/room_5b.png" width=64px /></td>
+<td><img src="./images/room_5c.png" width=64px /></td>
+<td><img src="./images/room_5d.png" width=64px /></td>
+<td><img src="./images/room_5e.png" width=64px /></td>
+<td><img src="./images/room_5f.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_60.png" width=64px /></td>
+<td><img src="./images/room_61.png" width=64px /></td>
+<td><img src="./images/room_62.png" width=64px /></td>
+<td><img src="./images/room_63.png" width=64px /></td>
+<td><img src="./images/room_64.png" width=64px /></td>
+<td><img src="./images/room_65.png" width=64px /></td>
+<td><img src="./images/room_66.png" width=64px /></td>
+<td><img src="./images/room_67.png" width=64px /></td>
+<td><img src="./images/room_68.png" width=64px /></td>
+<td><img src="./images/room_69.png" width=64px /></td>
+<td><img src="./images/room_6a.png" width=64px /></td>
+<td><img src="./images/room_6b.png" width=64px /></td>
+<td><img src="./images/room_6c.png" width=64px /></td>
+<td><img src="./images/room_6d.png" width=64px /></td>
+<td><img src="./images/room_6e.png" width=64px /></td>
+<td><img src="./images/room_6f.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_70.png" width=64px /></td>
+<td><img src="./images/room_71.png" width=64px /></td>
+<td><img src="./images/room_72.png" width=64px /></td>
+<td><img src="./images/room_73.png" width=64px /></td>
+<td><img src="./images/room_74.png" width=64px /></td>
+<td><img src="./images/room_75.png" width=64px /></td>
+<td><img src="./images/room_76.png" width=64px /></td>
+<td><img src="./images/room_77.png" width=64px /></td>
+<td><img src="./images/room_78.png" width=64px /></td>
+<td><img src="./images/room_79.png" width=64px /></td>
+<td><img src="./images/room_7a.png" width=64px /></td>
+<td><img src="./images/room_7b.png" width=64px /></td>
+<td><img src="./images/room_7c.png" width=64px /></td>
+<td><img src="./images/room_7d.png" width=64px /></td>
+<td><img src="./images/room_7e.png" width=64px /></td>
+<td><img src="./images/room_7f.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_80.png" width=64px /></td>
+<td><img src="./images/room_81.png" width=64px /></td>
+<td><img src="./images/room_82.png" width=64px /></td>
+<td><img src="./images/room_83.png" width=64px /></td>
+<td><img src="./images/room_84.png" width=64px /></td>
+<td><img src="./images/room_85.png" width=64px /></td>
+<td><img src="./images/room_86.png" width=64px /></td>
+<td><img src="./images/room_87.png" width=64px /></td>
+<td><img src="./images/room_88.png" width=64px /></td>
+<td><img src="./images/room_89.png" width=64px /></td>
+<td><img src="./images/room_8a.png" width=64px /></td>
+<td><img src="./images/room_8b.png" width=64px /></td>
+<td><img src="./images/room_8c.png" width=64px /></td>
+<td><img src="./images/room_8d.png" width=64px /></td>
+<td><img src="./images/room_8e.png" width=64px /></td>
+<td><img src="./images/room_8f.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_90.png" width=64px /></td>
+<td><img src="./images/room_91.png" width=64px /></td>
+<td><img src="./images/room_92.png" width=64px /></td>
+<td><img src="./images/room_93.png" width=64px /></td>
+<td><img src="./images/room_94.png" width=64px /></td>
+<td><img src="./images/room_95.png" width=64px /></td>
+<td><img src="./images/room_96.png" width=64px /></td>
+<td><img src="./images/room_97.png" width=64px /></td>
+<td><img src="./images/room_98.png" width=64px /></td>
+<td><img src="./images/room_99.png" width=64px /></td>
+<td><img src="./images/room_9a.png" width=64px /></td>
+<td><img src="./images/room_9b.png" width=64px /></td>
+<td><img src="./images/room_9c.png" width=64px /></td>
+<td><img src="./images/room_9d.png" width=64px /></td>
+<td><img src="./images/room_9e.png" width=64px /></td>
+<td><img src="./images/room_9f.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_a0.png" width=64px /></td>
+<td><img src="./images/room_a1.png" width=64px /></td>
+<td><img src="./images/room_a2.png" width=64px /></td>
+<td><img src="./images/room_a3.png" width=64px /></td>
+<td><img src="./images/room_a4.png" width=64px /></td>
+<td><img src="./images/room_a5.png" width=64px /></td>
+<td><img src="./images/room_a6.png" width=64px /></td>
+<td><img src="./images/room_a7.png" width=64px /></td>
+<td><img src="./images/room_a8.png" width=64px /></td>
+<td><img src="./images/room_a9.png" width=64px /></td>
+<td><img src="./images/room_aa.png" width=64px /></td>
+<td><img src="./images/room_ab.png" width=64px /></td>
+<td><img src="./images/room_ac.png" width=64px /></td>
+<td><img src="./images/room_ad.png" width=64px /></td>
+<td><img src="./images/room_ae.png" width=64px /></td>
+<td><img src="./images/room_af.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_b0.png" width=64px /></td>
+<td><img src="./images/room_b1.png" width=64px /></td>
+<td><img src="./images/room_b2.png" width=64px /></td>
+<td><img src="./images/room_b3.png" width=64px /></td>
+<td><img src="./images/room_b4.png" width=64px /></td>
+<td><img src="./images/room_b5.png" width=64px /></td>
+<td><img src="./images/room_b6.png" width=64px /></td>
+<td><img src="./images/room_b7.png" width=64px /></td>
+<td><img src="./images/room_b8.png" width=64px /></td>
+<td><img src="./images/room_b9.png" width=64px /></td>
+<td><img src="./images/room_ba.png" width=64px /></td>
+<td><img src="./images/room_bb.png" width=64px /></td>
+<td><img src="./images/room_bc.png" width=64px /></td>
+<td><img src="./images/room_bd.png" width=64px /></td>
+<td><img src="./images/room_be.png" width=64px /></td>
+<td><img src="./images/room_bf.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_c0.png" width=64px /></td>
+<td><img src="./images/room_c1.png" width=64px /></td>
+<td><img src="./images/room_c2.png" width=64px /></td>
+<td><img src="./images/room_c3.png" width=64px /></td>
+<td><img src="./images/room_c4.png" width=64px /></td>
+<td><img src="./images/room_c5.png" width=64px /></td>
+<td><img src="./images/room_c6.png" width=64px /></td>
+<td><img src="./images/room_c7.png" width=64px /></td>
+<td><img src="./images/room_c8.png" width=64px /></td>
+<td><img src="./images/room_c9.png" width=64px /></td>
+<td><img src="./images/room_ca.png" width=64px /></td>
+<td><img src="./images/room_cb.png" width=64px /></td>
+<td><img src="./images/room_cc.png" width=64px /></td>
+<td><img src="./images/room_cd.png" width=64px /></td>
+<td><img src="./images/room_ce.png" width=64px /></td>
+<td><img src="./images/room_cf.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_d0.png" width=64px /></td>
+<td><img src="./images/room_d1.png" width=64px /></td>
+<td><img src="./images/room_d2.png" width=64px /></td>
+<td><img src="./images/room_d3.png" width=64px /></td>
+<td><img src="./images/room_d4.png" width=64px /></td>
+<td><img src="./images/room_d5.png" width=64px /></td>
+<td><img src="./images/room_d6.png" width=64px /></td>
+<td><img src="./images/room_d7.png" width=64px /></td>
+<td><img src="./images/room_d8.png" width=64px /></td>
+<td><img src="./images/room_d9.png" width=64px /></td>
+<td><img src="./images/room_da.png" width=64px /></td>
+<td><img src="./images/room_db.png" width=64px /></td>
+<td><img src="./images/room_dc.png" width=64px /></td>
+<td><img src="./images/room_dd.png" width=64px /></td>
+<td><img src="./images/room_de.png" width=64px /></td>
+<td><img src="./images/room_df.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_e0.png" width=64px /></td>
+<td><img src="./images/room_e1.png" width=64px /></td>
+<td><img src="./images/room_e2.png" width=64px /></td>
+<td><img src="./images/room_e3.png" width=64px /></td>
+<td><img src="./images/room_e4.png" width=64px /></td>
+<td><img src="./images/room_e5.png" width=64px /></td>
+<td><img src="./images/room_e6.png" width=64px /></td>
+<td><img src="./images/room_e7.png" width=64px /></td>
+<td><img src="./images/room_e8.png" width=64px /></td>
+<td><img src="./images/room_e9.png" width=64px /></td>
+<td><img src="./images/room_ea.png" width=64px /></td>
+<td><img src="./images/room_eb.png" width=64px /></td>
+<td><img src="./images/room_ec.png" width=64px /></td>
+<td><img src="./images/room_ed.png" width=64px /></td>
+<td><img src="./images/room_ee.png" width=64px /></td>
+<td><img src="./images/room_ef.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_f0.png" width=64px /></td>
+<td><img src="./images/room_f1.png" width=64px /></td>
+<td><img src="./images/room_f2.png" width=64px /></td>
+<td><img src="./images/room_f3.png" width=64px /></td>
+<td><img src="./images/room_f4.png" width=64px /></td>
+<td><img src="./images/room_f5.png" width=64px /></td>
+<td><img src="./images/room_f6.png" width=64px /></td>
+<td><img src="./images/room_f7.png" width=64px /></td>
+<td><img src="./images/room_f8.png" width=64px /></td>
+<td><img src="./images/room_f9.png" width=64px /></td>
+<td><img src="./images/room_fa.png" width=64px /></td>
+<td><img src="./images/room_fb.png" width=64px /></td>
+<td><img src="./images/room_fc.png" width=64px /></td>
+<td><img src="./images/room_fd.png" width=64px /></td>
+<td><img src="./images/room_fe.png" width=64px /></td>
+<td><img src="./images/room_ff.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_100.png" width=64px /></td>
+<td><img src="./images/room_101.png" width=64px /></td>
+<td><img src="./images/room_102.png" width=64px /></td>
+<td><img src="./images/room_103.png" width=64px /></td>
+<td><img src="./images/room_104.png" width=64px /></td>
+<td><img src="./images/room_105.png" width=64px /></td>
+<td><img src="./images/room_106.png" width=64px /></td>
+<td><img src="./images/room_107.png" width=64px /></td>
+<td><img src="./images/room_108.png" width=64px /></td>
+<td><img src="./images/room_109.png" width=64px /></td>
+<td><img src="./images/room_10a.png" width=64px /></td>
+<td><img src="./images/room_10b.png" width=64px /></td>
+<td><img src="./images/room_10c.png" width=64px /></td>
+<td><img src="./images/room_10d.png" width=64px /></td>
+<td><img src="./images/room_10e.png" width=64px /></td>
+<td><img src="./images/room_10f.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_110.png" width=64px /></td>
+<td><img src="./images/room_111.png" width=64px /></td>
+<td><img src="./images/room_112.png" width=64px /></td>
+<td><img src="./images/room_113.png" width=64px /></td>
+<td><img src="./images/room_114.png" width=64px /></td>
+<td><img src="./images/room_115.png" width=64px /></td>
+<td><img src="./images/room_116.png" width=64px /></td>
+<td><img src="./images/room_117.png" width=64px /></td>
+<td><img src="./images/room_118.png" width=64px /></td>
+<td><img src="./images/room_119.png" width=64px /></td>
+<td><img src="./images/room_11a.png" width=64px /></td>
+<td><img src="./images/room_11b.png" width=64px /></td>
+<td><img src="./images/room_11c.png" width=64px /></td>
+<td><img src="./images/room_11d.png" width=64px /></td>
+<td><img src="./images/room_11e.png" width=64px /></td>
+<td><img src="./images/room_11f.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_120.png" width=64px /></td>
+<td><img src="./images/room_121.png" width=64px /></td>
+<td><img src="./images/room_122.png" width=64px /></td>
+<td><img src="./images/room_123.png" width=64px /></td>
+<td><img src="./images/room_124.png" width=64px /></td>
+<td><img src="./images/room_125.png" width=64px /></td>
+<td><img src="./images/room_126.png" width=64px /></td>
+<td><img src="./images/room_127.png" width=64px /></td>
+<td><img src="./images/room_128.png" width=64px /></td>
+<td><img src="./images/room_129.png" width=64px /></td>
+<td><img src="./images/room_12a.png" width=64px /></td>
+<td><img src="./images/room_12b.png" width=64px /></td>
+<td><img src="./images/room_12c.png" width=64px /></td>
+<td><img src="./images/room_12d.png" width=64px /></td>
+<td><img src="./images/room_12e.png" width=64px /></td>
+<td><img src="./images/room_12f.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_130.png" width=64px /></td>
+<td><img src="./images/room_131.png" width=64px /></td>
+<td><img src="./images/room_132.png" width=64px /></td>
+<td><img src="./images/room_133.png" width=64px /></td>
+<td><img src="./images/room_134.png" width=64px /></td>
+<td><img src="./images/room_135.png" width=64px /></td>
+<td><img src="./images/room_136.png" width=64px /></td>
+<td><img src="./images/room_137.png" width=64px /></td>
+<td><img src="./images/room_138.png" width=64px /></td>
+<td><img src="./images/room_139.png" width=64px /></td>
+<td><img src="./images/room_13a.png" width=64px /></td>
+<td><img src="./images/room_13b.png" width=64px /></td>
+<td><img src="./images/room_13c.png" width=64px /></td>
+<td><img src="./images/room_13d.png" width=64px /></td>
+<td><img src="./images/room_13e.png" width=64px /></td>
+<td><img src="./images/room_13f.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_140.png" width=64px /></td>
+<td><img src="./images/room_141.png" width=64px /></td>
+<td><img src="./images/room_142.png" width=64px /></td>
+<td><img src="./images/room_143.png" width=64px /></td>
+<td><img src="./images/room_144.png" width=64px /></td>
+<td><img src="./images/room_145.png" width=64px /></td>
+<td><img src="./images/room_146.png" width=64px /></td>
+<td><img src="./images/room_147.png" width=64px /></td>
+<td><img src="./images/room_148.png" width=64px /></td>
+<td><img src="./images/room_149.png" width=64px /></td>
+<td><img src="./images/room_14a.png" width=64px /></td>
+<td><img src="./images/room_14b.png" width=64px /></td>
+<td><img src="./images/room_14c.png" width=64px /></td>
+<td><img src="./images/room_14d.png" width=64px /></td>
+<td><img src="./images/room_14e.png" width=64px /></td>
+<td><img src="./images/room_14f.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_150.png" width=64px /></td>
+<td><img src="./images/room_151.png" width=64px /></td>
+<td><img src="./images/room_152.png" width=64px /></td>
+<td><img src="./images/room_153.png" width=64px /></td>
+<td><img src="./images/room_154.png" width=64px /></td>
+<td><img src="./images/room_155.png" width=64px /></td>
+<td><img src="./images/room_156.png" width=64px /></td>
+<td><img src="./images/room_157.png" width=64px /></td>
+<td><img src="./images/room_158.png" width=64px /></td>
+<td><img src="./images/room_159.png" width=64px /></td>
+<td><img src="./images/room_15a.png" width=64px /></td>
+<td><img src="./images/room_15b.png" width=64px /></td>
+<td><img src="./images/room_15c.png" width=64px /></td>
+<td><img src="./images/room_15d.png" width=64px /></td>
+<td><img src="./images/room_15e.png" width=64px /></td>
+<td><img src="./images/room_15f.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_160.png" width=64px /></td>
+<td><img src="./images/room_161.png" width=64px /></td>
+<td><img src="./images/room_162.png" width=64px /></td>
+<td><img src="./images/room_163.png" width=64px /></td>
+<td><img src="./images/room_164.png" width=64px /></td>
+<td><img src="./images/room_165.png" width=64px /></td>
+<td><img src="./images/room_166.png" width=64px /></td>
+<td><img src="./images/room_167.png" width=64px /></td>
+<td><img src="./images/room_168.png" width=64px /></td>
+<td><img src="./images/room_169.png" width=64px /></td>
+<td><img src="./images/room_16a.png" width=64px /></td>
+<td><img src="./images/room_16b.png" width=64px /></td>
+<td><img src="./images/room_16c.png" width=64px /></td>
+<td><img src="./images/room_16d.png" width=64px /></td>
+<td><img src="./images/room_16e.png" width=64px /></td>
+<td><img src="./images/room_16f.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_170.png" width=64px /></td>
+<td><img src="./images/room_171.png" width=64px /></td>
+<td><img src="./images/room_172.png" width=64px /></td>
+<td><img src="./images/room_173.png" width=64px /></td>
+<td><img src="./images/room_174.png" width=64px /></td>
+<td><img src="./images/room_175.png" width=64px /></td>
+<td><img src="./images/room_176.png" width=64px /></td>
+<td><img src="./images/room_177.png" width=64px /></td>
+<td><img src="./images/room_178.png" width=64px /></td>
+<td><img src="./images/room_179.png" width=64px /></td>
+<td><img src="./images/room_17a.png" width=64px /></td>
+<td><img src="./images/room_17b.png" width=64px /></td>
+<td><img src="./images/room_17c.png" width=64px /></td>
+<td><img src="./images/room_17d.png" width=64px /></td>
+<td><img src="./images/room_17e.png" width=64px /></td>
+<td><img src="./images/room_17f.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_180.png" width=64px /></td>
+<td><img src="./images/room_181.png" width=64px /></td>
+<td><img src="./images/room_182.png" width=64px /></td>
+<td><img src="./images/room_183.png" width=64px /></td>
+<td><img src="./images/room_184.png" width=64px /></td>
+<td><img src="./images/room_185.png" width=64px /></td>
+<td><img src="./images/room_186.png" width=64px /></td>
+<td><img src="./images/room_187.png" width=64px /></td>
+<td><img src="./images/room_188.png" width=64px /></td>
+<td><img src="./images/room_189.png" width=64px /></td>
+<td><img src="./images/room_18a.png" width=64px /></td>
+<td><img src="./images/room_18b.png" width=64px /></td>
+<td><img src="./images/room_18c.png" width=64px /></td>
+<td><img src="./images/room_18d.png" width=64px /></td>
+<td><img src="./images/room_18e.png" width=64px /></td>
+<td><img src="./images/room_18f.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_190.png" width=64px /></td>
+<td><img src="./images/room_191.png" width=64px /></td>
+<td><img src="./images/room_192.png" width=64px /></td>
+<td><img src="./images/room_193.png" width=64px /></td>
+<td><img src="./images/room_194.png" width=64px /></td>
+<td><img src="./images/room_195.png" width=64px /></td>
+<td><img src="./images/room_196.png" width=64px /></td>
+<td><img src="./images/room_197.png" width=64px /></td>
+<td><img src="./images/room_198.png" width=64px /></td>
+<td><img src="./images/room_199.png" width=64px /></td>
+<td><img src="./images/room_19a.png" width=64px /></td>
+<td><img src="./images/room_19b.png" width=64px /></td>
+<td><img src="./images/room_19c.png" width=64px /></td>
+<td><img src="./images/room_19d.png" width=64px /></td>
+<td><img src="./images/room_19e.png" width=64px /></td>
+<td><img src="./images/room_19f.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_1a0.png" width=64px /></td>
+<td><img src="./images/room_1a1.png" width=64px /></td>
+<td><img src="./images/room_1a2.png" width=64px /></td>
+<td><img src="./images/room_1a3.png" width=64px /></td>
+<td><img src="./images/room_1a4.png" width=64px /></td>
+<td><img src="./images/room_1a5.png" width=64px /></td>
+<td><img src="./images/room_1a6.png" width=64px /></td>
+<td><img src="./images/room_1a7.png" width=64px /></td>
+<td><img src="./images/room_1a8.png" width=64px /></td>
+<td><img src="./images/room_1a9.png" width=64px /></td>
+<td><img src="./images/room_1aa.png" width=64px /></td>
+<td><img src="./images/room_1ab.png" width=64px /></td>
+<td><img src="./images/room_1ac.png" width=64px /></td>
+<td><img src="./images/room_1ad.png" width=64px /></td>
+<td><img src="./images/room_1ae.png" width=64px /></td>
+<td><img src="./images/room_1af.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_1b0.png" width=64px /></td>
+<td><img src="./images/room_1b1.png" width=64px /></td>
+<td><img src="./images/room_1b2.png" width=64px /></td>
+<td><img src="./images/room_1b3.png" width=64px /></td>
+<td><img src="./images/room_1b4.png" width=64px /></td>
+<td><img src="./images/room_1b5.png" width=64px /></td>
+<td><img src="./images/room_1b6.png" width=64px /></td>
+<td><img src="./images/room_1b7.png" width=64px /></td>
+<td><img src="./images/room_1b8.png" width=64px /></td>
+<td><img src="./images/room_1b9.png" width=64px /></td>
+<td><img src="./images/room_1ba.png" width=64px /></td>
+<td><img src="./images/room_1bb.png" width=64px /></td>
+<td><img src="./images/room_1bc.png" width=64px /></td>
+<td><img src="./images/room_1bd.png" width=64px /></td>
+<td><img src="./images/room_1be.png" width=64px /></td>
+<td><img src="./images/room_1bf.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_1c0.png" width=64px /></td>
+<td><img src="./images/room_1c1.png" width=64px /></td>
+<td><img src="./images/room_1c2.png" width=64px /></td>
+<td><img src="./images/room_1c3.png" width=64px /></td>
+<td><img src="./images/room_1c4.png" width=64px /></td>
+<td><img src="./images/room_1c5.png" width=64px /></td>
+<td><img src="./images/room_1c6.png" width=64px /></td>
+<td><img src="./images/room_1c7.png" width=64px /></td>
+<td><img src="./images/room_1c8.png" width=64px /></td>
+<td><img src="./images/room_1c9.png" width=64px /></td>
+<td><img src="./images/room_1ca.png" width=64px /></td>
+<td><img src="./images/room_1cb.png" width=64px /></td>
+<td><img src="./images/room_1cc.png" width=64px /></td>
+<td><img src="./images/room_1cd.png" width=64px /></td>
+<td><img src="./images/room_1ce.png" width=64px /></td>
+<td><img src="./images/room_1cf.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_1d0.png" width=64px /></td>
+<td><img src="./images/room_1d1.png" width=64px /></td>
+<td><img src="./images/room_1d2.png" width=64px /></td>
+<td><img src="./images/room_1d3.png" width=64px /></td>
+<td><img src="./images/room_1d4.png" width=64px /></td>
+<td><img src="./images/room_1d5.png" width=64px /></td>
+<td><img src="./images/room_1d6.png" width=64px /></td>
+<td><img src="./images/room_1d7.png" width=64px /></td>
+<td><img src="./images/room_1d8.png" width=64px /></td>
+<td><img src="./images/room_1d9.png" width=64px /></td>
+<td><img src="./images/room_1da.png" width=64px /></td>
+<td><img src="./images/room_1db.png" width=64px /></td>
+<td><img src="./images/room_1dc.png" width=64px /></td>
+<td><img src="./images/room_1dd.png" width=64px /></td>
+<td><img src="./images/room_1de.png" width=64px /></td>
+<td><img src="./images/room_1df.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_1e0.png" width=64px /></td>
+<td><img src="./images/room_1e1.png" width=64px /></td>
+<td><img src="./images/room_1e2.png" width=64px /></td>
+<td><img src="./images/room_1e3.png" width=64px /></td>
+<td><img src="./images/room_1e4.png" width=64px /></td>
+<td><img src="./images/room_1e5.png" width=64px /></td>
+<td><img src="./images/room_1e6.png" width=64px /></td>
+<td><img src="./images/room_1e7.png" width=64px /></td>
+<td><img src="./images/room_1e8.png" width=64px /></td>
+<td><img src="./images/room_1e9.png" width=64px /></td>
+<td><img src="./images/room_1ea.png" width=64px /></td>
+<td><img src="./images/room_1eb.png" width=64px /></td>
+<td><img src="./images/room_1ec.png" width=64px /></td>
+<td><img src="./images/room_1ed.png" width=64px /></td>
+<td><img src="./images/room_1ee.png" width=64px /></td>
+<td><img src="./images/room_1ef.png" width=64px /></td>
+</tr>
+<tr>
+<td><img src="./images/room_1f0.png" width=64px /></td>
+<td><img src="./images/room_1f1.png" width=64px /></td>
+<td><img src="./images/room_1f2.png" width=64px /></td>
+<td><img src="./images/room_1f3.png" width=64px /></td>
+<td><img src="./images/room_1f4.png" width=64px /></td>
+<td><img src="./images/room_1f5.png" width=64px /></td>
+<td><img src="./images/room_1f6.png" width=64px /></td>
+<td><img src="./images/room_1f7.png" width=64px /></td>
+<td><img src="./images/room_1f8.png" width=64px /></td>
+<td><img src="./images/room_1f9.png" width=64px /></td>
+<td><img src="./images/room_1fa.png" width=64px /></td>
+<td><img src="./images/room_1fb.png" width=64px /></td>
+<td><img src="./images/room_1fc.png" width=64px /></td>
+<td><img src="./images/room_1fd.png" width=64px /></td>
+<td><img src="./images/room_1fe.png" width=64px /></td>
+<td><img src="./images/room_1ff.png" width=64px /></td>
+</tr>
+</table> )

@@ -4,3 +4,13 @@ Copyright=(c) 1985 Stephen Crow, 2023 Ritchie Swann (this disassembly)
 
 [OtherCode:Loading system]
 Source=starquake_loader.skool
+
+[Config]
+HtmlWriterClass=starquake.StarquakeHtmlWriter
+RefFiles=map.ref
+
+[Page:Rooms]
+SectionPrefix=Rooms
+
+[Index:Graphics:Graphics]
+Rooms

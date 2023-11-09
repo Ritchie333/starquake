@@ -2631,7 +2631,7 @@ b$7578 DEFB $05,$04,$05,$02,$00,$06,$03,$00
 b$7584 DEFB $02,$04,$03,$04,$00,$06,$00,$00
  $758C DEFB $09,$00,$08,$10
 
-; Room data 8
+; Room data 8 - Start
 ;
 ; #CALL:print_room_data(#PC,room_8)
 b$7590 DEFB $05,$02,$05,$05,$07,$00,$11,$00
@@ -3777,7 +3777,7 @@ b$7E6C DEFB $3D,$41,$41,$3D,$43,$50,$42,$00
 b$7E78 DEFB $3E,$41,$54,$3E,$00,$3B,$36,$3B
  $7E80 DEFB $42,$49,$49,$49
 
-; Room data c7
+; Room data c7 - The core
 ;
 ; #CALL:print_room_data(#PC,room_c7)
 b$7E84 DEFB $3C,$41,$41,$3C,$3C,$00,$00,$3C
@@ -6052,8 +6052,8 @@ b$9666 DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $9736 DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $973E DEFB $00,$00
 
-; Moving object data
-g$9740 DEFB $51,$51,$51,$51,$00,$00,$00,$71
+; Room block attributes
+b$9740 DEFB $51,$51,$51,$51,$00,$00,$00,$71
  $9748 DEFB $00,$10,$10,$10,$10,$10,$10,$10
  $9750 DEFB $10,$10,$10,$10,$00,$20,$20,$20
  $9758 DEFB $20,$00,$00,$62,$40,$40,$00,$40
@@ -8866,7 +8866,7 @@ c$A7D5 LD HL,$DD18   ;
 b$A7EC DEFB $0D,$20,$20,$20,$20,$20,$20,$20
  $A7F4 DEFB $20,$20,$20
  
-; Data block at A7F7
+; Attributes to use in room blocks
 b$A7F7 DEFB $20,$03,$02,$05,$06
 
 ; Routine at A7FC
@@ -9025,7 +9025,7 @@ c$A8D3 PUSH BC       ;
  $A8EC INC HL        ; Point to the next data in the room.
  $A8ED PUSH HL       ; Store the pointer to room data.
  $A8EE LD L,A        ;
- $A8EF CALL $A90F    ; Put all moving objects in the room (?)
+ $A8EF CALL $A90F    ; Get the attributes for the block.
  $A8F2 CALL $DAC6    ;
  $A8F5 CALL $EA65    ; Draw the graphics.
  $A8F8 POP HL        ; Restore the pointer to room data.
@@ -9047,7 +9047,7 @@ c$A8D3 PUSH BC       ;
  $A90D POP BC        ;
  $A90E RET           ; }
 
-; Put all moving objects in a room
+; Set attributes for a room
 ;
 ; Used by the routine at #R$A8D3.
 ;
@@ -9055,14 +9055,14 @@ c$A8D3 PUSH BC       ;
 c$A90F PUSH HL       ; { Store main registers.
  $A910 PUSH BC       ;
  $A911 PUSH DE       ; }
- $A912 LD H,$00      ; Set #REGh to 0 to all of #REGhl can be used.
- $A914 LD DE,$9740   ; { Add the base address of the moving object table. (#R$9740)
+ $A912 LD H,$00      ; Set #REGh to 0 so all of #REGhl can be used.
+ $A914 LD DE,$9740   ; { Add the base address of the attribute table. (#R$9740)
  $A917 ADD HL,DE     ; }
- $A918 LD A,(HL)     ; Get the data here.
- $A919 CP $00        ; Is there anything?
- $A91B JP Z,$AA2C    ; If not, exit the routine, nothing to do.
+ $A918 LD A,(HL)     ; Get the attribute.
+ $A919 CP $00        ; Is it black on black?
+ $A91B JP Z,$AA2C    ; If so, exit the routine, nothing to do.
  $A91E AND $F0       ; Are any of bits 4-7 set?
- $A920 JR Z,$A927    ; Jump forawrd if not.
+ $A920 JR Z,$A927    ; Jump forward if not.
  $A922 CP $50        ; Is it less than 50?
  $A924 JP C,$A9E5    ; Jump forward if so.
 *$A927 PUSH AF       ;
@@ -9181,12 +9181,12 @@ c$A90F PUSH HL       ; { Store main registers.
 *$A9E0 INC HL        ;
  $A9E1 JR $A9CC      ;
 *$A9E3 JR $A9F6      ;
-; Handle ???
-*$A9E5 RRCA          ; { Get bits 4-5.
+; Handle PAPER mask.
+*$A9E5 RRCA          ; { Get bits 4-5, which contain an offset to the attributes.
  $A9E6 RRCA          ;
  $A9E7 RRCA          ;
  $A9E8 RRCA          ; }
- $A9E9 LD HL,$A7F7   ; Point #REGhl at ??
+ $A9E9 LD HL,$A7F7   ; Point #REGhl at paper ID tables.
  $A9EC LD D,$00      ; { Put the data in #REGde.
  $A9EE LD E,A        ; }
  $A9EF ADD HL,DE     ; Add the base table address.
@@ -14610,8 +14610,14 @@ c$EA56 LD B,$0C      ;
 ; Either unused (pointing to ROM), or points to the sprite buffer in #R$5B00.
 w$EA60 DEFW $005E
 
-; Data block at EA62
-b$EA62 DEFB $02,$05,$00
+; Attribute mask for INK in the room
+g$EA62 DEFB $02
+
+; Attribute mask for PAPER and INK in the room
+g$EA63 DEFB $05
+
+; Data block at EA64
+b$EA64 $00
 
 ; Print a graphic
 ;
@@ -14625,10 +14631,10 @@ c$EA65 PUSH IX       ; { Push the main registers.
  $EA67 PUSH BC       ;
  $EA68 PUSH DE       ;
  $EA69 PUSH HL       ; }
- $EA6A LD A,($DAC0)  ; Point #REGhl at the current room data. (#R$DAC0)
- $EA6D AND $07       ;
- $EA6F CP $02        ;
- $EA71 JR NC,$EA81   ;
+ $EA6A LD A,($DAC0)  ; Get the current room block (#R$DAC0)
+ $EA6D AND $07       ; { Set the attribute mask to be
+ $EA6F CP $02        ; the bottom 3 bits, plus bit 2
+ $EA71 JR NC,$EA81   ; always set.
  $EA73 LD A,($DAC0)  ;
  $EA76 AND $07       ;
  $EA78 CP $02        ;
@@ -14636,7 +14642,7 @@ c$EA65 PUSH IX       ; { Push the main registers.
  $EA7C LD A,B        ;
  $EA7D AND $07       ;
  $EA7F OR $02        ;
-*$EA81 LD ($EA62),A  ;
+*$EA81 LD ($EA62),A  ; }
  $EA84 LD DE,$EB23   ; Point #REGde at the UDG offset table. (#R$EB23)
  $EA87 LD H,$00      ; {Set #REGh to 0 and double #REGhl to get a word offset.
  $EA89 ADD HL,HL     ; }

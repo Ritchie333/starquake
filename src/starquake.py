@@ -35,12 +35,12 @@ class StarquakeHtmlWriter(HtmlWriter):
         return nCols
 
     def print_udg( self, cwd, addr, fName ):
-        udgs = self.get_udgs( addr )
+        udgs = self.get_udgs( addr, 7 )
         if( udgs ):
             frame = Frame( udgs, 2 )
             return self.handle_image( frame, fName, cwd )
         
-    def get_udgs( self, addr ):
+    def get_udgs( self, addr, mask ):
         ptr = addr + 6
        
         udgs = []
@@ -55,9 +55,12 @@ class StarquakeHtmlWriter(HtmlWriter):
                 udgline = []
                         
                 for col in range( 0, nCols ):
-                    attr = self.snapshot[ attrptr ] & 0x3f
-                    if attr == 0 or attr == 0x36 :
-                        attr = 7
+                    fullattr = self.snapshot[ attrptr ]
+                    attr = fullattr & 0x3f
+                    if attr == 0:
+                        attr = ( fullattr & 0xf8 ) | mask
+                    if attr == 0x36 :
+                        attr = mask
                     if flag & 0x80 :
                         udg = Udg( attr, self.snapshot[ ptr : ptr + 8 ] )
                         ptr += 8
@@ -95,6 +98,7 @@ class StarquakeHtmlWriter(HtmlWriter):
             for j in range( 0, 4 ):
                 ptr = addr + ( i * 4 ) + j
                 id = self.snapshot[ ptr ]
+
                 self.get_block_data( bg, id, x, y )
                 x += 8
             x = 0
@@ -110,14 +114,26 @@ class StarquakeHtmlWriter(HtmlWriter):
         for i in range( 0, 2 ):
             for j in range( 0, 2 ):
                 subid = self.snapshot[ addr + i * 2 + j ]
-                self.add_block_udgs( bg, subid, rx, ry )
+                attr = self.get_block_attr( subid )
+                self.add_block_udgs( bg, subid, rx, ry, attr )
                 rx -= 4
             rx = x + 4
             ry -= 3
                
-    def add_block_udgs( self, bg, id, x, y ):
+    def get_block_attr( self, id ):
+        addr = 0x9740 + id
+        attr = self.snapshot[ addr ]
+        if attr != 0 and attr < 0x50:
+            offset = attr >> 4
+            attr = self.snapshot[ 0xA7F7 + offset ]
+        return attr
+
+    def add_block_udgs( self, bg, id, x, y, attr ):
         ptr = self.udg_id_to_ptr( id )
-        udgs = self.get_udgs( ptr )
+        if attr == 0:
+            # TODO work out what is supposed to happen with attr 0
+            attr = 7
+        udgs = self.get_udgs( ptr, attr )
         if( udgs ):
             skoolkit.graphics.overlay_udgs( bg, udgs, x * 8, y * 8, 0, lambda bg, fg : fg, lambda bg, fg, mk : fg )
 
@@ -125,30 +141,3 @@ class StarquakeHtmlWriter(HtmlWriter):
         addr = 0xeb23 + id * 2
         ptr = self.snapshot[ addr ] + 0x100 * self.snapshot[ addr + 1 ]
         return ptr
-
-    # Dump out text for a .ctl file so all the UDGs and attributes
-    # are in the right place, and call print_udg()
-    def print_udg_ctl( self, cwd ):
-        base = 0xeb23
-        for i in range( 0, 0x98 ):
-            addr = self.snapshot[ base + i * 2 ] + 0x100 * self.snapshot[ base + i * 2 + 1 ]
-            if addr != 0 and addr != 0xfbfb:
-
-                nAttrs = 0
-                for j in range( 0, 6 ):
-                    nAttrs += bin( self.snapshot[ addr + j ]).count("1")
-
-                attrPtr = addr - nAttrs
-
-                print( f'b ${attrPtr:x} UDG {i:x} attributes')
-                print( f'b ${addr:x} UDG {i:x}' )
-                print( f'D ${addr:x} #CALL:print_udg(#PC,udg_{i:x})')
-                print( f'B ${addr:x},6')
-
-    # Dump out text for a .ctl file for room data
-    def print_room_ctl( self, cwd ):
-        addr = 0x7530
-        for i in range( 0, 0x200 ):
-            ptr = i * 12 + addr
-            print( f'b ${ptr:x} Room data {i:x}')
-            print( f'B ${ptr:x},12')
