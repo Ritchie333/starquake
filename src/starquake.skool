@@ -1207,7 +1207,7 @@ b$6109 DEFB $00,$00,$00,$00,$00,$00,$00,$00
  
 ; Routine at 6131
 ;
-; Used by the routines at #R$6194 and #R$6233
+; Used by the routines at #R$6194 and #R$6233.
 c$6131 LD HL,$6109                                                                                              ;
  $6134 LD B,$04                                                                                                 ;
  $6136 LD D,$00                                                                                                 ;
@@ -8319,7 +8319,7 @@ b$A34D DEFB $32,$43,$00,$FF,$FF,$FF,$FF,$FF
 ; Used by the routines at #R$6668, #R$A66C and #R$C35E.
 c$A410 JR $A426      ;
 
-; Routine at A412
+; Clear the playing area (copy)
 ;
 ; Used by the routines at #R$CB58, #R$CCF1 and #R$CE82.
 c$A412 JP $A647      ;
@@ -8625,33 +8625,33 @@ b$A607 DEFB $0A,$0C,$03,$64,$09,$0C,$03,$00
  $A637 DEFB $1E,$00,$00,$1E,$4A,$0C,$03,$C8
  $A63F DEFB $49,$78,$03,$00,$00,$00,$00,$00
 
-; Routine at A647
+; Clear the playing area
 ;
 ; Used by the routines at #R$A412 and #R$A426.
-c$A647 LD HL,$DE1E   ;
- $A64A LD B,$90      ;
-*$A64C LD E,(HL)     ;
- $A64D INC HL        ;
- $A64E LD D,(HL)     ;
- $A64F INC HL        ;
- $A650 PUSH HL       ;
- $A651 EX DE,HL      ;
- $A652 LD C,$20      ;
-*$A654 LD (HL),$00   ;
- $A656 INC HL        ;
- $A657 DEC C         ;
- $A658 JR NZ,$A654   ;
- $A65A POP HL        ;
- $A65B DJNZ $A64C    ;
- $A65D LD HL,$58C0   ;
- $A660 LD DE,$0240   ;
+c$A647 LD HL,$DE1E   ; Point #REGhl at the start of the offsets for the playing area. (#R$DDEE)
+ $A64A LD B,$90      ; 144 lines to clear.
+*$A64C LD E,(HL)     ; { Get the next screen address in #REGde,
+ $A64D INC HL        ;  and ensure #REGhl points to the next one.
+ $A64E LD D,(HL)     ; 
+ $A64F INC HL        ; }
+ $A650 PUSH HL       ; Store the pointer in #REGhl.
+ $A651 EX DE,HL      ; Swap #REGde and #REGhl, so #REGhl has the screen address.
+ $A652 LD C,$20      ; 32 columns to clear.
+*$A654 LD (HL),$00   ; Turn all bits off.
+ $A656 INC HL        ; Move forward on screen.
+ $A657 DEC C         ; { Loop until all columns cleared.
+ $A658 JR NZ,$A654   ; }
+ $A65A POP HL        ; Restore the pointer to the screen buffer.
+ $A65B DJNZ $A64C    ; Loop until all rows cleared.
+ $A65D LD HL,$58C0   ; { Clear the playing area attributes
+ $A660 LD DE,$0240   ; to bright white on black.
 *$A663 LD (HL),$47   ;
  $A665 INC HL        ;
  $A666 DEC DE        ;
  $A667 LD A,D        ;
  $A668 OR E          ;
- $A669 JR NZ,$A663   ;
- $A66B RET           ;
+ $A669 JR NZ,$A663   ; }
+ $A66B RET           ; Return.
 
 ; Routine at A66C
 ;
@@ -11689,13 +11689,9 @@ c$CB58 LD HL,$DD30                                                      ;
  $CBEA CALL $A412                                                       ;
  $CBED CALL $D55F                                                       ;
  $CBF0 CALL $D3C1                                                       ;
- $CBF3 DEFM $16,$08,$09,"SECURITY  DOOR",$16,$0F,$0A,"ACCESS  CODE",$FF ; Security
-                                                                        ; door
-                                                                        ; access
-                                                                        ; message
- 
-; Routine at CC14
-c$CC14 LD BC,$0A0C   ;
+ $CBF3 DEFM $16,$08,$09,"SECURITY  DOOR"
+ $CC04 DEFM $16,$0F,$0A,"ACCESS  CODE",$FF 
+ $CC14 LD BC,$0A0C   ;
  $CC17 LD L,$25      ;
  $CC19 CALL $EA65    ;
  $CC1C INC L         ;
@@ -11729,11 +11725,11 @@ c$CC14 LD BC,$0A0C   ;
  $CC58 POP DE        ;
  $CC59 RET           ;
  
-; Blob picked up an item
+; Blob interacted with an item
 ;
 ; Used by the routine at #R$CB58.
 ;
-; A Type of item Blob picked up with.
+; A Type of item Blob interacted with.
 c$CC5A CP $01        ;
  $CC5C JP NZ,$CE77   ;
  $CC5F LD A,($D2C2)  ;
@@ -11816,101 +11812,104 @@ b$CCEA DEFB $00,$00,$00,$00,$00,$00,$00
 ; Exchange message
 ;
 ; Used by the routine at #R$CC5A.
-c$CCF1 LD A,($DD23)                                                                                             ;
- $CCF4 BIT 3,A                                                                                                  ;
- $CCF6 JP Z,$D1A6                                                                                               ;
- $CCF9 CALL $A412                                                                                               ;
- $CCFC CALL $CDFE                                                                                               ;
- $CCFF CALL $D3C1                                                                                               ;
- $CD02 DEFM $16,$0D,$09,"CHEOPS KEY CODE",$FF                                                                   ;
- $CD15 LD A,$0B                                                                                                 ;
- $CD17 CALL $D7C0                                                                                               ;
- $CD1A LD A,$02                                                                                                 ;
- $CD1C LD BC,$0F0D                                                                                              ;
- $CD1F CALL $D5FD                                                                                               ;
- $CD22 CP $00                                                                                                   ;
- $CD24 JP NZ,$CC4B                                                                                              ;
- $CD27 CALL $A412                                                                                               ;
- $CD2A CALL $CDFE                                                                                               ;
- $CD2D LD HL,$D2D2                                                                                              ;
- $CD30 LD B,$04                                                                                                 ;
-*$CD32 LD A,(HL)                                                                                                ;
- $CD33 CP $00                                                                                                   ;
- $CD35 JR Z,$CD3F                                                                                               ;
- $CD37 CP $09                                                                                                   ;
- $CD39 JR C,$CD4D                                                                                               ;
- $CD3B CP $1A                                                                                                   ;
- $CD3D JR NC,$CD4D                                                                                              ;
-*$CD3F INC HL                                                                                                   ;
- $CD40 INC HL                                                                                                   ;
- $CD41 DJNZ $CD32                                                                                               ;
- $CD43 LD B,$04                                                                                                 ;
-*$CD45 DEC HL                                                                                                   ;
- $CD46 DEC HL                                                                                                   ;
- $CD47 LD A,(HL)                                                                                                ;
- $CD48 AND A                                                                                                    ;
- $CD49 JR NZ,$CD4D                                                                                              ;
- $CD4B DJNZ $CD45                                                                                               ;
-*$CD4D LD ($CCEF),HL                                                                                            ;
- $CD50 LD HL,$CCEE                                                                                              ;
- $CD53 LD (HL),A                                                                                                ;
- $CD54 LD B,$04                                                                                                 ;
-*$CD56 DEC HL                                                                                                   ;
-*$CD57 CALL $DAC6                                                                                               ;
- $CD5A LD A,($DAC0)                                                                                             ;
-*$CD5D SUB $09                                                                                                  ;
- $CD5F JR NC,$CD5D                                                                                              ;
- $CD61 ADD A,$0A                                                                                                ;
- $CD63 LD DE,$D2DD                                                                                              ;
-*$CD66 INC DE                                                                                                   ;
- $CD67 DEC A                                                                                                    ;
- $CD68 JR NZ,$CD66                                                                                              ;
- $CD6A LD A,(DE)                                                                                                ;
- $CD6B CP $80                                                                                                   ;
- $CD6D JR C,$CD57                                                                                               ;
- $CD6F AND $3F                                                                                                  ;
- $CD71 LD (HL),A                                                                                                ;
- $CD72 DJNZ $CD56                                                                                               ;
- $CD74 CALL $D3C1                                                                                               ;
- $CD77 DEFM $16,$0D,$08,"EXCHANGE    FOR",$FF,$CD,"_",$D5,$CD,$C1,$D3,$16,$15,$04,"HIT ANY KEY FROM 1 TO 5",$FF ;
- $CDAB LD A,($CCEE)                                                                                             ;
- $CDAE CALL $CE68                                                                                               ;
- $CDB1 LD BC,$0C11                                                                                              ;
- $CDB4 LD A,($DAC0)                                                                                             ;
-*$CDB7 SUB $06                                                                                                  ;
- $CDB9 JR NC,$CDB7                                                                                              ;
- $CDBB ADD A,$08                                                                                                ;
- $CDBD CALL $DB24                                                                                               ;
- $CDC0 LD B,$05                                                                                                 ;
-*$CDC2 LD A,$05                                                                                                 ;
- $CDC4 SUB B                                                                                                    ;
- $CDC5 CALL $CE2C                                                                                               ;
- $CDC8 DJNZ $CDC2                                                                                               ;
-*$CDCA CALL $D5C8                                                                                               ;
- $CDCD CP $31                                                                                                   ;
- $CDCF JR C,$CDCA                                                                                               ;
- $CDD1 CP $36                                                                                                   ;
- $CDD3 JR NC,$CDCA                                                                                              ;
- $CDD5 SUB $31                                                                                                  ;
- $CDD7 LD B,$23                                                                                                 ;
-*$CDD9 PUSH AF                                                                                                  ;
- $CDDA LD A,$10                                                                                                 ;
- $CDDC CALL $D7C0                                                                                               ;
- $CDDF POP AF                                                                                                   ;
- $CDE0 CALL $CE2C                                                                                               ;
- $CDE3 DJNZ $CDD9                                                                                               ;
- $CDE5 LD E,A                                                                                                   ;
- $CDE6 LD D,$00                                                                                                 ;
- $CDE8 LD HL,$CCEA                                                                                              ;
- $CDEB ADD HL,DE                                                                                                ;
- $CDEC LD A,(HL)                                                                                                ;
- $CDED LD HL,($CCEF)                                                                                            ;
- $CDF0 LD (HL),A                                                                                                ;
- $CDF1 CALL $D425                                                                                               ;
- $CDF4 LD HL,$A350                                                                                              ;
- $CDF7 XOR A                                                                                                    ;
- $CDF8 CALL $A801                                                                                               ;
- $CDFB JP $CC4B                                                                                                 ;
+c$CCF1 LD A,($DD23)                                      ;
+ $CCF4 BIT 3,A                                           ;
+ $CCF6 JP Z,$D1A6                                        ;
+ $CCF9 CALL $A412                                        ;
+ $CCFC CALL $CDFE                                        ;
+ $CCFF CALL $D3C1                                        ;
+ $CD02 DEFM $16,$0D,$09,"CHEOPS KEY CODE",$FF            ;
+ $CD15 LD A,$0B                                          ;
+ $CD17 CALL $D7C0                                        ;
+ $CD1A LD A,$02                                          ;
+ $CD1C LD BC,$0F0D                                       ;
+ $CD1F CALL $D5FD                                        ;
+ $CD22 CP $00                                            ;
+ $CD24 JP NZ,$CC4B                                       ;
+ $CD27 CALL $A412                                        ;
+ $CD2A CALL $CDFE                                        ;
+ $CD2D LD HL,$D2D2                                       ;
+ $CD30 LD B,$04                                          ;
+*$CD32 LD A,(HL)                                         ;
+ $CD33 CP $00                                            ;
+ $CD35 JR Z,$CD3F                                        ;
+ $CD37 CP $09                                            ;
+ $CD39 JR C,$CD4D                                        ;
+ $CD3B CP $1A                                            ;
+ $CD3D JR NC,$CD4D                                       ;
+*$CD3F INC HL                                            ;
+ $CD40 INC HL                                            ;
+ $CD41 DJNZ $CD32                                        ;
+ $CD43 LD B,$04                                          ;
+*$CD45 DEC HL                                            ;
+ $CD46 DEC HL                                            ;
+ $CD47 LD A,(HL)                                         ;
+ $CD48 AND A                                             ;
+ $CD49 JR NZ,$CD4D                                       ;
+ $CD4B DJNZ $CD45                                        ;
+*$CD4D LD ($CCEF),HL                                     ;
+ $CD50 LD HL,$CCEE                                       ;
+ $CD53 LD (HL),A                                         ;
+ $CD54 LD B,$04                                          ;
+*$CD56 DEC HL                                            ;
+*$CD57 CALL $DAC6                                        ;
+ $CD5A LD A,($DAC0)                                      ;
+*$CD5D SUB $09                                           ;
+ $CD5F JR NC,$CD5D                                       ;
+ $CD61 ADD A,$0A                                         ;
+ $CD63 LD DE,$D2DD                                       ;
+*$CD66 INC DE                                            ;
+ $CD67 DEC A                                             ;
+ $CD68 JR NZ,$CD66                                       ;
+ $CD6A LD A,(DE)                                         ;
+ $CD6B CP $80                                            ;
+ $CD6D JR C,$CD57                                        ;
+ $CD6F AND $3F                                           ;
+ $CD71 LD (HL),A                                         ;
+ $CD72 DJNZ $CD56                                        ;
+ $CD74 CALL $D3C1                                        ;
+ $CD77 DEFM $16,$0D,$08,"EXCHANGE    FOR",$FF            ;
+ $CD8A CALL $D55F                                        ;
+ $CD8D CALL $D3C1                                        ;
+ $CD90 DEFM $16,$15,$04,"HIT ANY KEY FROM 1 TO 5",$FF ;  ;
+ $CDAB LD A,($CCEE)                                      ;
+ $CDAE CALL $CE68                                        ;
+ $CDB1 LD BC,$0C11                                       ;
+ $CDB4 LD A,($DAC0)                                      ;
+*$CDB7 SUB $06                                           ;
+ $CDB9 JR NC,$CDB7                                       ;
+ $CDBB ADD A,$08                                         ;
+ $CDBD CALL $DB24                                        ;
+ $CDC0 LD B,$05                                          ;
+*$CDC2 LD A,$05                                          ;
+ $CDC4 SUB B                                             ;
+ $CDC5 CALL $CE2C                                        ;
+ $CDC8 DJNZ $CDC2                                        ;
+*$CDCA CALL $D5C8                                        ;
+ $CDCD CP $31                                            ;
+ $CDCF JR C,$CDCA                                        ;
+ $CDD1 CP $36                                            ;
+ $CDD3 JR NC,$CDCA                                       ;
+ $CDD5 SUB $31                                           ;
+ $CDD7 LD B,$23                                          ;
+*$CDD9 PUSH AF                                           ;
+ $CDDA LD A,$10                                          ;
+ $CDDC CALL $D7C0                                        ;
+ $CDDF POP AF                                            ;
+ $CDE0 CALL $CE2C                                        ;
+ $CDE3 DJNZ $CDD9                                        ;
+ $CDE5 LD E,A                                            ;
+ $CDE6 LD D,$00                                          ;
+ $CDE8 LD HL,$CCEA                                       ;
+ $CDEB ADD HL,DE                                         ;
+ $CDEC LD A,(HL)                                         ;
+ $CDED LD HL,($CCEF)                                     ;
+ $CDF0 LD (HL),A                                         ;
+ $CDF1 CALL $D425                                        ;
+ $CDF4 LD HL,$A350                                       ;
+ $CDF7 XOR A                                             ;
+ $CDF8 CALL $A801                                        ;
+ $CDFB JP $CC4B                                          ;
 
 ; Cheops key code message
 ;
@@ -11980,168 +11979,170 @@ c$CE68 PUSH DE       ;
  $CE75 POP DE        ;
  $CE76 RET           ;
 
-; Routine at CE77
+; Blob has interacted with an item. (2)
 ;
 ; Used by the routine at #R$CC5A.
+;
+; A Type of item interacted with.
 c$CE77 CP $06        ;
  $CE79 JR NZ,$CE82   ;
  $CE7B POP HL        ;
  $CE7C POP HL        ;
  $CE7D LD A,$10      ;
  $CE7F JP $C350      ;
+*$CE82 CP $0B
+ $CE84 JR NZ,$CEAD
+ $CE86 LD HL,$D2D2
+ $CE89 LD B,$04   
+*$CE8B LD A,(HL)  
+ $CE8C CP $10
+ $CE8E JR Z,$CE96 
+ $CE90 INC HL
+ $CE91 INC HL
+ $CE92 DJNZ $CE8B 
+ $CE94 JR $CEAA   
+*$CE96 LD HL,($9605)
+ $CE99 LD A,(HL)  
+ $CE9A AND $7F    
+ $CE9C JR Z,$CEAA 
+ $CE9E LD A,(HL)  
+ $CE9F AND $80    
+ $CEA1 LD (HL),A  
+ $CEA2 CALL $A807 
+ $CEA5 LD A,$08   
+ $CEA7 CALL $D7C0 
+*$CEAA JP $D1A6   
+*$CEAD CP $0C
+ $CEAF JR NZ,$CEC4
+ $CEB1 CALL $C8DD 
+ $CEB4 LD HL,$DD24
+ $CEB7 XOR A 
+ $CEB8 BIT 3,(HL) 
+ $CEBA JR Z,$CEBE 
+ $CEBC LD A,$02   
+*$CEBE LD ($DD22),A
+ $CEC1 JP $D1A6   
+*$CEC4 CP $0D
+ $CEC6 JP NZ,$D09F
+*$CEC9 LD A,($DD23)
+ $CECC AND $03    
+ $CECE JP Z,$D1A6
+*$CEC9 LD A,($DD23)
+ $CECC AND $03    
+ $CECE JP Z,$D1A6                           ; If it's not this, it must be a teleport, control continues to #R$CED1
 
-; Routine at CE82
+; Teleport
 ;
-; Used by the routine at #R$CE77.
-c$CE82 CP $0B                                                                               ;
- $CE84 JR NZ,$CEAD                                                                          ;
- $CE86 LD HL,$D2D2                                                                          ;
- $CE89 LD B,$04                                                                             ;
-*$CE8B LD A,(HL)                                                                            ;
- $CE8C CP $10                                                                               ;
- $CE8E JR Z,$CE96                                                                           ;
- $CE90 INC HL                                                                               ;
- $CE91 INC HL                                                                               ;
- $CE92 DJNZ $CE8B                                                                           ;
- $CE94 JR $CEAA                                                                             ;
-*$CE96 LD HL,($9605)                                                                        ;
- $CE99 LD A,(HL)                                                                            ;
- $CE9A AND $7F                                                                              ;
- $CE9C JR Z,$CEAA                                                                           ;
- $CE9E LD A,(HL)                                                                            ;
- $CE9F AND $80                                                                              ;
- $CEA1 LD (HL),A                                                                            ;
- $CEA2 CALL $A807                                                                           ;
- $CEA5 LD A,$08                                                                             ;
- $CEA7 CALL $D7C0                                                                           ;
-*$CEAA JP $D1A6                                                                             ;
-*$CEAD CP $0C                                                                               ;
- $CEAF JR NZ,$CEC4                                                                          ;
- $CEB1 CALL $C8DD                                                                           ;
- $CEB4 LD HL,$DD24                                                                          ;
- $CEB7 XOR A                                                                                ;
- $CEB8 BIT 3,(HL)                                                                           ;
- $CEBA JR Z,$CEBE                                                                           ;
- $CEBC LD A,$02                                                                             ;
-*$CEBE LD ($DD22),A                                                                         ;
- $CEC1 JP $D1A6                                                                             ;
-*$CEC4 CP $0D                                                                               ;
- $CEC6 JP NZ,$D09F                                                                          ;
- $CEC9 LD A,($DD23)                                                                         ;
- $CECC AND $03                                                                              ;
- $CECE JP Z,$D1A6                                                                           ;
- $CED1 CALL $A412                                                                           ;
- $CED4 LD HL,$0000                                                                          ;
- $CED7 LD ($EA60),HL                                                                        ;
- $CEDA CALL $D55F                                                                           ;
- $CEDD CALL $D3C1                                                                           ;
- $CEE0 DEFM $16,$08,$04,"YOU HAVE ENTERED",$16,$0A,$08,"TELEPORT",$16,$0C,$06,"CODE : ",$FF ; Entered
-                                                                                            ; teleport
-                                                                                            ; message
- $CF09 LD BC,$0917                                                                          ;
- $CF0C LD L,$24                                                                             ;
- $CF0E CALL $EA65                                                                           ;
- $CF11 LD HL,$D03B                                                                          ;
- $CF14 LD B,$0F                                                                             ;
-*$CF16 LD DE,($D2C8)                                                                        ;
- $CF1A LD A,(HL)                                                                            ;
- $CF1B INC HL                                                                               ;
- $CF1C CP E                                                                                 ;
- $CF1D JR NZ,$CF23                                                                          ;
- $CF1F LD A,(HL)                                                                            ;
- $CF20 CP D                                                                                 ;
- $CF21 JR Z,$CF29                                                                           ;
-*$CF23 LD DE,$0006                                                                          ;
-$CF26 ADD HL,DE                                                                            ;
- $CF27 DJNZ $CF16                                                                           ;
-*$CF29 LD DE,$0006                                                                          ;
- $CF2C OR A                                                                                 ;
- $CF2D SBC HL,DE                                                                            ;
- $CF2F LD DE,$CF3D                                                                          ;
- $CF32 LD BC,$0005                                                                          ;
- $CF35 LDIR                                                                                 ;
- $CF37 CALL $D55F                                                                           ;
- $CF3A CALL $D3C1                                                                           ;
- $CF3D DEFM "VEROX",$FF                                                                     ; Current
-                                                                                            ; teleport
-                                                                                            ; code
- $CF43 CALL $D55F                                                                           ;
- $CF46 CALL $D3C1                                                                           ;
- $CF49 DEFM $16,$0E,$08,"ENTER TELEPORTAL",$16,$10,$08,"DESTINATION CODE",$FF               ; Enter new
-                                                                                            ; teleport
-                                                                                            ; code
-                                                                                            ; message
- $CF70 CALL $D55F                                                                           ;
- $CF73 CALL $D3C1                                                                           ;
- $CF76 DEFM $16,$13,$0C,"- - - - -",$16,$13,$0C,$FF                                         ;
- $CF86 LD A,$07                                                                             ; {Enter a
- $CF88 CALL $D7C0                                                                           ; teleport
- $CF8B CALL $D55F                                                                           ; code
- $CF8E LD HL,$D031                                                                          ;
- $CF91 LD B,$05                                                                             ;
- *$CF93 CALL $D5C8                                                                           ;
- $CF96 CP $00                                                                               ;
- $CF98 JR NZ,$CF93                                                                          ;
-*$CF9A CALL $D5C8                                                                           ;
- $CF9D CP $0A                                                                               ;
-$CF9F JR C,$CF9A                                                                           ;
- $CFA1 LD (HL),A                                                                            ;
- $CFA2 INC HL                                                                               ;
- $CFA3 LD ($CFA9),A                                                                         ;
-$CFA6 CALL $D3C1                                                                           ; }
- $CFA9 DEFM "L ",$FF                                                                        ;
- $CFAC LD A,$11                                                                             ;
- $CFAE CALL $D7C0                                                                           ;
- $CFB1 DJNZ $CF93                                                                           ;
- $CFB3 LD HL,$D036                                                                          ;
- $CFB6 LD C,$0F                                                                             ;
-*$CFB8 LD B,$05                                                                             ;
- $CFBA LD DE,$D031                                                                          ;
- $CFBD PUSH HL                                                                              ;
- *$CFBE LD A,(DE)                                                                            ;
- $CFBF CP (HL)                                                                              ;
- $CFC0 JR NZ,$CFFD                                                                          ;
- $CFC2 INC HL                                                                               ;
- $CFC3 INC DE                                                                               ;
- $CFC4 DJNZ $CFBE                                                                           ;
- $CFC6 POP DE                                                                               ;
-$CFC7 POP DE                                                                               ;
- $CFC8 POP DE                                                                               ;
- $CFC9 LD E,(HL)                                                                            ;
- $CFCA INC HL                                                                               ;
- $CFCB LD D,(HL)                                                                            ;
- $CFCC LD ($D2C8),DE                                                                        ;
- $CFD0 LD B,$14                                                                             ;
- $CFD2 CALL $D55F                                                                           ;
-*$CFD5 CALL $D58A                                                                           ;
- $CFD8 CALL $D3C1                                                                           ;
- $CFDB DEFM $16,$15,$09,"NOW TELEPORTING",$FF                                               ; Now
-                                                                                            ; teleporting
-                                                  ; message
- $CFEE LD A,$10                                                                             ;
- $CFF0 CALL $D7C0                                                                           ;
- $CFF3 DJNZ $CFD5                                                                           ;
- $CFF5 LD A,$09                                                                             ;
- $CFF7 CALL $D7C0                                                                           ;
- $CFFA LD A,$04                                                                             ;
- $CFFC RET                                                                                  ;
-*$CFFD POP HL                                                                               ;
- $CFFE LD DE,$0007                                                                          ;
- $D001 ADD HL,DE                                                                            ;
- $D002 DEC C                                                                                ;
- $D003 JR NZ,$CFB8                                                                          ;
- $D005 CALL $D55F                                                                           ;
- $D008 LD B,$28                                                                             ;
-*$D00A CALL $D58A                                                                           ;
- $D00D CALL $D3C1                                                                           ;
- $D010 DEFM $16,$15,$06,"CODE NOT RECOGNISED",$FF                                           ; Invalid
-                                                                                            ; teleport
-                                                                                            ; code
-                                                                                            ; message
- $D027 LD A,$0F                                                                             ;
- $D029 CALL $D7C0                                                                           ;
- $D02C DJNZ $D00A                                                                           ;
- $D02E JP $CC4B                                                                             ;
+; Used by the routine at #R$CE77
+c$CED1 CALL $A412                           ; Clear the display area.
+ $CED4 LD HL,$0000                          ; { Set no pointer to custom sprite data.
+ $CED7 LD ($EA60),HL                        ; }
+ $CEDA CALL $D55F                           ;
+ $CEDD CALL $D3C1                           ; { Print the following message
+ $CEE0 DEFM $16,$08,$04,"YOU HAVE ENTERED"  ;
+ $CEF3 DEFM $16,$0A,$08,"TELEPORT"          ;
+ $CEFE DEFM $16,$0C,$06,"CODE : ",$FF       ; }
+ $CF09 LD BC,$0917                          ; { Display the teleport icon at the position in #REGbc.
+ $CF0C LD L,$24                             ;
+ $CF0E CALL $EA65                           ; }
+; Work out what is the code for this teleporter, and display it.
+ $CF11 LD HL,$D03B                          ; Point #REGhl at the teleport codes. (#R$D03B)
+ $CF14 LD B,$0F                             ; 15 entries to loook at.
+*$CF16 LD DE,($D2C8)                        ; Put the current room in #REGde.
+ $CF1A LD A,(HL)                            ; Get the low byte for the room this teleporter is in.
+ $CF1B INC HL                               ; Point to the next place in the buffer.
+ $CF1C CP E                                 ; Does the low byte match the current room?
+ $CF1D JR NZ,$CF23                          ; Jump back if not, this isn't the code for here.
+ $CF1F LD A,(HL)                            ; Get the next byte for this room.
+ $CF20 CP D                                 ; Does the high byte match the current room?
+ $CF21 JR Z,$CF29                           ; Jump forward if it does, we've got this teleporter.
+*$CF23 LD DE,$0006                          ; { Move forward to the next teleporter data.
+ $CF26 ADD HL,DE                            ; }
+ $CF27 DJNZ $CF16                           ; Loop until all teleporters have been checked.
+; A matching teleporter name has been found so display it.
+*$CF29 LD DE,$0006                          ; { Move back from the room data 6 bytes to get the name.
+ $CF2C OR A                                 ;
+ $CF2D SBC HL,DE                            ; }
+ $CF2F LD DE,$CF3D                          ; Store it in the string at #N$CF3D.
+ $CF32 LD BC,$0005                          ;
+ $CF35 LDIR                                 ;
+ $CF37 CALL $D55F 
+ $CF3A CALL $D3C1                           ; { Print the teleport name.
+ $CF3D DEFM "VEROX",$FF                     ; }
+ $CF43 CALL $D55F 
+ $CF46 CALL $D3C1                           ; { Print the teleporter message.
+ $CF49 DEFM $16,$0E,$08,"ENTER TELEPORTAL"  ;
+ $CF5C DEFM $16,$10,$08,"DESTINATION CODE",$FF ; }
+ $CF70 CALL $D55F 
+ $CF73 CALL $D3C1                           ; { Print some dashes.
+ $CF76 DEFM $16,$13,$0C,"- - - - -",$16,$13,$0C,$FF ; }
+; Ask the player where they want to go.
+ $CF86 LD A,$07   
+ $CF88 CALL $D7C0 
+ $CF8B CALL $D55F 
+ $CF8E LD HL,$D031
+ $CF91 LD B,$05   
+*$CF93 CALL $D5C8 
+ $CF96 CP $00
+ $CF98 JR NZ,$CF93
+*$CF9A CALL $D5C8 
+ $CF9D CP $0A
+ $CF9F JR C,$CF9A 
+ $CFA1 LD (HL),A  
+ $CFA2 INC HL
+ $CFA3 LD ($CFA9),A
+ $CFA6 CALL $D3C1 
+ $CFA9 DEFM "L ",$FF
+ $CFAC LD A,$11   
+ $CFAE CALL $D7C0 
+ $CFB1 DJNZ $CF93 
+ $CFB3 LD HL,$D036          ; Point #REGhl at the list of teleport codes.
+ $CFB6 LD C,$0F             ; 15 entries to look at.
+*$CFB8 LD B,$05             ; 5 characters per entry.
+ $CFBA LD DE,$D031          ; Point #REGde at the current teleport code.
+ $CFBD PUSH HL              ; Store the list in #REGhl.
+*$CFBE LD A,(DE)            ; Get the next letter of the code.
+ $CFBF CP (HL)              ; Does it equal this entry?
+ $CFC0 JR NZ,$CFFD          ; Jump forward if not, this code doesn't match.
+ $CFC2 INC HL               ; { Otherwise, move forward in both buffers.
+ $CFC3 INC DE               ; }
+ $CFC4 DJNZ $CFBE           ; Loop until all 5 characters are checked.
+; A matching teleport code has been entered.
+; #REGhl points to the target room.
+ $CFC6 POP DE               ; Restore the base pointer to the list.
+ $CFC7 POP DE               ; { Clear up the stack to do a return to an
+ $CFC8 POP DE               ; earlier function. }
+ $CFC9 LD E,(HL)            ; { Put the target room in #REGde.
+ $CFCA INC HL               ;
+ $CFCB LD D,(HL)            ; }
+ $CFCC LD ($D2C8),DE        ; Store this as the current room. (#R$D2C8)
+ $CFD0 LD B,$14   
+ $CFD2 CALL $D55F 
+*$CFD5 CALL $D58A 
+ $CFD8 CALL $D3C1           ; { Print "now teleporting:.
+ $CFDB DEFM $16,$15,$09,"NOW TELEPORTING",$FF ; }
+ $CFEE LD A,$10   
+ $CFF0 CALL $D7C0 
+ $CFF3 DJNZ $CFD5 
+ $CFF5 LD A,$09   
+ $CFF7 CALL $D7C0 
+ $CFFA LD A,$04   
+ $CFFC RET
+; This teleport code doesn't match. Error out.
+*$CFFD POP HL
+ $CFFE LD DE,$0007
+ $D001 ADD HL,DE  
+ $D002 DEC C 
+ $D003 JR NZ,$CFB8
+ $D005 CALL $D55F 
+ $D008 LD B,$28   
+*$D00A CALL $D58A 
+ $D00D CALL $D3C1 
+ $D010 DEFM $16,$15,$06,"CODE NOT RECOGNISED",$FF
+ $D027 LD A,$0F   
+ $D029 CALL $D7C0 
+ $D02C DJNZ $D00A 
+ $D02E JP $CC4B
 
 ; Current teleport code
 g$D031 DEFM "EXIAL"
@@ -12761,7 +12762,7 @@ c$D422 JP $D521      ;
 
 ; Routine at D425
 ;
-; Used by the routines at #R$64A0, #R$A426, #R$A66C, #R$CC5A, #R$CCF1, #R$D09F
+; Used by the routines at #R$64A0, #R$A426, #R$A66C, #R$CC9A, #R$CCF1, #R$D09F
 ; and #R$D5FD.
 c$D425 CALL $D521                                                                                                                            ;
  $D428 LD A,($D2CC)                                                                                                                          ;
@@ -13239,24 +13240,26 @@ c$D5FD LD ($D5F6),A                               ;
 ; Data block at D7BD
 b$D7BD DEFB $00,$00,$00
 
-; Routine at D7C0
+; Play a short sound effect.
 ;
 ; Used by the routines at #R$5FF4, #R$6233, #R$67C7, #R$A01B, #R$A66C, #R$C35E,
 ; #R$C5BD, #R$CC14, #R$CC5A, #R$CCF1, #R$CE82, #R$D09F and #R$D5FD.
-c$D7C0 PUSH HL        ;
+;
+; A Type of effect to play
+c$D7C0 PUSH HL        ; { Store main registers.
  $D7C1 PUSH BC        ;
  $D7C2 PUSH DE        ;
- $D7C3 PUSH IX        ;
- $D7C5 LD D,$00       ;
- $D7C7 LD E,A         ;
- $D7C8 RLCA           ;
- $D7C9 RLCA           ;
+ $D7C3 PUSH IX        ; }
+ $D7C5 LD D,$00       ; { Put the effect type in #REGde.
+ $D7C7 LD E,A         ; }
+ $D7C8 RLCA           ; { Multiply by 5 to get a suitable offset.
+ $D7C9 RLCA           ; 
  $D7CA ADD A,E        ;
- $D7CB LD E,A         ;
- $D7CC LD HL,$D839    ;
- $D7CF ADD HL,DE      ;
- $D7D0 PUSH HL        ;
- $D7D1 POP IX         ;
+ $D7CB LD E,A         ; }
+ $D7CC LD HL,$D839    ; { Add the base address of the sound effect table.
+ $D7CF ADD HL,DE      ; }
+ $D7D0 PUSH HL        ; { Put this in #REGix.
+ $D7D1 POP IX         ; }
  $D7D3 LD A,(IX+$04)  ;
  $D7D6 AND $1F        ;
 *$D7D8 PUSH AF        ;
@@ -13277,10 +13280,10 @@ c$D7C0 PUSH HL        ;
  $D7F6 INC L          ;
 *$D7F7 LD C,$00       ;
 *$D7F9 LD B,H         ;
-*$D7FA LD A,C         ;
- $D7FB OUT ($FE),A    ;
- $D7FD XOR $10        ;
- $D7FF LD C,A         ;
+*$D7FA LD A,C         ; { Change the state of the speaker,
+ $D7FB OUT ($FE),A    ; and make sure #REGc is the opposite state
+ $D7FD XOR $10        ; for the next run.
+ $D7FF LD C,A         ; }
  $D800 LD A,H         ;
  $D801 AND B          ;
  $D802 XOR (IX+$03)   ;
@@ -13312,28 +13315,37 @@ c$D7C0 PUSH HL        ;
 *$D82F POP AF         ;
  $D830 DEC A          ;
  $D831 JR NZ,$D7D8    ;
- $D833 POP IX         ;
+ $D833 POP IX         ; { Restore main registers and return.
  $D835 POP DE         ;
  $D836 POP BC         ;
  $D837 POP HL         ;
- $D838 RET            ;
+ $D838 RET            ; }
  
-; Data block at D839
-b$D839 DEFB $3F,$30,$01,$00,$81,$00,$7F,$FE
- $D841 DEFB $00,$01,$C5,$C4,$03,$01,$C1,$01
- $D849 DEFB $7F,$7F,$01,$41,$01,$14,$FF,$01
- $D851 DEFB $41,$28,$22,$01,$7F,$FF,$32,$38
- $D859 DEFB $FE,$05,$C3,$F0,$F1,$28,$01,$DE
- $D861 DEFB $1E,$00,$01,$01,$C3,$8C,$80,$01
- $D869 DEFB $7F,$C3,$00,$22,$01,$7F,$DF,$22
- $D871 DEFB $00,$28,$7F,$DF,$20,$00,$14,$00
- $D879 DEFB $81,$C8,$C9,$FE,$05,$03,$00,$0A
- $D881 DEFB $FE,$0F,$07,$00,$03,$04,$17,$FF
- $D889 DEFB $1E,$00,$07,$00,$41,$14,$0A,$FE
- $D891 DEFB $00,$6A,$40,$00,$FF,$01,$81,$FF
- $D899 DEFB $FE,$FF,$FF,$C1,$0A,$01,$FF,$00
- $D8A1 DEFB $01,$04,$00,$FF,$14,$01,$07,$0A
- $D8A9 DEFB $FF,$00,$01,$00,$00,$00,$00,$00
+; Sound effect table
+b$D839 DEFB $3F,$30,$01,$00,$81
+ $D83E DEFB $00,$7F,$FE,$00,$01
+ $D843 DEFB $C5,$C4,$03,$01,$C1
+ $D848 DEFB $01,$7F,$7F,$01,$41
+ $D84D DEFB $01,$14,$FF,$01,$41
+ $D852 DEFB $28,$22,$01,$7F,$FF
+ $D857 DEFB $32,$38,$FE,$05,$C3
+ $D85C DEFB $F0,$F1,$28,$01,$DE
+ $D861 DEFB $1E,$00,$01,$01,$C3
+ $D866 DEFB $8C,$80,$01,$7F,$C3
+ $D86B DEFB $00,$22,$01,$7F,$DF
+ $D870 DEFB $22,$00,$28,$7F,$DF
+ $D875 DEFB $20,$00,$14,$00,$81
+ $D87A DEFB $C8,$C9,$FE,$05,$03
+ $D87F DEFB $00,$0A,$FE,$0F,$07
+ $D884 DEFB $00,$03,$04,$17,$FF
+ $D889 DEFB $1E,$00,$07,$00,$41
+ $D88E DEFB $14,$0A,$FE,$00,$6A
+ $D893 DEFB $40,$00,$FF,$01,$81
+ $D898 DEFB $FF,$FE,$FF,$FF,$C1
+ $D89D DEFB $0A,$01,$FF,$00,$01
+ $D8A2 DEFB $04,$00,$FF,$14,$01
+ $D8A7 DEFB $07,$0A,$FF,$00,$01
+ $D8AC DEFB $00,$00,$00,$00,$00
 
 ; Routine at D8B1
 ;
@@ -14000,58 +14012,194 @@ b$DD1F DEFB $B4,$E5,$07,$00,$00,$02,$03,$04
  $DDBF DEFB $40,$DF,$07,$00,$00,$00,$00,$00
  $DDC7 DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $DDCF DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $DDD7 DEFB $00,$00,$00,$00,$00,$00,$00,$40
- $DDDF DEFB $40,$40,$41,$40,$42,$40,$43,$40
- $DDE7 DEFB $44,$40,$45,$40,$46,$40,$47,$60
- $DDEF DEFB $40,$60,$41,$60,$42,$60,$43,$60
- $DDF7 DEFB $44,$60,$45,$60,$46,$60,$47,$80
- $DDFF DEFB $40,$80,$41,$80,$42,$80,$43,$80
- $DE07 DEFB $44,$80,$45,$80,$46,$80,$47,$A0
- $DE0F DEFB $40,$A0,$41,$A0,$42,$A0,$43,$A0
- $DE17 DEFB $44,$A0,$45,$A0,$46,$A0,$47,$C0
- $DE1F DEFB $40,$C0,$41,$C0,$42,$C0,$43,$C0
- $DE27 DEFB $44,$C0,$45,$C0,$46,$C0,$47,$E0
- $DE2F DEFB $40,$E0,$41,$E0,$42,$E0,$43,$E0
- $DE37 DEFB $44,$E0,$45,$E0,$46,$E0,$47,$00
- $DE3F DEFB $48,$00,$49,$00,$4A,$00,$4B,$00
- $DE47 DEFB $4C,$00,$4D,$00,$4E,$00,$4F,$20
- $DE4F DEFB $48,$20,$49,$20,$4A,$20,$4B,$20
- $DE57 DEFB $4C,$20,$4D,$20,$4E,$20,$4F,$40
- $DE5F DEFB $48,$40,$49,$40,$4A,$40,$4B,$40
- $DE67 DEFB $4C,$40,$4D,$40,$4E,$40,$4F,$60
- $DE6F DEFB $48,$60,$49,$60,$4A,$60,$4B,$60
- $DE77 DEFB $4C,$60,$4D,$60,$4E,$60,$4F,$80
- $DE7F DEFB $48,$80,$49,$80,$4A,$80,$4B,$80
- $DE87 DEFB $4C,$80,$4D,$80,$4E,$80,$4F,$A0
- $DE8F DEFB $48,$A0,$49,$A0,$4A,$A0,$4B,$A0
- $DE97 DEFB $4C,$A0,$4D,$A0,$4E,$A0,$4F,$C0
- $DE9F DEFB $48,$C0,$49,$C0,$4A,$C0,$4B,$C0
- $DEA7 DEFB $4C,$C0,$4D,$C0,$4E,$C0,$4F,$E0
- $DEAF DEFB $48,$E0,$49,$E0,$4A,$E0,$4B,$E0
- $DEB7 DEFB $4C,$E0,$4D,$E0,$4E,$E0,$4F,$00
- $DEBF DEFB $50,$00,$51,$00,$52,$00,$53,$00
- $DEC7 DEFB $54,$00,$55,$00,$56,$00,$57,$20
- $DECF DEFB $50,$20,$51,$20,$52,$20,$53,$20
- $DED7 DEFB $54,$20,$55,$20,$56,$20,$57,$40
- $DEDF DEFB $50,$40,$51,$40,$52,$40,$53,$40
- $DEE7 DEFB $54,$40,$55,$40,$56,$40,$57,$60
- $DEEF DEFB $50,$60,$51,$60,$52,$60,$53,$60
- $DEF7 DEFB $54,$60,$55,$60,$56,$60,$57,$80
- $DEFF DEFB $50,$80,$51,$80,$52,$80,$53,$80
- $DF07 DEFB $54,$80,$55,$80,$56,$80,$57,$A0
- $DF0F DEFB $50,$A0,$51,$A0,$52,$A0,$53,$A0
- $DF17 DEFB $54,$A0,$55,$A0,$56,$A0,$57,$C0
- $DF1F DEFB $50,$C0,$51,$C0,$52,$C0,$53,$C0
- $DF27 DEFB $54,$C0,$55,$C0,$56,$C0,$57,$E0
- $DF2F DEFB $50,$E0,$51,$E0,$52,$E0,$53,$E0
- $DF37 DEFB $54,$E0,$55,$E0,$56,$E0,$57,$00
- $DF3F DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $DF47 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $DF4F DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $DF57 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $DF5F DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $DF67 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $DF6F DEFB $00,$00
+ $DDD7 DEFB $00,$00,$00,$00,$00,$00,$00
+
+; Screen offset table
+w$DDDE DEFW $4040
+ $DDE0 DEFW $4140
+ $DDE2 DEFW $4240
+ $DDE4 DEFW $4340
+ $DDE6 DEFW $4440
+ $DDE8 DEFW $4540
+ $DDEA DEFW $4640
+ $DDEC DEFW $4740
+ $DDEE DEFW $4060
+ $DDF0 DEFW $4160
+ $DDF2 DEFW $4260
+ $DDF4 DEFW $4360
+ $DDF6 DEFW $4460
+ $DDF8 DEFW $4560
+ $DDFA DEFW $4660
+ $DDFC DEFW $4760
+ $DDFE DEFW $4080
+ $DE00 DEFW $4180
+ $DE02 DEFW $4280
+ $DE04 DEFW $4380
+ $DE06 DEFW $4480
+ $DE08 DEFW $4580
+ $DE0A DEFW $4680
+ $DE0C DEFW $4780
+ $DE0E DEFW $40A0
+ $DE10 DEFW $41A0
+ $DE12 DEFW $42A0
+ $DE14 DEFW $43A0
+ $DE16 DEFW $44A0
+ $DE18 DEFW $45A0
+ $DE1A DEFW $46A0
+ $DE1C DEFW $47A0
+ $DE1E DEFW $40C0
+ $DE20 DEFW $41C0
+ $DE22 DEFW $42C0
+ $DE24 DEFW $43C0
+ $DE26 DEFW $44C0
+ $DE28 DEFW $45C0
+ $DE2A DEFW $46C0
+ $DE2C DEFW $47C0
+ $DE2E DEFW $40E0
+ $DE30 DEFW $41E0
+ $DE32 DEFW $42E0
+ $DE34 DEFW $43E0
+ $DE36 DEFW $44E0
+ $DE38 DEFW $45E0
+ $DE3A DEFW $46E0
+ $DE3C DEFW $47E0
+ $DE3E DEFW $4800
+ $DE40 DEFW $4900
+ $DE42 DEFW $4A00
+ $DE44 DEFW $4B00
+ $DE46 DEFW $4C00
+ $DE48 DEFW $4D00
+ $DE4A DEFW $4E00
+ $DE4C DEFW $4F00
+ $DE4E DEFW $4820
+ $DE50 DEFW $4920
+ $DE52 DEFW $4A20
+ $DE54 DEFW $4B20
+ $DE56 DEFW $4C20
+ $DE58 DEFW $4D20
+ $DE5A DEFW $4E20
+ $DE5C DEFW $4F20
+ $DE5E DEFW $4840
+ $DE60 DEFW $4940
+ $DE62 DEFW $4A40
+ $DE64 DEFW $4B40
+ $DE66 DEFW $4C40
+ $DE68 DEFW $4D40
+ $DE6A DEFW $4E40
+ $DE6C DEFW $4F40
+ $DE6E DEFW $4860
+ $DE70 DEFW $4960
+ $DE72 DEFW $4A60
+ $DE74 DEFW $4B60
+ $DE76 DEFW $4C60
+ $DE78 DEFW $4D60
+ $DE7A DEFW $4E60
+ $DE7C DEFW $4F60
+ $DE7E DEFW $4880
+ $DE80 DEFW $4980
+ $DE82 DEFW $4A80
+ $DE84 DEFW $4B80
+ $DE86 DEFW $4C80
+ $DE88 DEFW $4D80
+ $DE8A DEFW $4E80
+ $DE8C DEFW $4F80
+ $DE8E DEFW $48A0
+ $DE90 DEFW $49A0
+ $DE92 DEFW $4AA0
+ $DE94 DEFW $4BA0
+ $DE96 DEFW $4CA0
+ $DE98 DEFW $4DA0
+ $DE9A DEFW $4EA0
+ $DE9C DEFW $4FA0
+ $DE9E DEFW $48C0
+ $DEA0 DEFW $49C0
+ $DEA2 DEFW $4AC0
+ $DEA4 DEFW $4BC0
+ $DEA6 DEFW $4CC0
+ $DEA8 DEFW $4DC0
+ $DEAA DEFW $4EC0
+ $DEAC DEFW $4FC0
+ $DEAE DEFW $48E0
+ $DEB0 DEFW $49E0
+ $DEB2 DEFW $4AE0
+ $DEB4 DEFW $4BE0
+ $DEB6 DEFW $4CE0
+ $DEB8 DEFW $4DE0
+ $DEBA DEFW $4EE0
+ $DEBC DEFW $4FE0
+ $DEBE DEFW $5000
+ $DEC0 DEFW $5100
+ $DEC2 DEFW $5200
+ $DEC4 DEFW $5300
+ $DEC6 DEFW $5400
+ $DEC8 DEFW $5500
+ $DECA DEFW $5600
+ $DECC DEFW $5700
+ $DECE DEFW $5020
+ $DED0 DEFW $5120
+ $DED2 DEFW $5220
+ $DED4 DEFW $5320
+ $DED6 DEFW $5420
+ $DED8 DEFW $5520
+ $DEDA DEFW $5620
+ $DEDC DEFW $5720
+ $DEDE DEFW $5040
+ $DEE0 DEFW $5140
+ $DEE2 DEFW $5240
+ $DEE4 DEFW $5340
+ $DEE6 DEFW $5440
+ $DEE8 DEFW $5540
+ $DEEA DEFW $5640
+ $DEEC DEFW $5740
+ $DEEE DEFW $5060
+ $DEF0 DEFW $5160
+ $DEF2 DEFW $5260
+ $DEF4 DEFW $5360
+ $DEF6 DEFW $5460
+ $DEF8 DEFW $5560
+ $DEFA DEFW $5660
+ $DEFC DEFW $5760
+ $DEFE DEFW $5080
+ $DF00 DEFW $5180
+ $DF02 DEFW $5280
+ $DF04 DEFW $5380
+ $DF06 DEFW $5480
+ $DF08 DEFW $5580
+ $DF0A DEFW $5680
+ $DF0C DEFW $5780
+ $DF0E DEFW $50A0
+ $DF10 DEFW $51A0
+ $DF12 DEFW $52A0
+ $DF14 DEFW $53A0
+ $DF16 DEFW $54A0
+ $DF18 DEFW $55A0
+ $DF1A DEFW $56A0
+ $DF1C DEFW $57A0
+ $DF1E DEFW $50C0
+ $DF20 DEFW $51C0
+ $DF22 DEFW $52C0
+ $DF24 DEFW $53C0
+ $DF26 DEFW $54C0
+ $DF28 DEFW $55C0
+ $DF2A DEFW $56C0
+ $DF2C DEFW $57C0
+ $DF2E DEFW $50E0
+ $DF30 DEFW $51E0
+ $DF32 DEFW $52E0
+ $DF34 DEFW $53E0
+ $DF36 DEFW $54E0
+ $DF38 DEFW $55E0
+ $DF3A DEFW $56E0
+ $DF3C DEFW $57E0
+
+; Data block at DF3E
+b$DF3E DEFB $00,$00,$00,$00,$00,$00,$00,$00
+ $DF46 DEFB $00,$00,$00,$00,$00,$00,$00,$00
+ $DF4E DEFB $00,$00,$00,$00,$00,$00,$00,$00
+ $DF56 DEFB $00,$00,$00,$00,$00,$00,$00,$00
+ $DF5E DEFB $00,$00,$00,$00,$00,$00,$00,$00
+ $DF66 DEFB $00,$00,$00,$00,$00,$00,$00,$00
+ $DF6E DEFB $00,$00,$00
  
 ; Routine at DF71
 c$DF71 XOR A         ;
@@ -14667,7 +14815,7 @@ c$EA56 LD B,$0C      ;
 ; Pointer to sprite buffer
 ;
 ; Either unused (pointing to ROM), or points to the sprite buffer in #R$5B00.
-w$EA60 DEFW $005E
+g$EA60 DEFW $005E
 
 ; Attribute mask for INK in the room
 g$EA62 DEFB $02

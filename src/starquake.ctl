@@ -1830,20 +1830,20 @@ C $CE65
 c $CE68
 c $CE77
 
-c $CE82
-T $CEE0 Entered teleport message
+c $CE82 Teleport
+T $CEE0
 C $CF09
-T $CF3D Current teleport code
+T $CF3D
 C $CF43
-T $CF49 Enter new teleport code message
+T $CF49
 C $CF70
 T $CF76
-C $CF86 Enter a teleport code
+C $CF86
 T $CFA9
 C $CFAC
-T $CFDB Now teleporting message
+T $CFDB
 C $CFEE
-T $D010 Invalid teleport code message
+T $D010
 C $D027
 
 g $D031 Current teleport code
@@ -1929,7 +1929,10 @@ T $D76A Access code invalid
 C $D781
 b $D7BD
 c $D7C0
-b $D839
+
+b $D839 Sound effect table
+B $D839,$78,5
+
 c $D8B1
 c $D97B
 c $D9C8
@@ -1961,6 +1964,10 @@ g $DD1D X co-ordinate
 g $DD1E Y co-ordinate
 
 b $DD1F
+
+w $DDDE Screen offset table
+
+b $DF3E
 
 c $DF71
 b $E074 Blob walking right
