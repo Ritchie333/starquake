@@ -122,8 +122,15 @@ C $68F6
 T $694D Game completed text
 C $69CE
 b $69D6
+b $69DC Theme tune 1
+b $6A08 Theme tune 2
+b $6A34 Theme tune 3
+b $6A61 Theme tune 4
 
-b $74f1
+b $6A86
+
+s $74F1
+b $74FE Theme tune 5
 
 b $7530 Room data 0
 D $7530 #CALL:print_room_data(#PC,room_0)
@@ -1938,7 +1945,8 @@ c $D97B
 c $D9C8
 c $D9DE
 b $DA6F
-t $DAAF Random bit of assembly
+w $DA70 Note frequencies
+t $DAAE Random bit of assembly
 b $DABF
 g $DAC0
 W $DAC0

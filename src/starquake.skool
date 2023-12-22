@@ -981,7 +981,7 @@ b$5E2C DEFB $DA,$D3,$76,$6F,$1A,$08,$FB,$FC
 ; Keyboard options
 t$5E5B DEFM $00,"5867012345OPAQMQWERT"
 
-; Data block at 5E70
+; System UDGs
 b$5E70 DEFB $2A,$00,$00,$00,$18,$18,$00,$00
  $5E78 DEFB $00,$00,$7F,$61,$6F,$4F,$4F,$41
  $5E80 DEFB $7F
@@ -989,30 +989,30 @@ b$5E70 DEFB $2A,$00,$00,$00,$18,$18,$00,$00
 ; Run the main menu
 ;
 ; Used by the routines at #R$5E24, #R$6060, #R$6194 and #R$654B.
-c$5E81 LD HL,$ACD4                                                                                                      ;
- $5E84 LD ($5C36),HL                                                                                                    ;
- $5E87 LD HL,$5C3C                                                                                                      ;
- $5E8A RES 0,(HL)                                                                                                       ;
- $5E8C LD HL,$5E71                                                                                                      ;
- $5E8F LD ($5C7B),HL                                                                                                    ;
- $5E92 LD A,$05                                                                                                         ;
- $5E94 CALL $6615                                                                                                       ;
- $5E97 LD BC,$1609                                                                                                      ;
- $5E9A LD L,$88                                                                                                         ;
- $5E9C CALL $EA65                                                                                                       ;
- $5E9F LD C,$11                                                                                                         ;
- $5EA1 INC L                                                                                                            ;
- $5EA2 CALL $EA65                                                                                                       ;
- $5EA5 LD A,$07                                                                                                         ;
- $5EA7 LD ($5E59),A                                                                                                     ;
- $5EAA CALL $D3C1                                                                                                       ;
+c$5E81 LD HL,$ACD4      ; { Set the character set (#HTML(<a href="https://skoolkid.github.io/rom/asm/5C36.html">#5C36</a>))
+ $5E84 LD ($5C36),HL    ; to #R$ADD4. }
+ $5E87 LD HL,$5C3C      ; { Turn off the "print to lower screen" flag
+ $5E8A RES 0,(HL)       ; }
+ $5E8C LD HL,$5E71      ; { Set the UDGs to point to #N$E571.
+ $5E8F LD ($5C7B),HL    ; }
+ $5E92 LD A,$05         ; Set the attribute mask.
+ $5E94 CALL $6615       ; Print the banners on screen.
+ $5E97 LD BC,$1609      ;
+ $5E9A LD L,$88         ;
+ $5E9C CALL $EA65       ;
+ $5E9F LD C,$11         ;
+ $5EA1 INC L            ;
+ $5EA2 CALL $EA65       ;
+ $5EA5 LD A,$07         ;
+ $5EA7 LD ($5E59),A     ;
+ $5EAA CALL $D3C1       ;
  $5EAD DEFM $13,$01,$10,$07,$11,$00,$16,$03,$07,"S",$90,"T",$90,"A",$90,"R",$90,"Q",$90,"U",$90,"A",$90,"K",$90,"E",$FF ;
- $5EC8 LD HL,$AEAC                                                                                                      ;
- $5ECB LD ($5C7B),HL                                                                                                    ;
- $5ECE CALL $5ED9                                                                                                       ;
- $5ED1 LD B,$03                                                                                                         ;
- $5ED3 CALL $6600                                                                                                       ;
- $5ED6 JP $5FF4                                                                                                         ;
+ $5EC8 LD HL,$AEAC      ;
+ $5ECB LD ($5C7B),HL    ;
+ $5ECE CALL $5ED9       ;
+ $5ED1 LD B,$03         ;
+ $5ED3 CALL $6600       ;
+ $5ED6 JP $5FF4         ;
 
 ; Print main menu options
 ;
@@ -1085,7 +1085,7 @@ c$5FB4 LD HL,$5E5B      ;
 
 ; Clear the screen
 ;
-; Used by the routines at #R$6194, #R$6615 and #R$6668.
+; Used by the routines at #R$6194, #R$6615 and #R$666D.
 c$5FD0 XOR A         ;
 $5FD1 CALL $5FE2    ;
  $5FD4 LD HL,$4000   ;
@@ -1167,33 +1167,33 @@ c$5FF4 CALL $5ED9    ;
 ; Quit the game
 ;
 ; Used by the routine at #R$5FF4.
-c$6060 LD A,$04                                                                                           ;
- $6062 CALL $6615                                                                                         ;
- $6065 CALL $D3C1                                                                                         ;
+c$6060 LD A,$04       ;
+ $6062 CALL $6615     ;
+ $6065 CALL $D3C1     ;
  $6068 DEFM $16,$04,$09,$10,$06,"QUIT THE GAME",$16,$06,$09,"ARE YOU SURE...",$16,$09,$0C,"Y OR N...",$FF ;
-*$6099 CALL $D5C8                                                                                         ;
- $609C AND A                                                                                              ;
- $609D JR NZ,$6099                                                                                        ;
-*$609F CALL $D5C8                                                                                         ;
- $60A2 AND A                                                                                              ;
- $60A3 JR Z,$609F                                                                                         ;
- $60A5 CP $59                                                                                             ;
- $60A7 JP NZ,$5E81                                                                                        ;
- $60AA CALL $D3C1                                                                                         ;
+*$6099 CALL $D5C8     ;
+ $609C AND A          ;
+ $609D JR NZ,$6099    ;
+*$609F CALL $D5C8     ;
+ $60A2 AND A          ;
+ $60A3 JR Z,$609F     ;
+ $60A5 CP $59         ;
+ $60A7 JP NZ,$5E81    ;
+ $60AA CALL $D3C1     ;
  $60AD DEFM $16,$13,$06,$10,$02,"SAY GOODBYE TO OLLY...",$FF                                              ;
- $60C9 LD BC,$0C0C                                                                                        ;
- $60CC LD L,$56                                                                                           ;
- $60CE CALL $EA65                                                                                         ;
- $60D1 LD B,$FF                                                                                           ;
-*$60D3 HALT                                                                                               ;
- $60D4 DJNZ $60D3                                                                                         ;
- $60D6 LD HL,$7530                                                                                        ;
-*$60D9 LD (HL),$00                                                                                        ;
- $60DB INC HL                                                                                             ;
- $60DC XOR A                                                                                              ;
- $60DD CP H                                                                                               ;
- $60DE JR NZ,$60D9                                                                                        ;
- $60E0 RST $00                                                                                            ;
+ $60C9 LD BC,$0C0C    ;
+ $60CC LD L,$56       ;
+ $60CE CALL $EA65     ;
+ $60D1 LD B,$FF       ;
+*$60D3 HALT           ;
+ $60D4 DJNZ $60D3     ;
+ $60D6 LD HL,$7530    ;
+*$60D9 LD (HL),$00    ;
+ $60DB INC HL         ;
+ $60DC XOR A          ;
+ $60DD CP H           ;
+ $60DE JR NZ,$60D9    ;
+ $60E0 RST $00        ;
 
 ; Key mappings
 t$60E1 DEFM "1234567890QWERTYUIOPASDFGHJKL\\[ZXCVBNM]*"
@@ -1208,48 +1208,48 @@ b$6109 DEFB $00,$00,$00,$00,$00,$00,$00,$00
 ; Routine at 6131
 ;
 ; Used by the routines at #R$6194 and #R$6233.
-c$6131 LD HL,$6109                                                                                              ;
- $6134 LD B,$04                                                                                                 ;
- $6136 LD D,$00                                                                                                 ;
-*$6138 LD C,$0A                                                                                                 ;
- $613A LD A,$04                                                                                                 ;
- $613C SUB B                                                                                                    ;
- $613D CP $03                                                                                                   ;
- $613F JR NZ,$6142                                                                                              ;
- $6141 XOR A                                                                                                    ;
-*$6142 LD E,A                                                                                                   ;
-*$6143 XOR A                                                                                                    ;
- $6144 LD ($6176),A                                                                                             ;
- $6147 INC A                                                                                                    ;
- $6148 LD ($6171),A                                                                                             ;
- $614B LD A,(HL)                                                                                                ;
- $614C LD ($6177),A                                                                                             ;
- $614F CP $90                                                                                                   ;
- $6151 JR C,$615C                                                                                               ;
- $6153 LD A,$02                                                                                                 ;
- $6155 LD ($6171),A                                                                                             ;
- $6158 DEC A                                                                                                    ;
- $6159 LD ($6176),A                                                                                             ;
-*$615C LD A,D                                                                                                   ;
- $615D LD ($6173),A                                                                                             ;
- $6160 INC A                                                                                                    ;
- $6161 LD ($617C),A                                                                                             ;
- $6164 LD A,E                                                                                                   ;
- $6165 LD ($6174),A                                                                                             ;
- $6168 LD ($617D),A                                                                                             ;
- $616B CALL $D3C1                                                                                               ;
+c$6131 LD HL,$6109          ;
+ $6134 LD B,$04             ;
+ $6136 LD D,$00             ;
+*$6138 LD C,$0A             ;
+ $613A LD A,$04             ;
+ $613C SUB B                ;
+ $613D CP $03               ;
+ $613F JR NZ,$6142          ;
+ $6141 XOR A                ;
+*$6142 LD E,A               ;
+*$6143 XOR A                ;
+ $6144 LD ($6176),A         ;
+ $6147 INC A                ;
+ $6148 LD ($6171),A         ;
+ $614B LD A,(HL)            ;
+ $614C LD ($6177),A         ;
+ $614F CP $90               ;
+ $6151 JR C,$615C           ;
+ $6153 LD A,$02             ;
+ $6155 LD ($6171),A         ;
+ $6158 DEC A                ;
+ $6159 LD ($6176),A         ;
+*$615C LD A,D               ;
+ $615D LD ($6173),A         ;
+ $6160 INC A                ;
+ $6161 LD ($617C),A         ;
+ $6164 LD A,E               ;
+ $6165 LD ($6174),A         ;
+ $6168 LD ($617D),A         ;
+ $616B CALL $D3C1           ;
  $616E DEFM $10,$07,$11,$01,$16,$01,$01,$13,$01,$00,$10,$00,"+",$16,$01,$01,$8C,",",$10,$05,$13,$01,$11,$00,$FF ;
- $6187 INC E                                                                                                    ;
- $6188 INC E                                                                                                    ;
- $6189 INC E                                                                                                    ;
- $618A INC HL                                                                                                   ;
- $618B DEC C                                                                                                    ;
- $618C JR NZ,$6143                                                                                              ;
- $618E INC D                                                                                                    ;
- $618F INC D                                                                                                    ;
- $6190 INC D                                                                                                    ;
- $6191 DJNZ $6138                                                                                               ;
- $6193 RET                                                                                                      ;
+ $6187 INC E                ;
+ $6188 INC E                ;
+ $6189 INC E                ;
+ $618A INC HL               ;
+ $618B DEC C                ;
+ $618C JR NZ,$6143          ;
+ $618E INC D                ;
+ $618F INC D                ;
+ $6190 INC D                ;
+ $6191 DJNZ $6138           ;
+ $6193 RET                  ;
 
 ; Define keys
 ;
@@ -1702,12 +1702,12 @@ t$64FA DEFM "STA109825",$1F,"TAR093900",$17,"ARQ082975",$13,"RQU062050",$11,"QUA
 ; Data block at 6549
  b$6549 DEFB $05,$00
 
-; Routine at 654B
+; Print the high score table
 ;
 ; Used by the routine at #R$67C7.
-c$654B LD A,$03                                      ;
- $654D CALL $6615                                    ;
- $6550 CALL $D3C1                                    ;
+c$654B LD A,$03                                      ; Set magenta on black.
+ $654D CALL $6615                                    ; Print the banners.
+ $6550 CALL $D3C1                                    ; Print a string.
  $6553 DEFM $10,$05,$16,$03,$09,"CORE OF HEROES",$FF ; Hiscore table title
  $6567 LD HL,$64FA                                   ;
  $656A LD B,$08                                      ;
@@ -1767,7 +1767,11 @@ c$65BB PUSH HL       ;
  $65D9 POP DE        ;
  $65DA POP HL        ;
  $65DB JR $65ED      ;
-*$65DD OR A          ;
+
+; Routine at 65DD
+;
+; Used by the routine at #R$65BB.
+c$65DD OR A          ;
  $65DE JR NZ,$65E4   ;
  $65E0 SBC HL,DE     ;
  $65E2 ADD HL,DE     ;
@@ -1779,111 +1783,121 @@ c$65BB PUSH HL       ;
  $65EA JR NC,$65E6   ;
  $65EC ADD HL,DE     ;
 *$65ED LD ($65F3),A  ;
- $65F0 CALL $D3C1    ;
- $65F3 JR NC,$65F4   ;
+ $65F0 CALL $D3C1    ; Print a string
+ $65F3 DEFM $30,$FF  ; Placeholder for number
  $65F5 RET           ;
- $65F6 CALL C,$0869  ;
- $65F9 LD L,D        ;
- $65FA INC (HL)      ;
- $65FB LD L,D        ;
- $65FC LD H,C        ;
- $65FD LD L,D        ;
- $65FE CP $74        ;
 
-; Play the theme tune
+; Theme tune index
+b$65F6 DEFW $69DC    ; Theme tune 1
+ $65F8 DEFW $6A08    ; Theme tune 2
+ $65FA DEFW $6A34    ; Theme tune 3
+ $65FC DEFW $6A61    ; Theme tune 4
+ $65FE DEFW $74FE    ; Theme tune 5
+
+; Play a theme tune
 ;
-; Used by the routines at #R$5E81, #R$654B, #R$6668 and #R$67C7.
-c$6600 LD HL,$65F4   ;
-*$6603 INC HL        ;
+; Used by the routines at #R$5E81, #R$654B, #R$666D and #R$67C7.
+;
+; B ID of the tune to play
+c$6600 LD HL,$65F4   ; { Get the appropriate pointer to theme tune data.
+*$6603 INC HL        ; given the ID.
  $6604 INC HL        ;
- $6605 DJNZ $6603    ;
- $6607 LD E,(HL)     ;
+ $6605 DJNZ $6603    ; }
+ $6607 LD E,(HL)     ; { Put the address of the theme tune in #REGde.
  $6608 INC HL        ;
- $6609 LD D,(HL)     ;
-*$660A CALL $D5C8    ;
- $660D CP $00        ;
- $660F JR NZ,$660A   ;
- $6611 EX DE,HL      ;
- $6612 JP $D9DE      ;
+ $6609 LD D,(HL)     ; }
+*$660A CALL $D5C8    ; Wait for a key to be pressed.
+ $660D CP $00        ; Was a key pressed?
+ $660F JR NZ,$660A   ; Loop back if so.
+ $6611 EX DE,HL      ; Put the address of the theme tune in #REGhl.
+ $6612 JP $D9DE      ; Jump forward and play the tune.
 
-; Routine at 6615
+; Print edge banners on screen
 ;
-; Used by the routines at #R$5E81, #R$6060, #R$654B, #R$6668 and #R$67C7.
-c$6615 LD ($EA63),A  ;
- $6618 CALL $5FD0    ;
- $661B XOR A         ;
- $661C LD ($EA61),A  ;
- $661F LD E,$07      ;
- $6621 LD D,$04      ;
- $6623 LD C,$02      ;
-*$6625 LD B,$00      ;
- $6627 LD L,$8A      ;
- $6629 CALL $EA65    ;
- $662C LD B,$16      ;
- $662E CALL $EA65    ;
- $6631 LD A,C        ;
+; Used by the routines at #R$5E81, #R$6060, #R$654B, #R$666D and #R$67C7.
+;
+; A Attribute mask to use
+c$6615 LD ($EA63),A  ; Set the attribute mask (#R$EA63).
+ $6618 CALL $5FD0    ; Clear the screen.
+ $661B XOR A         ; { Reset the high byte of the sprite buffer (#R$EA60).
+ $661C LD ($EA61),A  ; }
+; Print the top and bottom banners
+ $661F LD E,$07      ; Loop 7 columns.
+ $6621 LD D,$04      ; Increment by 4 rows or columns per iteration.
+ $6623 LD C,$02      ; Start at column 2.
+*$6625 LD B,$00      ; Set row #N$00.
+ $6627 LD L,$8A      ; Set graphic ID #N$8A.
+ $6629 CALL $EA65    ; Print a graphic.
+ $662C LD B,$16      ; Set row #N$16.
+ $662E CALL $EA65    ; Print a graphic.
+ $6631 LD A,C        ; { Move forward 4 columns.
  $6632 ADD A,D       ;
- $6633 LD C,A        ;
- $6634 DEC E         ;
- $6635 JR NZ,$6625   ;
- $6637 LD E,$05      ;
- $6639 LD B,$02      ;
-*$663B LD C,$00      ;
- $663D LD L,$8B      ;
- $663F CALL $EA65    ;
- $6642 LD C,$1E      ;
- $6644 CALL $EA65    ;
- $6647 LD A,B        ;
+ $6633 LD C,A        ; }
+ $6634 DEC E         ; Decrement the column count.
+ $6635 JR NZ,$6625   ; Loop back while there is more to do.
+; Print the left and right banners
+ $6637 LD E,$05      ; Loop 5 rows.
+ $6639 LD B,$02      ; Start at row 2.
+*$663B LD C,$00      ; Set column 0.
+ $663D LD L,$8B      ; Set graphic ID #N$8B
+ $663F CALL $EA65    ; Print the graphic.
+ $6642 LD C,$1E      ; Set column #N$1E.
+ $6644 CALL $EA65    ; Print the graphic.
+ $6647 LD A,B        ; { Move forward 4 rows.
  $6648 ADD A,D       ;
- $6649 LD B,A        ;
- $664A DEC E         ;
- $664B JR NZ,$663B   ;
+ $6649 LD B,A        ; }
+ $664A DEC E         ; Decrement the row count.
+ $664B JR NZ,$663B   ; Loop while there is more to do.
+; Print the corner banners
 ; This entry point is used by the routine at #R$5FF4.
-*$664D LD HL,$6661   ;
- $6650 LD D,$04      ;
-*$6652 LD C,(HL)     ;
- $6653 INC HL        ;
- $6654 LD B,(HL)     ;
- $6655 INC HL        ;
- $6656 LD E,(HL)     ;
- $6657 INC HL        ;
- $6658 EX DE,HL      ;
- $6659 CALL $EA65    ;
- $665C EX DE,HL      ;
- $665D DEC D         ;
- $665E JR NZ,$6652   ;
- $6660 RET           ;
+*$664D LD HL,$6661   ; Point #REGhl at the corner banner data (#R$6661).
+ $6650 LD D,$04      ; 4 entries to process.
+*$6652 LD C,(HL)     ; { Get the next column.
+ $6653 INC HL        ; } 
+ $6654 LD B,(HL)     ; { Get the next row.
+ $6655 INC HL        ; }
+ $6656 LD E,(HL)     ; { Get the next graphic ID.
+ $6657 INC HL        ; }
+ $6658 EX DE,HL      ; Swap #REGde and #REGhl, so the graphic ID is in the right place.
+ $6659 CALL $EA65    ; Print the graphic.
+ $665C EX DE,HL      ; Swap back #REGde and #REGhl.
+ $665D DEC D         ; Decrement the entry count.
+ $665E JR NZ,$6652   ; { Loop until all entries have been processed.
+ $6660 RET           ; }
  
-; Data block at 6661
-b$6661 DEFB $00,$00,$8C,$1E,$00,$8D,$00
-
+; Corner banner graphics
+;
+; Format is column, row, graphic ID
+b$6661 DEFB $00,$00,$8C
+ $6664 DEFB $1E,$00,$8D
+ $6667 DEFB $00,$16,$8E
+ $666A DEFB $1E,$16,$8F
+     
 ; Display intro text
-c$6668 LD D,$8E                                                                                                                                                     ;
- $666A LD E,$16                                                                                                                                                     ;
- $666C ADC A,A                                                                                                                                                      ;
- ; This entry point is used by the routine at #R$6351.
-*$666D LD A,$04                                                                                                                                                     ;
- $666F CALL $6615                                                                                                                                                   ;
- $6672 CALL $D3C1                                                                                                                                                   ;
- $6675 DEFM $10,$05,$16,$04,$05,"FLIGHT COMPUTER REPORT",$10,$03,$16,$07,$03,"TOUCHDOWN IMMINENT PREPARE",$16,$09,$05,"FOR "                                        ;
- $66B6 DEFM "MISSION STARQUAKE...",$16,$0B,$04,"CRASH... BANG... SMASH...",$16,$0D,$0A,"TOUCTHDOWN",$10,$03,$16,$0F                                                 ;
- $66F7 DEFM $05,"COMTHUTER MALTHUNCTION",$16,$11,$07,"MALFUNNYTHINKIN ...",$FF                                                                                      ;
- $6725 LD B,$04                                                                                                                                                     ;
- $6727 CALL $6600                                                                                                                                                   ;
- $672A CALL $5FD0                                                                                                                                                   ;
- $672D CALL $A410                                                                                                                                                   ;
+;
+; Used by the routine at #R$6351.
+c$666D LD A,$04                   ; Set green on black.
+ $666F CALL $6615                 ; Print the banners.
+ $6672 CALL $D3C1                 ; Print a string.
+ $6675 DEFM $10,$05,$16,$04,$05,"FLIGHT COMPUTER REPORT",$10,$03,$16,$07,$03,"TOUCHDOWN IMMINENT PREPARE",$16,$09,$05,"FOR "  ;
+ $66B6 DEFM "MISSION STARQUAKE...",$16,$0B,$04,"CRASH... BANG... SMASH...",$16,$0D,$0A,"TOUCTHDOWN",$10,$03,$16,$0F   ;
+ $66F7 DEFM $05,"COMTHUTER MALTHUNCTION",$16,$11,$07,"MALFUNNYTHINKIN ...",$FF  ;
+ $6725 LD B,$04                   ;
+ $6727 CALL $6600                 ;
+ $672A CALL $5FD0                 ;
+ $672D CALL $A410                 ;
 ; This entry point is used by the routine at #R$67C7.
-*$6730 LD A,$02                                                                                                                                                     ;
- $6732 CALL $6615                                                                                                                                                   ;
- $6735 CALL $D3C1                                                                                                                                                   ;
+*$6730 LD A,$02                   ; Set red on black.
+ $6732 CALL $6615                 ; Print the banners.
+ $6735 CALL $D3C1                 ; Print a string.
  $6738 DEFM $16,$03,$0B,$10,$07,"GAME  OVER",$16,$06,$0A,$10,$05,"SCORE",$16,$09,$07,$10,$03,"ADVENTURE SCORE",$16,$0C,$08,$10,$04,"TIME TAKEN",$16,$0F,$05,$10,$07 ; {Game over
- $6779 DEFM "CORE ELEMENTS",$16,$11,$07,"REPLACED",$16,$09,$17,$10,$03,$FF                                                                                          ; text}
- $6797 CALL $679C                                                                                                                                                   ;
- $679A JR $67C7                                                                                                                                                     ;
+ $6779 DEFM "CORE ELEMENTS",$16,$11,$07,"REPLACED",$16,$09,$17,$10,$03,$FF      ; text}
+ $6797 CALL $679C                 ;
+ $679A JR $67C7                   ;
 
 ; Routine at 679C
 ;
-; Used by the routines at #R$64A0 and #R$6668.
+; Used by the routines at #R$64A0 and #R$666D.
 c$679C LD DE,$0000   ;
  $679F LD ($D2C8),DE ;
  $67A3 LD BC,$0200   ;
@@ -1908,182 +1922,195 @@ c$679C LD DE,$0000   ;
 
 ; Routine at 67C7
 ;
-; Used by the routine at #R$6668.
-c$67C7 LD ($654A),A                                                                                                    ;
- $67CA CALL $65BB                                                                                                      ;
- $67CD CALL $D3C1                                                                                                      ;
+; Used by the routine at #R$666D.
+c$67C7 LD ($654A),A                ;
+ $67CA CALL $65BB                  ;
+ $67CD CALL $D3C1                  ;
  $67D0 DEFM "/",$10,$05,$16,$06,$10,$FF                                                                                ;
- $67D7 LD HL,$D413                                                                                                     ;
- $67DA LD DE,$67EA                                                                                                     ;
- $67DD LD B,$06                                                                                                        ;
-*$67DF LD A,(HL)                                                                                                       ;
- $67E0 INC HL                                                                                                          ;
- $67E1 ADD A,$30                                                                                                       ;
- $67E3 LD (DE),A                                                                                                       ;
- $67E4 INC DE                                                                                                          ;
- $67E5 DJNZ $67DF                                                                                                      ;
- $67E7 CALL $D3C1                                                                                                      ;
+ $67D7 LD HL,$D413                 ;
+ $67DA LD DE,$67EA                 ;
+ $67DD LD B,$06                    ;
+*$67DF LD A,(HL)                   ;
+ $67E0 INC HL                      ;
+ $67E1 ADD A,$30                   ;
+ $67E3 LD (DE),A                   ;
+ $67E4 INC DE                      ;
+ $67E5 DJNZ $67DF                  ;
+ $67E7 CALL $D3C1                  ;
  $67EA DEFM $00,$00,$00,$00,$00,$00,$10,$04,$16,$0C,$14,$FF                                                            ;
- $67F6 LD HL,($5C78)                                                                                                   ;
- $67F9 LD A,($5C7A)                                                                                                    ;
- $67FC INC A                                                                                                           ;
- $67FD LD C,A                                                                                                          ;
- $67FE LD DE,$0000                                                                                                     ;
-*$6801 PUSH BC                                                                                                         ;
- $6802 LD BC,$0032                                                                                                     ;
- $6805 OR A                                                                                                            ;
- $6806 SBC HL,BC                                                                                                       ;
- $6808 POP BC                                                                                                          ;
- $6809 JR NC,$680E                                                                                                     ;
- $680B DEC C                                                                                                           ;
- $680C JR Z,$6811                                                                                                      ;
-*$680E INC DE                                                                                                          ;
- $680F JR $6801                                                                                                        ;
-*$6811 EX DE,HL                                                                                                        ;
- $6812 LD BC,$003C                                                                                                     ;
- $6815 LD DE,$0000                                                                                                     ;
-*$6818 OR A                                                                                                            ;
- $6819 SBC HL,BC                                                                                                       ;
- $681B JR C,$6820                                                                                                      ;
- $681D INC DE                                                                                                          ;
- $681E JR $6818                                                                                                        ;
-*$6820 ADD HL,BC                                                                                                       ;
- $6821 EX DE,HL                                                                                                        ;
- $6822 CALL $65BB                                                                                                      ;
- $6825 DEFM $CD,$C1,$D3,".",$FF                                                                                        ;
- $682A EX DE,HL                                                                                                        ;
- $682B LD A,L                                                                                                          ;
- $682C CP $0A                                                                                                          ;
- $682E JR NC,$6835                                                                                                     ;
- $6830 CALL $D3C1                                                                                                      ;
- $6833 DEFM "0",$FF                                                                                                    ;
-*$6835 CALL $65BB                                                                                                      ;
- $6838 CALL $D3C1                                                                                                      ;
- $683B DEFM $10,$07,$16,$13,$0A,$FF                                                                                    ;
- $6841 LD A,($D2E7)                                                                                                    ;
- $6844 LD L,A                                                                                                          ;
- $6845 LD A,$09                                                                                                        ;
- $6847 SUB L                                                                                                           ;
- $6848 LD L,A                                                                                                          ;
- $6849 LD H,$00                                                                                                        ;
- $684B CP $0A                                                                                                          ;
- $684D JR NC,$6854                                                                                                     ;
- $684F CALL $D3C1                                                                                                      ;
- $6852 DEFM "0",$FF                                                                                                    ;
-*$6854 CALL $65BB                                                                                                      ;
- $6857 LD BC,$0F15                                                                                                     ;
- $685A CALL $C352                                                                                                      ;
- $685D LD B,$01                                                                                                        ;
- $685F CALL $6600                                                                                                      ;
- $6862 LD DE,$67EA                                                                                                     ;
- $6865 LD HL,$6543                                                                                                     ;
- $6868 CALL $64EC                                                                                                      ;
- $686B JP C,$654B                                                                                                      ;
- $686E LD A,$07                                                                                                        ;
- $6870 CALL $6615                                                                                                      ;
- $6873 CALL $D3C1                                                                                                      ;
+ $67F6 LD HL,($5C78)               ;
+ $67F9 LD A,($5C7A)                ;
+ $67FC INC A                       ;
+ $67FD LD C,A                      ;
+ $67FE LD DE,$0000                 ;
+*$6801 PUSH BC                     ;
+ $6802 LD BC,$0032                 ;
+ $6805 OR A                        ;
+ $6806 SBC HL,BC                   ;
+ $6808 POP BC                      ;
+ $6809 JR NC,$680E                 ;
+ $680B DEC C                       ;
+ $680C JR Z,$6811                  ;
+*$680E INC DE                      ;
+ $680F JR $6801                    ;
+*$6811 EX DE,HL                    ;
+ $6812 LD BC,$003C                 ;
+ $6815 LD DE,$0000                 ;
+*$6818 OR A                        ;
+ $6819 SBC HL,BC                   ;
+ $681B JR C,$6820                  ;
+ $681D INC DE                      ;
+ $681E JR $6818                    ;
+*$6820 ADD HL,BC                   ;
+ $6821 EX DE,HL                    ;
+ $6822 CALL $65BB                  ;
+ $6825 DEFM $CD,$C1,$D3,".",$FF    ;
+ $682A EX DE,HL                    ;
+ $682B LD A,L                      ;
+ $682C CP $0A                      ;
+ $682E JR NC,$6835                 ;
+ $6830 CALL $D3C1                  ;
+ $6833 DEFM "0",$FF                ;
+*$6835 CALL $65BB                  ;
+ $6838 CALL $D3C1                  ;
+ $683B DEFM $10,$07,$16,$13,$0A,$FF;
+ $6841 LD A,($D2E7)                ;
+ $6844 LD L,A                      ;
+ $6845 LD A,$09                    ;
+ $6847 SUB L                       ;
+ $6848 LD L,A                      ;
+ $6849 LD H,$00                    ;
+ $684B CP $0A                      ;
+ $684D JR NC,$6854                 ;
+ $684F CALL $D3C1                  ;
+ $6852 DEFM "0",$FF                ;
+*$6854 CALL $65BB                  ;
+ $6857 LD BC,$0F15                 ;
+ $685A CALL $C352                  ;
+ $685D LD B,$01                    ;
+ $685F CALL $6600                  ;
+ $6862 LD DE,$67EA                 ;
+ $6865 LD HL,$6543                 ;
+ $6868 CALL $64EC                  ;
+ $686B JP C,$654B                  ;
+ $686E LD A,$07                    ; Set white on black.
+ $6870 CALL $6615                  ; Print the banners.
+ $6873 CALL $D3C1                  ; Print a string.
  $6876 DEFM $16,$05,$06,$10,$06,"ENCODE YOUR INITIALS",$16,$07,$09,"INTO THE CORE",$16,$09,$06,"FOR YOU HAVE ACHIEVED" ; {High
  $68B7 DEFM $16,$0B,$09,"A HEROES SCORE",$10,$05,$16,$10,$0D,"- - -",$16,$10,$0D,$10,$07,$FF                           ; score
-                                                                                                                                                                    ; achieved
-                                                                                                                                                                    ; text}
- $68D8 LD B,$03                                                                                                        ;
- $68DA LD HL,$6540                                                                                                     ;
-*$68DD CALL $D5C8                                                                                                      ;
- $68E0 CP $00                                                                                                          ;
- $68E2 JR NZ,$68DD                                                                                                     ;
-*$68E4 CALL $D5C8                                                                                                      ;
- $68E7 CP $20                                                                                                          ;
- $68E9 JR C,$68E4                                                                                                      ;
- $68EB LD (HL),A                                                                                                       ;
- $68EC INC HL                                                                                                          ;
- $68ED LD ($68F3),A                                                                                                    ;
- $68F0 CALL $D3C1                                                                                                      ;
- $68F3 DEFM "A ",$FF                                                                                                   ;
- $68F6 LD A,$07                                                                                                        ;
- $68F8 CALL $D7C0                                                                                                      ;
- $68FB DJNZ $68DD                                                                                                      ;
- $68FD LD DE,$67EA                                                                                                     ;
- $6900 LD B,$06                                                                                                        ;
-*$6902 LD A,(DE)                                                                                                       ;
- $6903 LD (HL),A                                                                                                       ;
- $6904 INC HL                                                                                                          ;
- $6905 INC DE                                                                                                          ;
- $6906 DJNZ $6902                                                                                                      ;
- $6908 INC HL                                                                                                          ;
- $6909 LD A,(HL)                                                                                                       ;
- $690A DEC HL                                                                                                          ;
- $690B LD (HL),A                                                                                                       ;
- $690C LD HL,$6536                                                                                                     ;
- $690F LD DE,$6540                                                                                                     ;
- $6912 LD B,$07                                                                                                        ;
-*$6914 PUSH BC                                                                                                         ;
- $6915 PUSH HL                                                                                                         ;
- $6916 PUSH DE                                                                                                         ;
- $6917 LD B,$03                                                                                                        ;
-*$6919 INC HL                                                                                                          ;
- $691A INC DE                                                                                                          ;
- $691B DJNZ $6919                                                                                                      ;
- $691D CALL $64EC                                                                                                      ;
- $6920 JR C,$6931                                                                                                      ;
- $6922 POP DE                                                                                                          ;
- $6923 POP HL                                                                                                          ;
- $6924 PUSH HL                                                                                                         ;
- $6925 PUSH DE                                                                                                         ;
- $6926 LD B,$0A                                                                                                        ;
-*$6928 LD C,(HL)                                                                                                       ;
- $6929 LD A,(DE)                                                                                                       ;
- $692A LD (HL),A                                                                                                       ;
- $692B LD A,C                                                                                                          ;
- $692C LD (DE),A                                                                                                       ;
- $692D INC DE                                                                                                          ;
- $692E INC HL                                                                                                          ;
- $692F DJNZ $6928                                                                                                      ;
-*$6931 POP DE                                                                                                          ;
- $6932 POP HL                                                                                                          ;
- $6933 LD B,$0A                                                                                                        ;
-*$6935 DEC HL                                                                                                          ;
- $6936 DEC DE                                                                                                          ;
- $6937 DJNZ $6935                                                                                                      ;
- $6939 POP BC                                                                                                          ;
- $693A DJNZ $6914                                                                                                      ;
- $693C JP $654B                                                                                                        ;
+                                                                                ; achieved
+                                                                                ; text}
+ $68D8 LD B,$03                    ;
+ $68DA LD HL,$6540                 ;
+*$68DD CALL $D5C8                  ;
+ $68E0 CP $00                      ;
+ $68E2 JR NZ,$68DD                 ;
+*$68E4 CALL $D5C8                  ;
+ $68E7 CP $20                      ;
+ $68E9 JR C,$68E4                  ;
+ $68EB LD (HL),A                   ;
+ $68EC INC HL                      ;
+ $68ED LD ($68F3),A                ;
+ $68F0 CALL $D3C1                  ;
+ $68F3 DEFM "A ",$FF               ;
+ $68F6 LD A,$07                    ;
+ $68F8 CALL $D7C0                  ;
+ $68FB DJNZ $68DD                  ;
+ $68FD LD DE,$67EA                 ;
+ $6900 LD B,$06                    ;
+*$6902 LD A,(DE)                   ;
+ $6903 LD (HL),A                   ;
+ $6904 INC HL                      ;
+ $6905 INC DE                      ;
+ $6906 DJNZ $6902                  ;
+ $6908 INC HL                      ;
+ $6909 LD A,(HL)                   ;
+ $690A DEC HL                      ;
+ $690B LD (HL),A                   ;
+ $690C LD HL,$6536                 ;
+ $690F LD DE,$6540                 ;
+ $6912 LD B,$07                    ;
+*$6914 PUSH BC                     ;
+ $6915 PUSH HL                     ;
+ $6916 PUSH DE                     ;
+ $6917 LD B,$03                    ;
+*$6919 INC HL                      ;
+ $691A INC DE                      ;
+ $691B DJNZ $6919                  ;
+ $691D CALL $64EC                  ;
+ $6920 JR C,$6931                  ;
+ $6922 POP DE                      ;
+ $6923 POP HL                      ;
+ $6924 PUSH HL                     ;
+ $6925 PUSH DE                     ;
+ $6926 LD B,$0A                    ;
+*$6928 LD C,(HL)                   ;
+ $6929 LD A,(DE)                   ;
+ $692A LD (HL),A                   ;
+ $692B LD A,C                      ;
+ $692C LD (DE),A                   ;
+ $692D INC DE                      ;
+ $692E INC HL                      ;
+ $692F DJNZ $6928                  ;
+*$6931 POP DE                      ;
+ $6932 POP HL                      ;
+ $6933 LD B,$0A                    ;
+*$6935 DEC HL                      ;
+ $6936 DEC DE                      ;
+ $6937 DJNZ $6935                  ;
+ $6939 POP BC                      ;
+ $693A DJNZ $6914                  ;
+ $693C JP $654B                    ;
+; All items in the core are there, so the game is won!
 ; This entry point is used by the routine at #R$5E26.
-*$693F LD A,$02                                                                                                        ;
- $6941 CALL $6615                                                                                                      ;
- $6944 LD BC,$0E0D                                                                                                     ;
- $6947 CALL $C352                                                                                                      ;
- $694A CALL $D3C1                                                                                                      ;
+*$693F LD A,$02                    ; Set red on black.
+ $6941 CALL $6615                  ; Print the banners.
+ $6944 LD BC,$0E0D                 ;
+ $6947 CALL $C352                  ;
+ $694A CALL $D3C1                  ; Print a string.
  $694D DEFM $16,$03,$07,$10,$05,"THE CORES COMPLETE",$16,$05,$06,"BUT HOW ARE YOU GONNA",$16,$07,$06,"GET HOME WHEN O" ; {Game
  $698E DEFM "NLY A",$16,$09,$03,"THTUPID LOONY WOULD WANDER",$16,$0B,$03,"THIS FAR OUT IN THE GALAXY",$FF              ; completed
-                                                                                                                                                                    ; text}
- $69CE LD B,$05                                                                                                        ;
- $69D0 CALL $6600                                                                                                      ;
- $69D3 JP $6730                                                                                                        ;
+                                                                                ; text}
+ $69CE LD B,$05                    ;
+ $69D0 CALL $6600                  ;
+ $69D3 JP $6730                    ;
 
 ; Data block at 69D6
-b$69D6 DEFB $FF,$FF,$FF,$FF,$FF,$FF,$82,$0B
- $69DE DEFB $0A,$68,$26,$28,$2A,$2B,$2F,$ED
- $69E6 DEFB $EA,$0B,$0A,$68,$26,$28,$2A,$2B
- $69EE DEFB $2F,$ED,$ED,$0F,$0D,$AF,$28,$2A
- $69F6 DEFB $2B,$2F,$0D,$0B,$AD,$26,$28,$2A
- $69FE DEFB $2D,$0B,$0A,$AB,$23,$28,$2A,$2B
- $6A06 DEFB $E8,$00,$46,$A3,$2A,$23,$28,$23
- $6A0E DEFB $26,$A3,$2A,$23,$28,$23,$26,$A1
- $6A16 DEFB $28,$21,$26,$21,$25,$A1,$28,$21
- $6A1E DEFB $26,$21,$25,$A3,$6A,$68,$26,$A3
- $6A26 DEFB $6A,$68,$26,$A1,$68,$66,$25,$A1
- $6A2E DEFB $68,$66,$25,$E3,$E3,$00,$64,$2A
- $6A36 DEFB $26,$23,$6A,$26,$63,$2B,$28,$23
- $6A3E DEFB $6B,$28,$63,$28,$25,$21,$68,$25
- $6A46 DEFB $61,$2A,$26,$21,$6A,$26,$61,$2A
- $6A4E DEFB $26,$23,$6A,$26,$63,$2B,$28,$23
- $6A56 DEFB $6B,$28,$63,$28,$25,$21,$68,$25
- $6A5E DEFB $61,$E6,$00,$46,$62,$29,$22,$27
- $6A66 DEFB $A9,$62,$29,$6C,$AE,$62,$29,$22
- $6A6E DEFB $27,$A9,$62,$29,$67,$A5,$62,$29
- $6A76 DEFB $22,$27,$A9,$62,$29,$6C,$AE,$62
- $6A7E DEFB $29,$22,$27,$A9,$87,$85,$A2,$00
- $6A86 DEFB $E7,$00,$AF,$54,$32,$6D,$52,$54
+b$69D6 DEFB $FF,$FF,$FF,$FF,$FF,$FF
+
+; Theme tune 1
+b$69DC DEFB $82,$0B,$0A,$68,$26,$28,$2A,$2B
+ $69E4 DEFB $2F,$ED,$EA,$0B,$0A,$68,$26,$28
+ $69EC DEFB $2A,$2B,$2F,$ED,$ED,$0F,$0D,$AF
+ $69F4 DEFB $28,$2A,$2B,$2F,$0D,$0B,$AD,$26
+ $69FC DEFB $28,$2A,$2D,$0B,$0A,$AB,$23,$28
+ $6A04 DEFB $2A,$2B,$E8,$00
+
+; Theme tune 2
+b$6A08 DEFB $46,$A3,$2A,$23,$28,$23,$26,$A3
+ $6A10 DEFB $2A,$23,$28,$23,$26,$A1,$28,$21
+ $6A18 DEFB $26,$21,$25,$A1,$28,$21,$26,$21
+ $6A20 DEFB $25,$A3,$6A,$68,$26,$A3,$6A,$68
+ $6A28 DEFB $26,$A1,$68,$66,$25,$A1,$68,$66
+ $6A30 DEFB $25,$E3,$E3,$00
+
+; Theme tune 3
+b$6A34 DEFB $64,$2A,$26,$23,$6A,$26,$63,$2B
+ $6A3C DEFB $28,$23,$6B,$28,$63,$28,$25,$21
+ $6A44 DEFB $68,$25,$61,$2A,$26,$21,$6A,$26
+ $6A4C DEFB $61,$2A,$26,$23,$6A,$26,$63,$2B
+ $6A54 DEFB $28,$23,$6B,$28,$63,$28,$25,$21
+ $6A5C DEFB $68,$25,$61,$E6,$00
+
+; Theme tune 4
+b$6A61 DEFB $46,$62,$29,$22,$27,$A9,$62,$29
+ $6A69 DEFB $6C,$AE,$62,$29,$22,$27,$A9,$62
+ $6A71 DEFB $29,$67,$A5,$62,$29,$22,$27,$A9
+ $6A79 DEFB $62,$29,$6C,$AE,$62,$29,$22,$27
+ $6A81 DEFB $A9,$87,$85,$A2,$00
+
+; Data block at 6A86
+b$6A86 DEFB $E7,$00,$AF,$54,$32,$6D,$52,$54
  $6A8E DEFB $32,$AD,$52,$31,$72,$54,$52,$31
  $6A96 DEFB $AF,$51,$2F,$71,$52,$51,$2F,$AD
  $6A9E DEFB $EF,$EF,$00,$00,$00,$00
@@ -2598,15 +2625,17 @@ b$748B DEFB $FC,$FC,$00,$00,$00,$00
  $74E1 DEFB $84,$80,$80,$FF,$FF,$00,$00,$FF
  $74E9 DEFB $9F,$1F,$1F,$FF,$FF,$00,$00,$FF
  
-; Data block at 74F1
-b$74F1 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $74F9 DEFB $00,$00,$00,$00,$00,$8C,$20,$27
- $7501 DEFB $AC,$2F,$2E,$AA,$25,$27,$AA,$25
- $7509 DEFB $27,$AC,$20,$27,$AC,$2E,$2F,$B3
- $7511 DEFB $2E,$2C,$AA,$25,$27,$AC,$20,$27
- $7519 DEFB $AC,$2F,$2E,$AA,$25,$27,$AA,$25
- $7521 DEFB $27,$AC,$20,$27,$AC,$2E,$2F,$B3
- $7529 DEFB $2E,$2C,$AA,$A5,$AC,$00,$00
+; Unused
+s$74F1 DEFS $0D
+
+; Theme tune 5
+b$74FE DEFB $8C,$20,$27,$AC,$2F,$2E,$AA,$25
+ $7506 DEFB $27,$AA,$25,$27,$AC,$20,$27,$AC
+ $750E DEFB $2E,$2F,$B3,$2E,$2C,$AA,$25,$27
+ $7516 DEFB $AC,$20,$27,$AC,$2F,$2E,$AA,$25
+ $751E DEFB $27,$AA,$25,$27,$AC,$20,$27,$AC
+ $7526 DEFB $2E,$2F,$B3,$2E,$2C,$AA,$A5,$AC
+ $752E DEFB $00,$00
 
 ; Room data 0
 ;
@@ -8316,7 +8345,7 @@ b$A34D DEFB $32,$43,$00,$FF,$FF,$FF,$FF,$FF
 
 ; Routine at A410
 ;
-; Used by the routines at #R$6668, #R$A66C and #R$C35E.
+; Used by the routines at #R$666D, #R$A66C and #R$C35E.
 c$A410 JR $A426      ;
 
 ; Clear the playing area (copy)
@@ -12764,80 +12793,80 @@ c$D422 JP $D521      ;
 ;
 ; Used by the routines at #R$64A0, #R$A426, #R$A66C, #R$CC9A, #R$CCF1, #R$D09F
 ; and #R$D5FD.
-c$D425 CALL $D521                                                                                                                            ;
- $D428 LD A,($D2CC)                                                                                                                          ;
- $D42B LD C,$2F                                                                                                                              ;
-*$D42D INC C                                                                                                                                 ;
- $D42E SUB $0A                                                                                                                               ;
- $D430 JR NC,$D42D                                                                                                                           ;
- $D432 ADD A,$3A                                                                                                                             ;
- $D434 LD B,A                                                                                                                                ;
- $D435 LD ($D441),BC                                                                                                                         ;
- $D439 CALL $D3C1                                                                                                                            ;
+c$D425 CALL $D521                                        ;
+ $D428 LD A,($D2CC)                                      ;
+ $D42B LD C,$2F                                          ;
+*$D42D INC C                                             ;
+ $D42E SUB $0A                                           ;
+ $D430 JR NC,$D42D                                       ;
+ $D432 ADD A,$3A                                         ;
+ $D434 LD B,A                                            ;
+ $D435 LD ($D441),BC                                     ;
+ $D439 CALL $D3C1                                        ;
 $D43C DEFM $16,$03,$0B,$10,$06,"04",$16,$01,$10,$10,$02," ",$10,$04,"   ",$16,$02,$10,$10,$07,"    ",$16,$03,$10,$10,$06,"    ",$10,$08,$FF ;
- $D463 LD B,$03                                                                                                                              ;
- $D465 LD HL,$D2CF                                                                                                                           ;
-*$D468 LD A,(HL)                                                                                                                             ;
- $D469 CP $7F                                                                                                                                ;
- $D46B JR C,$D46F                                                                                                                            ;
- $D46D LD (HL),$7F                                                                                                                           ;
-*$D46F LD A,B                                                                                                                                ;
- $D470 LD ($D477),A                                                                                                                          ;
- $D473 CALL $D3C1                                                                                                                            ;
- $D476 DEFM $16,$01,$10,$FF                                                                                                                  ;
- $D47A LD A,(HL)                                                                                                                             ;
- $D47B RLCA                                                                                                                                  ;
- $D47C RLCA                                                                                                                                  ;
- $D47D RLCA                                                                                                                                  ;
- $D47E AND $03                                                                                                                               ;
- $D480 JR Z,$D48A                                                                                                                            ;
-*$D482 CALL $D3C1                                                                                                                            ;
- $D485 DEFM "(",$FF                                                                                                                          ;
- $D487 DEC A                                                                                                                                 ;
- $D488 JR NZ,$D482                                                                                                                           ;
-*$D48A LD A,(HL)                                                                                                                             ;
- $D48B CP $7F                                                                                                                                ;
- $D48D JR NZ,$D493                                                                                                                           ;
- $D48F LD A,$28                                                                                                                              ;
- $D491 JR $D499                                                                                                                              ;
-*$D493 RRCA                                                                                                                                  ;
- $D494 RRCA                                                                                                                                  ;
- $D495 AND $07                                                                                                                               ;
- $D497 ADD A,$20                                                                                                                             ;
-*$D499 LD ($D49F),A                                                                                                                          ;
- $D49C CALL $D3C1                                                                                                                            ;
- $D49F DEFM "%",$FF                                                                                                                          ;
- $D4A1 DEC HL                                                                                                                                ;
- $D4A2 DJNZ $D468                                                                                                                            ;
- $D4A4 CALL $D3C1                                                                                                                            ;
+ $D463 LD B,$03                                          ;
+ $D465 LD HL,$D2CF                                       ;
+*$D468 LD A,(HL)                                         ;
+ $D469 CP $7F                                            ;
+ $D46B JR C,$D46F                                        ;
+ $D46D LD (HL),$7F                                       ;
+*$D46F LD A,B                                            ;
+ $D470 LD ($D477),A                                      ;
+ $D473 CALL $D3C1                                        ;
+ $D476 DEFM $16,$01,$10,$FF                              ;
+ $D47A LD A,(HL)                                         ;
+ $D47B RLCA                                              ;
+ $D47C RLCA                                              ;
+ $D47D RLCA                                              ;
+ $D47E AND $03                                           ;
+ $D480 JR Z,$D48A                                        ;
+*$D482 CALL $D3C1                                        ;
+ $D485 DEFM "(",$FF                                      ;
+ $D487 DEC A                                             ;
+ $D488 JR NZ,$D482                                       ;
+*$D48A LD A,(HL)                                         ;
+ $D48B CP $7F                                            ;
+ $D48D JR NZ,$D493                                       ;
+ $D48F LD A,$28                                          ;
+ $D491 JR $D499                                          ;
+*$D493 RRCA                                              ;
+ $D494 RRCA                                              ;
+ $D495 AND $07                                           ;
+ $D497 ADD A,$20                                         ;
+*$D499 LD ($D49F),A                                      ;
+ $D49C CALL $D3C1                                        ;
+ $D49F DEFM "%",$FF                                      ;
+ $D4A1 DEC HL                                            ;
+ $D4A2 DJNZ $D468                                        ;
+ $D4A4 CALL $D3C1                                        ;
  $D4A7 DEFM $16,$01,$15,"        ",$16,$02,$15,"        ",$FF                                                                                ;
- $D4BE LD C,$15                                                                                                                              ;
- $D4C0 LD D,$04                                                                                                                              ;
- $D4C2 LD HL,$D2D2                                                                                                                           ;
-*$D4C5 PUSH DE                                                                                                                               ;
- $D4C6 LD E,(HL)                                                                                                                             ;
- $D4C7 INC HL                                                                                                                                ;
- $D4C8 LD B,(HL)                                                                                                                             ;
- $D4C9 INC HL                                                                                                                                ;
- $D4CA INC B                                                                                                                                 ;
- $D4CB DEC B                                                                                                                                 ;
-$D4CC JR Z,$D4E2                                                                                                                            ;
-$D4CE PUSH HL                                                                                                                               ;
- $D4CF LD D,$00                                                                                                                              ;
- $D4D1 LD HL,$0020                                                                                                                           ;
- $D4D4 CALL $30A9                                                                                                                            ;
-$D4D7 LD A,B                                                                                                                                ;
- $D4D8 LD DE,$9088                                                                                                                           ;
-$D4DB ADD HL,DE                                                                                                                             ;
- $D4DC LD B,$01                                                                                                                              ;
- $D4DE CALL $DB24                                                                                                                            ;
- $D4E1 POP HL                                                                                                                                ;
-*$D4E2 POP DE                                                                                                                                ;
- $D4E3 INC C                                                                                                                                 ;
- $D4E4 INC C                                                                                                                                 ;
- $D4E5 DEC D                                                                                                                                 ;
- $D4E6 JR NZ,$D4C5                                                                                                                           ;
- $D4E8 RET                                                                                                                                   ;
+ $D4BE LD C,$15                                          ;
+ $D4C0 LD D,$04                                          ;
+ $D4C2 LD HL,$D2D2                                       ;
+*$D4C5 PUSH DE                                           ;
+ $D4C6 LD E,(HL)                                         ;
+ $D4C7 INC HL                                            ;
+ $D4C8 LD B,(HL)                                         ;
+ $D4C9 INC HL                                            ;
+ $D4CA INC B                                             ;
+ $D4CB DEC B                                             ;
+$D4CC JR Z,$D4E2                                        ;
+$D4CE PUSH HL                                           ;
+ $D4CF LD D,$00                                          ;
+ $D4D1 LD HL,$0020                                       ;
+ $D4D4 CALL $30A9                                        ;
+$D4D7 LD A,B                                            ;
+ $D4D8 LD DE,$9088                                       ;
+$D4DB ADD HL,DE                                         ;
+ $D4DC LD B,$01                                          ;
+ $D4DE CALL $DB24                                        ;
+ $D4E1 POP HL                                            ;
+*$D4E2 POP DE                                            ;
+ $D4E3 INC C                                             ;
+ $D4E4 INC C                                             ;
+ $D4E5 DEC D                                             ;
+ $D4E6 JR NZ,$D4C5                                       ;
+ $D4E8 RET                                               ;
  
 ; Decrease one of Blob's settings
 ;
@@ -13572,67 +13601,71 @@ c$D9C8 CALL $A418    ;
  $D9DA CALL $A415    ;
  $D9DD RET           ;
 
-; Routine at D9DE
+; Play a tune
 ;
 ; Used by the routine at #R$6600.
-c$D9DE DI            ;
- $D9DF LD ($DA03),HL ;
- $D9E2 INC HL        ;
-*$D9E3 LD A,(HL)     ;
- $D9E4 INC HL        ;
- $D9E5 PUSH HL       ;
- $D9E6 CP $00        ;
- $D9E8 JR Z,$DA35    ;
- $D9EA LD C,A        ;
- $D9EB AND $1F       ;
- $D9ED LD H,$00      ;
- $D9EF LD L,A        ;
- $D9F0 ADD HL,HL     ;
- $D9F1 LD DE,$DA70   ;
- $D9F4 ADD HL,DE     ;
- $D9F5 LD E,(HL)     ;
+;
+; HL Pointer to tune data
+c$D9DE DI            ; Disable interrupts - essential for playing sound
+ $D9DF LD ($DA03),HL ; { Modify the code ahead at #N$DA03 to use this buffer. }
+ $D9E2 INC HL        ; Move forward one byte in the buffer.
+*$D9E3 LD A,(HL)     ; Get the next note to play.
+ $D9E4 INC HL        ; { Move to the next position in the buffer and store it.
+ $D9E5 PUSH HL       ; }
+ $D9E6 CP $00        ; Is this the end of the tune?
+ $D9E8 JR Z,$DA35    ; Jump forward if it is.
+ $D9EA LD C,A        ; Otherwise store the note value in #REGc.
+ $D9EB AND $1F       ; Get the bottom 5 bits, which store the note value.
+ $D9ED LD H,$00      ; { Put this in #REGhl.
+ $D9EF LD L,A        ; }
+ $D9F0 ADD HL,HL     ; Double the value to get a word offset.
+ $D9F1 LD DE,$DA70   ; Point #REGde at the note table (#R$DA70).
+ $D9F4 ADD HL,DE     ; Add the offset to the right note.
+ $D9F5 LD E,(HL)     ; { Put the frequency in #REGde.
  $D9F6 INC HL        ;
- $D9F7 LD D,(HL)     ;
+ $D9F7 LD D,(HL)     ; }
  $D9F8 PUSH DE       ;
  $D9F9 PUSH DE       ;
  $D9FA PUSH DE       ;
- $D9FB LD H,$00      ;
- $D9FD LD A,C        ;
- $D9FE OR $1F        ;
- $DA00 LD L,A        ;
- $DA01 LD DE,($6A34) ;
- $DA05 LD D,H        ;
- $DA06 CALL $30A9    ;
+ $D9FB LD H,$00      ; Set #REGh to 0.
+ $D9FD LD A,C        ; Get the note value.
+ $D9FE OR $1F        ; Turn on the bottom 5 bits.
+ $DA00 LD L,A        ; Set this as the low byte in #REGhl.
+ $DA01 LD DE,($6A34) ; Set #REGde to the start of the tune buffer.
+ $DA05 LD D,H        ; Set the high byte in #REGde to 0.
+ $DA06 CALL $30A9    ; Multiply #REGhl with #REGde.
  $DA09 POP DE        ;
- $DA0A LD BC,$0000   ;
+ $DA0A LD BC,$0000   ; Initialize #REGbc to 0.
 *$DA0D INC BC        ;
  $DA0E INC BC        ;
  $DA0F INC BC        ;
  $DA10 INC BC        ;
- $DA11 OR A          ;
+ $DA11 OR A          ; Reset the carry flag.
  $DA12 SBC HL,DE     ;
  $DA14 JR NC,$DA0D   ;
  $DA16 POP HL        ;
  $DA17 POP DE        ;
- $DA18 EXX           ;
- $DA19 LD BC,$FEFE   ;
- $DA1C EXX           ;
-*$DA1D LD A,($DA6F)  ;
- $DA20 OUT ($FE),A   ;
- $DA22 ADD A,$10     ;
- $DA24 AND $30       ;
- $DA26 LD ($DA6F),A  ;
+ $DA18 EXX           ; Exchange 16 bit registers.
+ $DA19 LD BC,$FEFE   ; Set #REGbc to scan SHIFT - V on the keyboard.
+ $DA1C EXX           ; Exchange 16 bit registers.
+*$DA1D LD A,($DA6F)  ; Get the previous value of port #N$FE.
+ $DA20 OUT ($FE),A   ; Output it.
+ $DA22 ADD A,$10     ; { Toggle bit 5 (for the speaker).
+ $DA24 AND $30       ; }
+ $DA26 LD ($DA6F),A  ; Set this as the next value to output.
  $DA29 EX AF,AF'     ;
- $DA2A EXX           ;
- $DA2B IN A,(C)      ;
- $DA2D RLC B         ;
- $DA2F EXX           ;
- $DA30 CPL           ;
- $DA31 AND $1F       ;
- $DA33 JR Z,$DA38    ;
-*$DA35 POP HL        ;
- $DA36 EI            ;
- $DA37 RET           ;
+ $DA2A EXX           ; Exchange 16 bit registers.
+ $DA2B IN A,(C)      ; Read the keyboard.
+ $DA2D RLC B         ; Move to the next section of keyboard.
+ $DA2F EXX           ; Exchange 16 bit registers.
+ $DA30 CPL           ; Flip the bits on #REGa, so a 1 represents a key pressed.
+ $DA31 AND $1F       ; Turn off bits 5-7, these aren't used.
+ $DA33 JR Z,$DA38    ; Jump forward if a key was not pressed.
+; The tune has finished or a key was pressed, so end the routine.
+*$DA35 POP HL        ; Restore #REGhl.
+ $DA36 EI            ; { Enable interrupts and return. 
+ $DA37 RET           ; }
+; Play the note for as long as is required.
 *$DA38 EX DE,HL      ;
  $DA39 PUSH BC       ;
  $DA3A PUSH HL       ;
@@ -13649,38 +13682,74 @@ c$D9DE DI            ;
  $DA49 LD A,L        ;
  $DA4A CP C          ;
 *$DA4B JR NZ,$DA53   ;
- $DA4D CALL $DA64    ;
+ $DA4D CALL $DA64    ; Change direction.
  $DA50 INC DE        ;
  $DA51 JR $DA57      ;
-*$DA53 LD B,$06      ;
-*$DA55 DJNZ $DA55    ;
-*$DA57 CALL $DA64    ;
- $DA5A POP BC        ;
- $DA5B DEC BC        ;
- $DA5C LD A,B        ;
- $DA5D OR C          ;
- $DA5E JR NZ,$DA1D   ;
- $DA60 POP HL        ;
- $DA61 JP $D9E3      ;
-*$DA64 LD A,($DA41)  ;
- $DA67 LD C,A        ;
+*$DA53 LD B,$06      ; { Short pause.
+*$DA55 DJNZ $DA55    ; }
+*$DA57 CALL $DA64    ; Change direction.
+ $DA5A POP BC        ; Restore #REGbc.
+ $DA5B DEC BC        ; Decrease time to play this note.
+ $DA5C LD A,B        ; { Is there time remaining?
+ $DA5D OR C          ; }
+ $DA5E JR NZ,$DA1D   ; Jump back if there is.
+ $DA60 POP HL        ; Restore #REGhl.
+ $DA61 JP $D9E3      ; Jump back to play the next note.
+
+; Swap the direction of sound iteration.
+;
+; Used by the routine at #R$D9DE.
+c$DA64 LD A,($DA41)  ; Get the instruction at #N$DA41, which is either INC HL or DEC HL.
+ $DA67 LD C,A        ; { Toggle it between the two values.
  $DA68 LD A,$4E      ;
- $DA6A SUB C         ;
- $DA6B LD ($DA41),A  ;
- $DA6E RET           ;
+ $DA6A SUB C         ; }
+ $DA6B LD ($DA41),A  ; { Set the new value and return.
+ $DA6E RET           ; }
  
-; Data block at DA6F
-b$DA6F DEFB $00,$5D,$01,$49,$01,$36,$01,$24
- $DA77 DEFB $01,$12,$01,$02,$01,$F3,$00,$E4
- $DA7F DEFB $00,$D7,$00,$CA,$00,$BE,$00,$B2
- $DA87 DEFB $00,$A7,$00,$9D,$00,$94,$00,$8B
- $DA8F DEFB $00,$82,$00,$7A,$00,$72,$00,$6B
- $DA97 DEFB $00,$64,$00,$5E,$00,$58,$00,$52
- $DA9F DEFB $00,$4D,$00,$47,$00,$43,$00,$3E
- $DAA7 DEFB $00,$3A,$00,$36,$00,$32,$00,$20
+; Bits to be written out to port #N$FE
+;
+; Used by the routine at #R$D9DE.
+g$DA6F DEFB $00
+
+; Note frequencies
+;
+; Used by the routine at #R$D9DE.
+w$DA70 DEFW $015D
+ $DA72 DEFW $0149
+ $DA74 DEFW $0136
+ $DA76 DEFW $0124
+ $DA78 DEFW $0112
+ $DA7A DEFW $0102
+ $DA7C DEFW $00F3
+ $DA7E DEFW $00E4
+ $DA80 DEFW $00D7
+ $DA82 DEFW $00CA
+ $DA84 DEFW $00BE
+ $DA86 DEFW $00B2
+ $DA88 DEFW $00A7
+ $DA8A DEFW $009D
+ $DA8C DEFW $0094
+ $DA8E DEFW $008B
+ $DA90 DEFW $0082
+ $DA92 DEFW $007A
+ $DA94 DEFW $0072
+ $DA96 DEFW $006B
+ $DA98 DEFW $0064
+ $DA9A DEFW $005E
+ $DA9C DEFW $0058
+ $DA9E DEFW $0052
+ $DAA0 DEFW $004D
+ $DAA2 DEFW $0047
+ $DAA4 DEFW $0043
+ $DAA6 DEFW $003E
+ $DAA8 DEFW $003A
+ $DAAA DEFW $0036
+ $DAAC DEFW $0032
 
 ; Random bit of assembly
-t$DAAF DEFM "LD   DE,MUSNOTES"
+;
+; This is the code at #N$D9F1
+t$DAAE DEFM " LD   DE,MUSNOTES"
 
 ; Data block at DABF
 b$DABF DEFB $0D
