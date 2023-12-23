@@ -960,15 +960,15 @@ b$5E1B DEFB $5E,$24,$5E,$24,$5E,$24,$5E,$24
 ; Used by the routine at #R$AC50.
 c$5E24 JR $5E81      ;
 
-; Routine at 5E26
+; Complete the game (copy)
 ;
 ; Used by the routine at #R$A66C.
-c$5E26 JP $693F      ;
+c$5E26 JP $693F      ; Jump to the "complete the game" routine
 
 ; End the game (copy)
 ;
 ; Used by the routines at #R$A66C, #R$C35E and #R$C5BD.
-c$5E29 JP $64A0      ;
+c$5E29 JP $64A0      ; Jump to the "end the game" routine
 
 ; Data block at 5E2C
 b$5E2C DEFB $DA,$D3,$76,$6F,$1A,$08,$FB,$FC
@@ -2061,9 +2061,11 @@ c$67C7 LD ($654A),A                ;
  $6939 POP BC                      ;
  $693A DJNZ $6914                  ;
  $693C JP $654B                    ;
+
 ; All items in the core are there, so the game is won!
-; This entry point is used by the routine at #R$5E26.
-*$693F LD A,$02                    ; Set red on black.
+;
+; Used by the routine at #R$5E26.
+c$693F LD A,$02                    ; Set red on black.
  $6941 CALL $6615                  ; Print the banners.
  $6944 LD BC,$0E0D                 ;
  $6947 CALL $C352                  ;
@@ -2071,8 +2073,8 @@ c$67C7 LD ($654A),A                ;
  $694D DEFM $16,$03,$07,$10,$05,"THE CORES COMPLETE",$16,$05,$06,"BUT HOW ARE YOU GONNA",$16,$07,$06,"GET HOME WHEN O" ; {Game
  $698E DEFM "NLY A",$16,$09,$03,"THTUPID LOONY WOULD WANDER",$16,$0B,$03,"THIS FAR OUT IN THE GALAXY",$FF              ; completed
                                                                                 ; text}
- $69CE LD B,$05                    ;
- $69D0 CALL $6600                  ;
+ $69CE LD B,$05                    ; { Play theme tune 5 (game completed)
+ $69D0 CALL $6600                  ; }
  $69D3 JP $6730                    ;
 
 ; Data block at 69D6
@@ -5862,7 +5864,9 @@ b$902A DEFB $36,$36,$36,$36,$36,$36,$36,$36
 ;
 ; #CALL:print_udg(#PC,udg_44)
 b$9033 DEFB $B0,$F0,$50,$00,$00,$00
- $9039 DEFB $00,$5F,$5F,$5F,$5F,$5F,$5F,$5F
+
+; Data block at 9039
+b$9039 DEFB $00,$5F,$5F,$5F,$5F,$5F,$5F,$5F
  $9041 DEFB $01,$01,$BD,$BD,$BD,$BD,$BD,$3D
  $9049 DEFB $70,$70,$70,$70,$70,$70,$70,$00
  $9051 DEFB $5F,$5E,$5E,$5E,$5E,$5E,$5E,$5E
@@ -5871,43 +5875,45 @@ b$9033 DEFB $B0,$F0,$50,$00,$00,$00
  $9069 DEFB $5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F
  $9071 DEFB $B8,$B8,$B8,$B8,$B8,$B8,$B8,$B8
  $9079 DEFB $5F,$5F,$5F,$00,$00,$00,$00,$00
- $9081 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $9089 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $9091 DEFB $00,$0F,$1F,$1F,$1F,$0E,$36,$00
- $9099 DEFB $00,$01,$1D,$3E,$3F,$3F,$3C,$70
- $90A1 DEFB $E0,$C0,$80,$00,$03,$07,$07,$03
- $90A9 DEFB $07,$07,$87,$81,$06,$CE,$EC,$C0
- $90B1 DEFB $E0,$E0,$E1,$81,$60,$73,$37,$5C
- $90B9 DEFB $18,$39,$35,$73,$67,$87,$E3,$2E
- $90C1 DEFB $1C,$B8,$B4,$C6,$E6,$E1,$C7,$00
- $90C9 DEFB $00,$F0,$F8,$F8,$F8,$70,$6C,$00
- $90D1 DEFB $00,$00,$00,$00,$00,$00,$00,$0E
- $90D9 DEFB $07,$03,$01,$00,$C0,$E0,$E0,$00
- $90E1 DEFB $00,$80,$B8,$7C,$FC,$FC,$3C,$1B
- $90E9 DEFB $03,$01,$00,$01,$77,$F6,$F8,$03
- $90F1 DEFB $8D,$DD,$E0,$70,$B6,$0F,$3F,$F8
- $90F9 DEFB $F6,$77,$03,$00,$01,$03,$1B,$3F
- $9101 DEFB $0F,$96,$E0,$F0,$3D,$8D,$03,$E0
- $9109 DEFB $E0,$C3,$0F,$1F,$1B,$37,$37,$07
- $9111 DEFB $07,$C3,$F0,$F8,$F8,$FC,$FC,$33
- $9119 DEFB $33,$19,$1C,$0F,$C3,$E0,$E0,$FC
- $9121 DEFB $FC,$F8,$78,$F0,$C3,$07,$07,$C0
- $9129 DEFB $B1,$BC,$1F,$07,$69,$F0,$FC,$D8
- $9131 DEFB $C0,$00,$00,$C0,$EE,$6F,$1F,$FC
- $9139 DEFB $F0,$6C,$0E,$07,$BB,$B1,$C0,$1F
- $9141 DEFB $6F,$EE,$C0,$00,$80,$C0,$D8,$3C
- $9149 DEFB $3F,$3F,$3E,$1D,$01,$00,$00,$07
- $9151 DEFB $07,$03,$00,$80,$C0,$E0,$70,$00
- $9159 DEFB $00,$00,$00,$00,$00,$00,$00,$37
- $9161 DEFB $0F,$1F,$1F,$1F,$0F,$00,$00,$E3
- $9169 DEFB $87,$67,$63,$2D,$1D,$38,$74,$C7
- $9171 DEFB $E1,$E6,$CE,$AC,$9C,$18,$3A,$EC
- $9179 DEFB $C6,$06,$81,$87,$07,$07,$03,$37
- $9181 DEFB $73,$60,$81,$E1,$E0,$E0,$C0,$E0
- $9189 DEFB $E0,$C0,$00,$01,$03,$07,$0E,$3C
- $9191 DEFB $FC,$FC,$7C,$B8,$80,$00,$00,$6C
- $9199 DEFB $70,$F8,$F8,$F8,$F0,$00,$00,$00
- $91A1 DEFB $00,$00,$00,$00,$00,$00,$00
+ $9081 DEFB $00,$00,$00,$00,$00,$00,$00
+
+; UDG - Core pieces
+b$9088 DEFB $00,$00,$00,$00,$00,$00,$00,$00
+ $9090 DEFB $00,$00,$0F,$1F,$1F,$1F,$0E,$36
+ $9098 DEFB $00,$00,$01,$1D,$3E,$3F,$3F,$3C
+ $90A0 DEFB $70,$E0,$C0,$80,$00,$03,$07,$07
+ $90A8 DEFB $03,$07,$07,$87,$81,$06,$CE,$EC
+ $90B0 DEFB $C0,$E0,$E0,$E1,$81,$60,$73,$37
+ $90B8 DEFB $5C,$18,$39,$35,$73,$67,$87,$E3
+ $90C0 DEFB $2E,$1C,$B8,$B4,$C6,$E6,$E1,$C7
+ $90C8 DEFB $00,$00,$F0,$F8,$F8,$F8,$70,$6C
+ $90D0 DEFB $00,$00,$00,$00,$00,$00,$00,$00
+ $90D8 DEFB $0E,$07,$03,$01,$00,$C0,$E0,$E0
+ $90E0 DEFB $00,$00,$80,$B8,$7C,$FC,$FC,$3C
+ $90E8 DEFB $1B,$03,$01,$00,$01,$77,$F6,$F8
+ $90F0 DEFB $03,$8D,$DD,$E0,$70,$B6,$0F,$3F
+ $90F8 DEFB $F8,$F6,$77,$03,$00,$01,$03,$1B
+ $9100 DEFB $3F,$0F,$96,$E0,$F0,$3D,$8D,$03
+ $9108 DEFB $E0,$E0,$C3,$0F,$1F,$1B,$37,$37
+ $9110 DEFB $07,$07,$C3,$F0,$F8,$F8,$FC,$FC
+ $9118 DEFB $33,$33,$19,$1C,$0F,$C3,$E0,$E0
+ $9120 DEFB $FC,$FC,$F8,$78,$F0,$C3,$07,$07
+ $9128 DEFB $C0,$B1,$BC,$1F,$07,$69,$F0,$FC
+ $9130 DEFB $D8,$C0,$00,$00,$C0,$EE,$6F,$1F
+ $9138 DEFB $FC,$F0,$6C,$0E,$07,$BB,$B1,$C0
+ $9140 DEFB $1F,$6F,$EE,$C0,$00,$80,$C0,$D8
+ $9148 DEFB $3C,$3F,$3F,$3E,$1D,$01,$00,$00
+ $9150 DEFB $07,$07,$03,$00,$80,$C0,$E0,$70
+ $9158 DEFB $00,$00,$00,$00,$00,$00,$00,$00
+ $9160 DEFB $37,$0F,$1F,$1F,$1F,$0F,$00,$00
+ $9168 DEFB $E3,$87,$67,$63,$2D,$1D,$38,$74
+ $9170 DEFB $C7,$E1,$E6,$CE,$AC,$9C,$18,$3A
+ $9178 DEFB $EC,$C6,$06,$81,$87,$07,$07,$03
+ $9180 DEFB $37,$73,$60,$81,$E1,$E0,$E0,$C0
+ $9188 DEFB $E0,$E0,$C0,$00,$01,$03,$07,$0E
+ $9190 DEFB $3C,$FC,$FC,$7C,$B8,$80,$00,$00
+ $9198 DEFB $6C,$70,$F8,$F8,$F8,$F0,$00,$00
+ $91A0 DEFB $00,$00,$00,$00,$00,$00,$00,$00
 
 ; UDG - Numbers
 b$91A8 DEFB $7F,$FF,$D8,$FB,$FB,$FB,$FB,$F8
@@ -10717,14 +10723,45 @@ c$C35E LD HL,$D2C4                                               ;
 ; Data block at C498
 b$C498 DEFB $0A,$04,$06,$0C,$09,$14,$05,$1C
  $C4A0 DEFB $02,$02,$FF,$FE,$02,$14,$08,$08
- $C4A8 DEFB $00,$15,$0F,$D5,$ED,$43,$A9,$C4
- $C4B0 DEFB $21,$DE,$D2,$11,$03,$03,$7E,$23
- $C4B8 DEFB $E5,$26,$07,$FE,$80,$38,$02,$26
- $C4C0 DEFB $02,$E5,$E6,$7F,$CD,$49,$C5,$F1
- $C4C8 DEFB $CD,$24,$DB,$E1,$0C,$0C,$1D,$20
- $C4D0 DEFB $E5,$1E,$03,$79,$D6,$06,$4F,$04
- $C4D8 DEFB $04,$15,$20,$DA,$06,$0D,$CD,$06
- $C4E0 DEFB $C5,$10,$FB,$D1,$C9
+ $C4A8 DEFB $00,$15,$0F
+
+; Routine at C4AB
+;
+; Used by the routine at #R$C352.
+c$C4AB PUSH DE       ;
+ $C4AC LD ($C4A9),BC ;
+ $C4B0 LD HL,$D2DE   ;
+ $C4B3 LD DE,$0303   ;
+*$C4B6 LD A,(HL)     ;
+ $C4B7 INC HL        ;
+ $C4B8 PUSH HL       ;
+ $C4B9 LD H,$07      ;
+ $C4BB CP $80        ;
+ $C4BD JR C,$C4C1    ;
+ $C4BF LD H,$02      ;
+*$C4C1 PUSH HL       ;
+ $C4C2 AND $7F       ;
+ $C4C4 CALL $C549    ;
+ $C4C7 POP AF        ;
+ $C4C8 CALL $DB24    ;
+ $C4CB POP HL        ;
+ $C4CC INC C         ;
+ $C4CD INC C         ;
+ $C4CE DEC E         ;
+ $C4CF JR NZ,$C4B6   ;
+ $C4D1 LD E,$03      ;
+ $C4D3 LD A,C        ;
+ $C4D4 SUB $06       ;
+ $C4D6 LD C,A        ;
+ $C4D7 INC B         ;
+ $C4D8 INC B         ;
+ $C4D9 DEC D         ;
+ $C4DA JR NZ,$C4B6   ;
+ $C4DC LD B,$0D      ;
+*$C4DE CALL $C506    ;
+ $C4E1 DJNZ $C4DE    ;
+ $C4E3 POP DE        ;
+ $C4E4 RET           ;
 
 ; Routine at C4E5
 ;
@@ -10809,10 +10846,10 @@ c$C544 JR $C54F      ;
 ; Used by the routines at #R$A01B and #R$C35E.
 c$C546 JP $C8DD      ;
 
-; Routine at C549
+; Return the address of a static UDG given its ID (copy)
 ;
 ; Used by the routine at #R$AA30.
-c$C549 JP $CE68      ;
+c$C549 JP $CE68      ; Jump to the routine.
 
 ; Routine at C54C
 ;
@@ -11992,21 +12029,24 @@ c$CE2C PUSH BC                   ;
  $CE66 POP BC                    ;
  $CE67 RET                       ;
 
-; Routine at CE68
+; Return the address of a static UDG given its ID
 ;
 ; Used by the routines at #R$C549, #R$CC5A, #R$CCF1, #R$CE2C and #R$D09F.
-c$CE68 PUSH DE       ;
- $CE69 LD L,A        ;
- $CE6A LD H,$00      ;
- $CE6C ADD HL,HL     ;
+;
+; A ID of the graphic
+; HL On exit, points to the graphic data
+c$CE68 PUSH DE       ; Store #REGde.
+ $CE69 LD L,A        ; { Put the ID in #REGhl.
+ $CE6A LD H,$00      ; }
+ $CE6C ADD HL,HL     ; { Multiply by 32 to get the right offset size.
  $CE6D ADD HL,HL     ;
  $CE6E ADD HL,HL     ;
  $CE6F ADD HL,HL     ;
- $CE70 ADD HL,HL     ;
- $CE71 LD DE,$9088   ;
- $CE74 ADD HL,DE     ;
- $CE75 POP DE        ;
- $CE76 RET           ;
+ $CE70 ADD HL,HL     ; }
+ $CE71 LD DE,$9088   ; { Add the base address of the core graphics (#R$9088).
+ $CE74 ADD HL,DE     ; }
+ $CE75 POP DE        ; { Restore #REGde and return.
+ $CE76 RET           ; }
 
 ; Blob has interacted with an item. (2)
 ;
@@ -13821,66 +13861,76 @@ c$DAC6 PUSH AF       ; { Store main registers.
 b$DB19 DEFB $04,$02,$00,$00,$00,$00,$00,$00
  $DB21 DEFB $00,$00,$00
 
-; Routine at DB24
+; Print a simple UDG on screen
 ;
 ; Used by the routines at #R$A66C, #R$AA30, #R$C4E5, #R$CC5A, #R$CCF1, #R$CDFE,
 ; #R$CE2C, #R$D09F, #R$D425 and #R$D5FD.
-c$DB24 PUSH HL       ;
+;
+; HL Address of graphic data
+; A Attribute
+; B Starting row
+; C Starting column
+c$DB24 PUSH HL       ; { Store main registers.
  $DB25 PUSH DE       ;
- $DB26 PUSH BC       ;
- $DB27 CALL $DB3B    ;
- $DB2A INC C         ;
- $DB2B CALL $DB3B    ;
- $DB2E INC B         ;
- $DB2F DEC C         ;
- $DB30 CALL $DB3B    ;
- $DB33 INC C         ;
- $DB34 CALL $DB3B    ;
- $DB37 POP BC        ;
+ $DB26 PUSH BC       ; }
+ $DB27 CALL $DB3B    ; Draw a cell
+ $DB2A INC C         ; Move to the next column
+ $DB2B CALL $DB3B    ; Draw a cell
+ $DB2E INC B         ; Move to the next row
+ $DB2F DEC C         ; Move back a column
+ $DB30 CALL $DB3B    ; Draw a cell
+ $DB33 INC C         ; Move to the next column
+ $DB34 CALL $DB3B    ; Draw a cell
+ $DB37 POP BC        ; { Restore main registers and return.
  $DB38 POP DE        ;
- $DB39 POP HL        ;
- $DB3A RET           ;
+ $DB39 POP HL        ; 
+ $DB3A RET           ; }
 
-; Routine at DB3B
+; Print a cell of a UDG
 ;
 ; Used by the routines at #R$DB24 and #R$DB88.
-c$DB3B PUSH AF       ;
- $DB3C LD A,B        ;
- $DB3D RRCA          ;
+;
+; HL Address of graphic data
+; A Attribute
+; B Row
+; C Column
+c$DB3B PUSH AF       ; Store the attribute.
+ $DB3C LD A,B        ; Put the row in #REGb.
+ $DB3D RRCA          ; { Rotate the bottom 3 bits into the top.
  $DB3E RRCA          ;
- $DB3F RRCA          ;
- $DB40 AND $E0       ;
- $DB42 ADD A,C       ;
- $DB43 LD E,A        ;
- $DB44 LD A,B        ;
- $DB45 AND $18       ;
- $DB47 OR $40        ;
- $DB49 LD D,A        ;
- $DB4A LD A,$08      ;
- $DB4C EX DE,HL      ;
-*$DB4D PUSH AF       ;
- $DB4E LD A,(DE)     ;
- $DB4F INC DE        ;
- $DB50 XOR (HL)      ;
- $DB51 LD (HL),A     ;
- $DB52 INC H         ;
- $DB53 POP AF        ;
- $DB54 DEC A         ;
- $DB55 JR NZ,$DB4D   ;
- $DB57 DEC H         ;
- $DB58 LD A,H        ;
+ $DB3F RRCA          ; }
+ $DB40 AND $E0       ; Select those bits, to give an offset.
+ $DB42 ADD A,C       ; Add the column.
+ $DB43 LD E,A        ; Set this to the low byte of the screen address.
+ $DB44 LD A,B        ; Put the row in #REGb.
+ $DB45 AND $18       ; Select bits 3 and 4.
+ $DB47 OR $40        ; Set bit 6, to give an offset from #N$4000 - #N$5800.
+ $DB49 LD D,A        ; Set this to the high byte of the screen address.
+ $DB4A LD A,$08      ; Set 8 bytes to copy.
+ $DB4C EX DE,HL      ; Swap #REGde and #REGhl, so #REGhl contains the target address.
+*$DB4D PUSH AF       ; Store copy count.
+ $DB4E LD A,(DE)     ; Get the byte to copy.
+ $DB4F INC DE        ; Move to the next graphic address.
+ $DB50 XOR (HL)      ; Merge with the existing cell on screen.
+ $DB51 LD (HL),A     ; Set the new graphic data.
+ $DB52 INC H         ; Move to the next row on screen.
+ $DB53 POP AF        ; Restore copy count.
+ $DB54 DEC A         ; Decrement 1.
+ $DB55 JR NZ,$DB4D   ; Loop while there are more rows to copy.
+ $DB57 DEC H         ; Move to the next row.
+ $DB58 LD A,H        ; { Translate the address into the appropriate third on screen.
  $DB59 RRCA          ;
  $DB5A RRCA          ;
  $DB5B RRCA          ;
  $DB5C AND $03       ;
  $DB5E OR $58        ;
- $DB60 LD H,A        ;
- $DB61 POP AF        ;
- $DB62 PUSH AF       ;
- $DB63 AND $80       ;
- $DB65 JR NZ,$DBA6   ;
- $DB67 POP AF        ;
- $DB68 LD (HL),A     ;
+ $DB60 LD H,A        ; }
+ $DB61 POP AF        ; Restore the attribute.
+ $DB62 PUSH AF       ; Store the attribute again.
+ $DB63 AND $80       ; Is the FLASH bit of the attribute set?
+ $DB65 JR NZ,$DBA6   ; Jump forward if not.
+ $DB67 POP AF        ; Restore the attributes.
+ $DB68 LD (HL),A     ; Set the attribute on screen.
  $DB69 EX DE,HL      ;
  $DB6A BIT 6,A       ;
  $DB6C JR Z,$DB7C    ;

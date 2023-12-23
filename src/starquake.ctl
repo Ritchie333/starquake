@@ -1157,6 +1157,9 @@ D $8d18 #CALL:print_room_data(#PC,room_1fe)
 b $8d24 Room data 1ff
 D $8d24 #CALL:print_room_data(#PC,room_1ff)
 
+b $9039
+b $9088
+
 b $91A8 UDG - Numbers
 b $9268 UDG - Access card
 b $928A UDG - Bonus items
@@ -1784,7 +1787,7 @@ C $C3A8
 
 b $C498
 
-
+c $C4AB
 
 c $C5AB
 c $C4E5
