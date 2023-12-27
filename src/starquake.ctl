@@ -115,11 +115,11 @@ T $683B
 C $6841
 T $6852
 C $6854
-T $6876 High score achieved text
+T $6876,,10 High score achieved text
 C $68D8
 T $68F3
 C $68F6
-T $694D Game completed text
+T $694D,,10 Game completed text
 C $69CE
 b $69D6
 b $69DC Theme tune 1
@@ -1158,14 +1158,84 @@ b $8d24 Room data 1ff
 D $8d24 #CALL:print_room_data(#PC,room_1ff)
 
 b $9039
-b $9088
 
-b $91A8 UDG - Numbers
-b $9268 UDG - Access card
-b $928A UDG - Bonus items
-b $93A8 UDG - Cheops pyramid
-b $93C8 UDG - Core items
+b $9088 Sprite 00
+
+b $9088 Sprite 00
+D $9088 #CALL print_sprite( #PC,sprite_00 )
+b $90a8 Sprite 01
+D $90a8 #CALL print_sprite( #PC,sprite_01 )
+b $90c8 Sprite 02
+D $90c8 #CALL print_sprite( #PC,sprite_02 )
+b $90e8 Sprite 03
+D $90e8 #CALL print_sprite( #PC,sprite_03 )
+b $9108 Sprite 04
+D $9108 #CALL print_sprite( #PC,sprite_04 )
+b $9128 Sprite 05
+D $9128 #CALL print_sprite( #PC,sprite_05 )
+b $9148 Sprite 06
+D $9148 #CALL print_sprite( #PC,sprite_06 )
+b $9168 Sprite 07
+D $9168 #CALL print_sprite( #PC,sprite_07 )
+b $9188 Sprite 08
+D $9188 #CALL print_sprite( #PC,sprite_08 )
+b $91a8 Sprite 09
+D $91a8 #CALL print_sprite( #PC,sprite_09 )
+b $91c8 Sprite 0a
+D $91c8 #CALL print_sprite( #PC,sprite_0a )
+b $91e8 Sprite 0b
+D $91e8 #CALL print_sprite( #PC,sprite_0b )
+b $9208 Sprite 0c
+D $9208 #CALL print_sprite( #PC,sprite_0c )
+b $9228 Sprite 0d
+D $9228 #CALL print_sprite( #PC,sprite_0d )
+b $9248 Sprite 0e
+D $9248 #CALL print_sprite( #PC,sprite_0e )
+b $9268 Sprite 0f
+D $9268 #CALL print_sprite( #PC,sprite_0f )
+b $9288 Sprite 10
+D $9288 #CALL print_sprite( #PC,sprite_10 )
+b $92a8 Sprite 11
+D $92a8 #CALL print_sprite( #PC,sprite_11 )
+b $92c8 Sprite 12
+D $92c8 #CALL print_sprite( #PC,sprite_12 )
+b $92e8 Sprite 13
+D $92e8 #CALL print_sprite( #PC,sprite_13 )
+b $9308 Sprite 14
+D $9308 #CALL print_sprite( #PC,sprite_14 )
+b $9328 Sprite 15
+D $9328 #CALL print_sprite( #PC,sprite_15 )
+b $9348 Sprite 16
+D $9348 #CALL print_sprite( #PC,sprite_16 )
+b $9368 Sprite 17
+D $9368 #CALL print_sprite( #PC,sprite_17 )
+b $9388 Sprite 18
+D $9388 #CALL print_sprite( #PC,sprite_18 )
+b $93a8 Sprite 19
+D $93a8 #CALL print_sprite( #PC,sprite_19 )
+b $93c8 Sprite 1a
+D $93c8 #CALL print_sprite( #PC,sprite_1a )
+b $93e8 Sprite 1b
+D $93e8 #CALL print_sprite( #PC,sprite_1b )
+b $9408 Sprite 1c
+D $9408 #CALL print_sprite( #PC,sprite_1c )
+b $9428 Sprite 1d
+D $9428 #CALL print_sprite( #PC,sprite_1d )
+b $9448 Sprite 1e
+D $9448 #CALL print_sprite( #PC,sprite_1e )
+b $9468 Sprite 1f
+D $9468 #CALL print_sprite( #PC,sprite_1f )
+b $9488 Sprite 20
+D $9488 #CALL print_sprite( #PC,sprite_20 )
+b $94a8 Sprite 21
+D $94a8 #CALL print_sprite( #PC,sprite_21 )
+b $94c8 Sprite 22
+D $94c8 #CALL print_sprite( #PC,sprite_22 )
+
 b $94E8
+B $94E8,$100,4
+
+b $95E8
 
 b $9600
 
@@ -1686,7 +1756,10 @@ D$9c38 #CALL:print_block_data(#PC,block_data_fe)
 b$9c3c Room block data ff
 D$9c3c #CALL:print_block_data(#PC,block_data_ff)
 
-c $9C40
+b $9C40
+c $9C47
+c $9C49
+c $9C4C
 c $9C4F
 
 c $9D96
@@ -1775,6 +1848,7 @@ b $B448 Annoying aliens
 b $BEC8 Stars
 b $BF88 Arrow
 b $BFB8
+
 c $C350
 c $C352
 c $C355
@@ -1882,7 +1956,7 @@ c $D2A6
 
 c $D2B9
 
-b $D2BE
+g $D2BE
 b $D2C8
 W $D2C8
 b $D2CA
@@ -1893,6 +1967,10 @@ g $D2CF Current fire power
 
 g $D2D0
 
+g $D2D2 Inventory
+
+g $D2DA
+
 c $D2F0
 c $D2F4
 b $D3BE
@@ -1902,11 +1980,14 @@ R $D3C1 HL Pointer to character data
 g $D3DD
 W $D3DD
 c $D3DF
-b $D413
+
+g $D413 Current score
+g $D419 Temporary working space for score
+
 c $D41F
 c $D422
 c $D425
-T $D43C
+T $D43C,$27,5
 C $D463
 T $D476
 C $D47A
@@ -1969,12 +2050,10 @@ c $DBEC
 
 b $DC43
 
-b $DD18
+b $DD38 Nasty movement tables
+B $DD38,$A0,$20
 
-g $DD1D X co-ordinate
-g $DD1E Y co-ordinate
-
-b $DD1F
+s $DDD8
 
 w $DDDE Screen offset table
 

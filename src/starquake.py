@@ -137,6 +137,21 @@ class StarquakeHtmlWriter(HtmlWriter):
         if( udgs ):
             skoolkit.graphics.overlay_udgs( bg, udgs, x * 8, y * 8, 0, lambda bg, fg : fg, lambda bg, fg, mk : fg )
 
+    def print_sprite( self, cwd, addr, fName ):
+        udgs = []
+
+        for y in range( 0, 2 ) :
+            udgLine = []
+            for x in range( 0, 2 ):
+                ptr = addr + ( y * 16 ) + ( x * 8 )
+                data = self.snapshot[ ptr : ptr + 8 ]
+                udgLine.append( Udg( 7, data ) )
+            udgs.append( udgLine )
+
+        frame = Frame( udgs, 2 )
+
+        return self.handle_image( frame, fName, cwd )
+
     def udg_id_to_ptr( self, id ):
         addr = 0xeb23 + id * 2
         ptr = self.snapshot[ addr ] + 0x100 * self.snapshot[ addr + 1 ]
