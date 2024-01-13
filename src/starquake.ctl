@@ -15,7 +15,7 @@ b $5E2C
 t $5E5B Keyboard options
 b $5E70
 c $5E81 Run the main menu
-T $5EAD
+T $5EAD,,8
 C $5EC8
 c $5ED9 Print main menu options
 T $5EE3
@@ -76,7 +76,7 @@ C $6257
 b $629C
 c $629D Start the game
 t $62D3 Key mappings
-b $62FC
+w $62FB Jump table for key mappings
 c $6307
 b $6343
 c $6351
@@ -2057,9 +2057,9 @@ s $DDD8
 
 w $DDDE Screen offset table
 
-b $DF3E
+s $DF3E
 
-c $DF71
+b $DF71
 b $E074 Blob walking right
 b $E134 Blob stationary right
 b $E1F4 Blob walking right 2

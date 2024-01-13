@@ -976,10 +976,22 @@ b$5E2C DEFB $DA,$D3,$76,$6F,$1A,$08,$FB,$FC
  $5E3C DEFB $D0,$B0,$46,$07,$85,$9E,$EE,$F1
  $5E44 DEFB $2A,$2B,$EF,$1F,$28,$29,$71,$61
  $5E4C DEFB $39,$3A,$E9,$BA,$04,$14,$54,$5B
- $5E54 DEFB $4B,$63,$64,$7B,$04,$07,$02
+ $5E54 DEFB $4B,$63,$64,$7B
+ 
+; Current control option
+g$5E58 DEFB $04
+
+; Current INK colour for selected control option
+g$5E59 DEFB $07
+
+; Game status buffer entry at 5E5A
+g$5E5A DEFB $02
+
+; Current control option being scanned.
+g$5E5B DEFB $00
 
 ; Keyboard options
-t$5E5B DEFM $00,"5867012345OPAQMQWERT"
+t$5E5C DEFM "5867012345OPAQMQWERT"
 
 ; System UDGs
 b$5E70 DEFB $2A,$00,$00,$00,$18,$18,$00,$00
@@ -997,54 +1009,58 @@ c$5E81 LD HL,$ACD4      ; { Set the character set (#HTML(<a href="https://skoolk
  $5E8F LD ($5C7B),HL    ; }
  $5E92 LD A,$05         ; Set the attribute mask.
  $5E94 CALL $6615       ; Print the banners on screen.
- $5E97 LD BC,$1609      ;
- $5E9A LD L,$88         ;
- $5E9C CALL $EA65       ;
- $5E9F LD C,$11         ;
- $5EA1 INC L            ;
- $5EA2 CALL $EA65       ;
- $5EA5 LD A,$07         ;
- $5EA7 LD ($5E59),A     ;
- $5EAA CALL $D3C1       ;
- $5EAD DEFM $13,$01,$10,$07,$11,$00,$16,$03,$07,"S",$90,"T",$90,"A",$90,"R",$90,"Q",$90,"U",$90,"A",$90,"K",$90,"E",$FF ;
+ $5E97 LD BC,$1609      ; Move to 24,09 (bottom centre of screen)
+ $5E9A LD L,$88         ; Use UDG #N$88.
+ $5E9C CALL $EA65       ; Print it.
+ $5E9F LD C,$11         ; Move to column 17.
+ $5EA1 INC L            ; Use UDG #N$88.
+ $5EA2 CALL $EA65       ; Print it.
+ $5EA5 LD A,$07         ; { Default to INK 7.
+ $5EA7 LD ($5E59),A     ; }
+ $5EAA CALL $D3C1       ; Print "STARQUAKE".
+ $5EAD DEFM $13,$01,$10,$07,$11,$00,$16,$03 ;
+ $5EB5 DEFM $07,"S",$90,"T",$90,"A",$90,"R" ;
+ $5EBD DEFM $90,"Q",$90,"U",$90,"A",$90,"K" ;
+ $5EC5 DEFM $90,"E",$FF                     ;
  $5EC8 LD HL,$AEAC      ;
  $5ECB LD ($5C7B),HL    ;
- $5ECE CALL $5ED9       ;
- $5ED1 LD B,$03         ;
- $5ED3 CALL $6600       ;
- $5ED6 JP $5FF4         ;
+ $5ECE CALL $5ED9       ; Print main menu options.
+ $5ED1 LD B,$03         ; { Play theme tune 3 (main menu tune).
+ $5ED3 CALL $6600       ; }
+ $5ED6 JP $5FF4         ; Run the main menu options.
 
 ; Print main menu options
 ;
 ; Used by the routines at #R$5E81 and #R$5FF4.
-c$5ED9 XOR A                                                    ;
- $5EDA LD ($5E5B),A                                             ;
- $5EDD CALL $5FB4                                               ;
- $5EE0 CALL $D3C1                                               ;
- $5EE3 DEFM $13,$01,$16,$06,$04,"1.KEMPSTON",$FF                ;
- $5EF3 CALL $5F86                                               ;
- $5EF6 CALL $5FB4                                               ;
- $5EF9 CALL $D3C1                                               ;
- $5EFC DEFM $16,$08,$04,"2.CURSOR",$FF                          ;
- $5F08 CALL $5F86                                               ;
- $5F0B CALL $5FB4                                               ;
- $5F0E CALL $D3C1                                               ;
- $5F11 DEFM $16,$0A,$04,"3.SINCLAIR ZX2",$FF                    ;
- $5F23 CALL $5F86                                               ;
- $5F26 CALL $5FB4                                               ;
- $5F29 CALL $D3C1                                               ;
- $5F2C DEFM $16,$0C,$04,"4.",$FF                                ;
- $5F32 LD HL,$5E66                                              ;
- $5F35 CALL $5F94                                               ;
- $5F38 CALL $5FB4                                               ;
- $5F3B CALL $D3C1                                               ;
- $5F3E DEFM $16,$0E,$04,"5.UDK ",$FF                            ;
- $5F48 LD HL,$5E6B                                              ;
- $5F4B CALL $5F94                                               ;
- $5F4E CALL $D3C1                                               ;
- $5F51 DEFM $10,$04,$16,$10,$04,"6.DEFINE YOUR OWN KEYS"        ;
- $5F6C DEFM $16,$12,$04,"0.START GAME",$16,$14,$04,"Q.QUIT",$FF ;
- $5F85 RET                                                      ;
+c$5ED9 XOR A                                                    ; { Reset the current control option being looked at. (#R$5E5B)
+ $5EDA LD ($5E5B),A                                             ; }
+ $5EDD CALL $5FB4                                               ; Higlight the current control selection.
+ $5EE0 CALL $D3C1                                               ; { Print "1. KEMPSTON".
+ $5EE3 DEFM $13,$01,$16,$06,$04,"1.KEMPSTON",$FF                ; }
+ $5EF3 CALL $5F86                                               ; Print "JOYSTICK".
+ $5EF6 CALL $5FB4                                               ; Higlight the current control selection.
+ $5EF9 CALL $D3C1                                               ; { Print "2. CURSOR".
+ $5EFC DEFM $16,$08,$04,"2.CURSOR",$FF                          ; }
+ $5F08 CALL $5F86                                               ; Print "JOYSTICK".
+ $5F0B CALL $5FB4                                               ; Higlight the current control selection.
+ $5F0E CALL $D3C1                                               ; { Print "3. SINCLAIR".
+ $5F11 DEFM $16,$0A,$04,"3.SINCLAIR ZX2",$FF                    ; }
+ $5F23 CALL $5F86                                               ; Print "JOYSTICK".
+ $5F26 CALL $5FB4                                               ; Higlight the current control selection.
+ $5F29 CALL $D3C1                                               ; { Print "4."
+ $5F2C DEFM $16,$0C,$04,"4.",$FF                                ; }
+ $5F32 LD HL,$5E66                                              ; Point #REGhl at the first key mappings. (#R$5E5C)
+ $5F35 CALL $5F94                                               ; Print key mappings.
+ $5F38 CALL $5FB4                                               ; Higlight the current control selection.
+ $5F3B CALL $D3C1                                               ; {Print "5. UDK"
+ $5F3E DEFM $16,$0E,$04,"5.UDK ",$FF                            ; }
+ $5F48 LD HL,$5E6B                                              ; Point #REGhl at the second key mappings.
+ $5F4B CALL $5F94                                               ; Print key mappings.
+ $5F4E CALL $D3C1                                               ; { Print remaining options.
+ $5F51 DEFM $10,$04,$16,$10,$04,"6.DEFINE YOUR OWN KEYS"        ; 
+ $5F6C DEFM $16,$12,$04,"0.START GAME"                          ;
+ $5F7B DEFB $16,$14,$04,"Q.QUIT",$FF                            ; }
+ $5F85 RET                                                      ; Return.
 
 ; Print joystick
 ;
@@ -1053,41 +1069,44 @@ c$5F86 CALL $D3C1           ;
  $5F89 DEFM " JOYSTICK",$FF ;
  $5F93 RET                  ;
 
-; Print keyboard
+; Print keyboard option
 ;
 ; Used by the routine at #R$5ED9.
-c$5F94 CALL $D3C1               ;
- $5F97 DEFM "KEYBOARD ... ",$FF ;
- $5FA5 LD B,$05                 ;
+;
+; HL Pointer to a string containing the key mappings
+c$5F94 CALL $D3C1               ; Print a string.
+ $5F97 DEFM "KEYBOARD ... ",$FF ; String data.
+ $5FA5 LD B,$05                 ; Print 5 characters.
  ; This entry point is used by the routine at #R$6233.
-*$5FA7 LD A,(HL)                ;
- $5FA8 INC HL                   ;
- $5FA9 LD ($5FAF),A             ;
- $5FAC CALL $D3C1               ;
- $5FAF DEFM $00,$FF,$10,$F4     ;
- $5FB3 RET                      ;
+*$5FA7 LD A,(HL)                ; Get the next data item.
+ $5FA8 INC HL                   ; Move to the next item in the string.
+ $5FA9 LD ($5FAF),A             ; Set the string data to print.
+ $5FAC CALL $D3C1               ; Print a string.
+ $5FAF DEFM $00,$FF             ; String data.
+ $5FB1 DJNZ $5FA7               ; Loop while there is more to print.
+ $5FB3 RET                      ; Otherwise return.
 
-; Routine at 5FB4
+; Highlight the current control selection
 ;
 ; Used by the routine at #R$5ED9.
-c$5FB4 LD HL,$5E5B      ;
- $5FB7 INC (HL)         ;
- $5FB8 LD A,$03         ;
- $5FBA LD ($5FCD),A     ;
- $5FBD LD A,($5E58)     ;
- $5FC0 CP (HL)          ;
- $5FC1 JR NZ,$5FC9      ;
- $5FC3 LD A,($5E59)     ;
- $5FC6 LD ($5FCD),A     ;
-*$5FC9 CALL $D3C1       ;
- $5FCC DEFM $10,$07,$FF ;
- $5FCF RET              ;
+c$5FB4 LD HL,$5E5B      ; Point #REGhl at the column to highlight.
+ $5FB7 INC (HL)         ; Increment to the next option.
+ $5FB8 LD A,$03         ; { Set INK 3.
+ $5FBA LD ($5FCD),A     ; }
+ $5FBD LD A,($5E58)     ; Get the current control option.
+ $5FC0 CP (HL)          ; Is it this one?
+ $5FC1 JR NZ,$5FC9      ; Jump forward if it isn't.
+ $5FC3 LD A,($5E59)     ; { Set INK for selected option.
+ $5FC6 LD ($5FCD),A     ; }
+*$5FC9 CALL $D3C1       ; Print the string.
+ $5FCC DEFM $10,$07,$FF ; String data.
+ $5FCF RET              ; Return.
 
 ; Clear the screen
 ;
 ; Used by the routines at #R$6194, #R$6615 and #R$666D.
 c$5FD0 XOR A         ;
-$5FD1 CALL $5FE2    ;
+ $5FD1 CALL $5FE2    ;
  $5FD4 LD HL,$4000   ;
  $5FD7 LD E,A        ;
  $5FD8 LD D,$19      ;
@@ -1112,7 +1131,7 @@ $5FD1 CALL $5FE2    ;
 ; Main menu
 ;
 ; Used by the routine at #R$5E81.
-c$5FF4 CALL $5ED9    ;
+c$5FF4 CALL $5ED9    ; Print the options.
  $5FF7 LD HL,$5E5A   ;
  $5FFA DEC (HL)      ;
  $5FFB JR NZ,$6021   ;
@@ -1125,9 +1144,9 @@ c$5FF4 CALL $5ED9    ;
  $6006 JR NZ,$6021   ;
  $6008 XOR A         ;
  $6009 LD ($EA61),A  ;
- $600C LD BC,$001E   ;
- $600F LD L,$90      ;
- $6011 CALL $EA65    ;
+ $600C LD BC,$001E   ; Move to 0,30.
+ $600F LD L,$90      ; Use UDG #N$90.
+ $6011 CALL $EA65    ; Draw it.
  $6014 CALL $DAC6    ;
  $6017 LD A,($DAC0)  ;
  $601A CP $28        ;
@@ -1135,34 +1154,38 @@ c$5FF4 CALL $5ED9    ;
  $601E CALL $664D    ;
 ; Get an option from the player.
 *$6021 CALL $D5C8    ; Wait for a keypress.
- $6024 CP $30        ; 
- $6026 JP C,$5FF4    ;
- $6029 CP $51        ;
- $602B JP Z,$6060    ;
- $602E CP $37        ;
- $6030 JR NC,$5FF4   ;
- $6032 CP $36        ;
- $6034 JP Z,$6194    ;
- $6037 CP $30        ;
- $6039 JP Z,$629D    ;
- $603C SUB $30       ;
- $603E CP $01        ;
- $6040 JR NZ,$6051   ;
- $6042 LD B,$00      ;
-*$6044 LD A,$E0      ;
- $6046 OUT ($1F),A   ;
- $6048 IN A,($1F)    ;
- $604A AND $E0       ;
- $604C JR NZ,$605D   ;
- $604E DJNZ $6044    ;
- $6050 INC A         ;
-*$6051 LD HL,$5E58   ;
- $6054 CP (HL)       ;
- $6055 JR Z,$605D    ;
- $6057 LD (HL),A     ;
- $6058 LD A,$0C      ;
- $605A CALL $D7C0    ;
-*$605D JP $5FF4      ;
+ $6024 CP $30        ; Is it less than '0'?
+ $6026 JP C,$5FF4    ; Jump back if it is.
+ $6029 CP $51        ; Was 'Q' pressed?
+ $602B JP Z,$6060    ; Jump forward if so.
+ $602E CP $37        ; Was a number between '0' and '6' pressed?
+ $6030 JR NC,$5FF4   ; Jump back if not.
+ $6032 CP $36        ; Was '6' pressed?
+ $6034 JP Z,$6194    ; If so, define keys
+ $6037 CP $30        ; Was '0' pressed?
+ $6039 JP Z,$629D    ; If so, start game.
+ $603C SUB $30       ; Otherwise convert the ASCII value to an index.
+ $603E CP $01        ; Was Kempston selected?
+ $6040 JR NZ,$6051   ; Jump forward if not.
+; Detect a Kempston joystick
+ $6042 LD B,$00      ; Loop 256 times.
+*$6044 LD A,$E0      ; { Turn off all bits in the Kempston interface.
+ $6046 OUT ($1F),A   ; }
+ $6048 IN A,($1F)    ; Read the Kempston interface.
+ $604A AND $E0       ; Turn off bits 0 - 5,
+                     ; should be zero if a Kempston is connected,
+                     ; otherwise will be random noise.
+ $604C JR NZ,$605D   ; Stop looking if Kempston is not connected.
+ $604E DJNZ $6044    ; Loop round to check the interface.
+; A Kempston interface is connected and responding correctly, so set it.
+ $6050 INC A         ; Set the selected option back to 1.
+*$6051 LD HL,$5E58   ; Point #REGhl towards the selected control option. (#R$5E58)
+ $6054 CP (HL)       ; Does the option match the selected one?
+ $6055 JR Z,$605D    ; Jump forward if it does.
+ $6057 LD (HL),A     ; Otherwise select this option.
+ $6058 LD A,$0C      ; { Play sound effect #N$0C.
+ $605A CALL $D7C0    ; }
+*$605D JP $5FF4      ; Jump back to select another option.
 
 ; Quit the game
 ;
@@ -1287,8 +1310,8 @@ c$6194 CALL $5FD0                                                       ;
  $6223 LD B,$78                                                         ;
 *$6225 HALT                                                             ;
  $6226 DJNZ $6225                                                       ;
- $6228 LD A,$05                                                         ;
- $622A LD ($5E58),A                                                     ;
+ $6228 LD A,$05                                                         ; { Set control type to 5 (user defined keys)
+ $622A LD ($5E58),A                                                     ; }
  $622D JP $5E81                                                         ;
  
 ; Data block at 6230
@@ -1356,60 +1379,66 @@ c$6233 CALL $D5C8                       ; Wait for a keypress.
  $6298 CALL $6131                       ;
  $629B RET                              ;
  
-; Data block at 629C
-b$629C DEFB $00
+; Current control option being scanned.
+g$629C DEFB $00
 
 ; Start the game
 ;
 ; Used by the routine at #R$5FF4.
-c$629D XOR A         ;
+c$629D XOR A         ; Set #REGa to 0 to initialize some flags.
  $629E LD ($629C),A  ;
- $62A1 LD HL,$C567   ;
+ $62A1 LD HL,$C567   ; Point #REGhl at the instruction for #R$C566.
  $62A4 LD (HL),A     ;
- $62A5 LD A,($5E58)  ;
- $62A8 CP $01        ;
- $62AA JR NZ,$62AF   ;
- $62AC LD (HL),A     ;
+ $62A5 LD A,($5E58)  ; Get the current control option (#R$5E58)
+ $62A8 CP $01        ; Is it Kempston?
+ $62AA JR NZ,$62AF   ; Jump forward if not.
+ $62AC LD (HL),A     ; Set instruction to match 1.
  $62AD JR $62D0      ;
-*$62AF LD C,A        ;
+*$62AF LD C,A        ; { Multiply the control option by 5.
  $62B0 RLCA          ;
  $62B1 RLCA          ;
- $62B2 ADD A,C       ;
- $62B3 LD D,$00      ;
- $62B5 LD E,A        ;
- $62B6 LD HL,$5E52   ;
- $62B9 ADD HL,DE     ;
- $62BA LD B,$05      ;
-*$62BC PUSH HL       ;
- $62BD PUSH BC       ;
- $62BE CALL $6307    ;
- $62C1 LD HL,$629C   ;
- $62C4 INC (HL)      ;
- $62C5 POP BC        ;
- $62C6 POP HL        ;
- $62C7 INC HL        ;
- $62C8 DJNZ $62BC    ;
+ $62B2 ADD A,C       ; }
+ $62B3 LD D,$00      ; { Put this value in #REGde.
+ $62B5 LD E,A        ; }
+ $62B6 LD HL,$5E52   ; { Add the base address of the key control table.
+ $62B9 ADD HL,DE     ; which will be from #R$5E5C - #N$5E6B. }
+ $62BA LD B,$05      ; 5 keys to handle.
+*$62BC PUSH HL       ; { Store #REGhl and #REGbc.
+ $62BD PUSH BC       ; }
+ $62BE CALL $6307    ; Get the mapping for this key.
+ $62C1 LD HL,$629C   ; { Increment the current control option.
+ $62C4 INC (HL)      ; }
+ $62C5 POP BC        ; { Restore #REGbc and #REGhl.
+ $62C6 POP HL        ; }
+ $62C7 INC HL        ; Move to the next key.
+ $62C8 DJNZ $62BC    ; Loop while there is more to do.
  $62CA LD HL,$5E70   ;
  $62CD CALL $6307    ;
 *$62D0 JP $6351      ;
 
 ; Key mappings
-t$62D3 DEFM "[ZXCVASDFGQWERT1234509876POIUY\\LKJH*]MNBy"
+t$62D3 DEFM "[ZXCVASDFGQWERT1234509876POIUY\\LKJH*]MNB"
 
-; Data block at 62FC
-b$62FC DEFB $C5,$9A,$C5,$84,$C5,$8F,$C5,$A5
- $6304 DEFB $C5,$5B,$C5
+; Lookup table for key mappings
+g$62FB DEFW $C579
+ $62FD DEFW $C59A
+ $62FF DEFW $C584
+ $6301 DEFW $C58F
+ $6303 DEFW $C5A5
+ $6305 DEFW $C55B
 
-; Routine at 6307
+; Translate a key into a keyboard scanning option
 ;
 ; Used by the routine at #R$629D.
-c$6307 LD B,$FE      ;
- $6309 LD A,(HL)     ;
- $630A LD HL,$62D3   ;
-*$630D LD C,$42      ;
- $630F LD E,$05      ;
-*$6311 CP (HL)       ;
- $6312 JR Z,$6322    ;
+;
+; HL Pointer to the key to translate
+c$6307 LD B,$FE      ; Start at high port address #N$FE.
+ $6309 LD A,(HL)     ; Get the next key.
+ $630A LD HL,$62D3   ; Point #REGhl at the key lookup table. (#R$62D3)
+*$630D LD C,$42      ; #N$42 entries to scan.
+ $630F LD E,$05      ; 5 entries per port address.
+*$6311 CP (HL)       ; Is this the right key?
+ $6312 JR Z,$6322    ; Move forward if so.
  $6314 INC HL        ;
  $6315 EX AF,AF'     ;
  $6316 LD A,C        ;
@@ -1420,17 +1449,17 @@ c$6307 LD B,$FE      ;
  $631C JR NZ,$6311   ;
  $631E RLC B         ;
  $6320 JR C,$630D    ;
-*$6322 LD HL,$62FB   ;
- $6325 LD A,($629C)  ;
- $6328 RLCA          ;
- $6329 LD D,$00      ;
- $632B LD E,A        ;
- $632C ADD HL,DE     ;
- $632D LD E,(HL)     ;
+*$6322 LD HL,$62FB   ; Point #REGhl towards the jump table. (#R$62FB)
+ $6325 LD A,($629C)  ; Get the current control mechanism.
+ $6328 RLCA          ; Double this to get a word offset.
+ $6329 LD D,$00      ; { Put the value in #REGde.
+ $632B LD E,A        ; }
+ $632C ADD HL,DE     ; Add the base address of the jump table.
+ $632D LD E,(HL)     ; { Put the value found in #REGde.
  $632E INC HL        ;
- $632F LD D,(HL)     ;
- $6330 EX DE,HL      ;
- $6331 LD (HL),$FE   ;
+ $632F LD D,(HL)     ; }
+ $6330 EX DE,HL      ; Swap #REGde and #REGhl, so the latter points to the jump table entry.
+ $6331 LD (HL),$FE   ; 
  $6333 INC HL        ;
  $6334 LD (HL),B     ;
  $6335 INC HL        ;
@@ -1613,8 +1642,8 @@ c$6351 LD B,$2D      ;
  $646B LD ($DD1D),HL ;
  $646E LD HL,$E734   ;
  $6471 LD ($DD1F),HL ;
- $6474 XOR A         ;
- $6475 LD ($DD22),A  ;
+ $6474 XOR A         ; { Set to not on a jetpack.
+ $6475 LD ($DD22),A  ; }
  $6478 INC A         ;
  $6479 LD ($DD2B),A  ;
  $647C LD HL,$0000   ;
@@ -1710,10 +1739,10 @@ c$654B LD A,$03                                      ; Set magenta on black.
  $654D CALL $6615                                    ; Print the banners.
  $6550 CALL $D3C1                                    ; Print a string.
  $6553 DEFM $10,$05,$16,$03,$09,"CORE OF HEROES",$FF ; Hiscore table title
- $6567 LD HL,$64FA                                   ;
+ $6567 LD HL,$64FA                                   ; Point #REGhl at the high score table. (#R$64FA)
  $656A LD B,$08                                      ;
  $656C LD C,$06                                      ;
- *$656E PUSH BC                                       ;
+*$656E PUSH BC                                       ;
  $656F LD A,$39                                      ;
  $6571 SUB B                                         ;
  $6572 LD ($6592),A                                  ;
@@ -8026,9 +8055,9 @@ c$9F05 LD HL,$9620     ;
  $9F51 SUB $08         ;
  $9F53 LD H,A          ;
  $9F54 CALL $9F64      ;
-*$9F57 LD A,($DD22)    ;
- $9F5A CP $02          ;
- $9F5C RET NZ          ;
+*$9F57 LD A,($DD22)    ; Get the jetpack flag.
+ $9F5A CP $02          ; Is Blob on a jetpack?
+ $9F5C RET NZ          ; Return if not.
  $9F5D LD HL,($DD1D)   ;
  $9F60 LD A,H          ;
  $9F61 SUB $08         ;
@@ -8578,22 +8607,22 @@ c$A426 LD HL,($DD1D) ; Get the co-ordinates.
  $A433 LD ($DD1D),HL ; }
  $A436 LD HL,$0000   ; { Don't use a temporary graphic buffer.
  $A439 LD ($EA60),HL ; }
- $A43C LD BC,$0001   ;
- $A43F CALL $D3DF    ;
- $A442 LD BC,$0002   ;
+ $A43C LD BC,$0001   ; { Draw the status graphic at 0,1.
+ $A43F CALL $D3DF    ; }
+ $A442 LD BC,$0002   ; { Draw the score box graphic at 0,2.
  $A445 LD L,$94      ;
- $A447 CALL $EA65    ;
- $A44A INC L         ;
+ $A447 CALL $EA65    ; }
+ $A44A INC L         ; { Draw status area 1 at 0,10.
  $A44B LD C,$0A      ;
- $A44D CALL $EA65    ;
- $A450 INC L         ;
+ $A44D CALL $EA65    ; }
+ $A450 INC L         ; { Draw status area 2 at 0,18.
  $A451 LD C,$12      ;
- $A453 CALL $EA65    ;
- $A456 INC L         ;
+ $A453 CALL $EA65    ; }
+ $A456 INC L         ; { Draw status area 3 at 0,26.
  $A457 LD C,$1A      ;
- $A459 CALL $EA65    ;
+ $A459 CALL $EA65    ; }
  $A45C CALL $D425    ; Update the status area.
- $A45F CALL $A647    ;
+ $A45F CALL $A647    ; Clear the playing area.
  $A462 LD HL,$5B20   ;
  $A465 LD ($EA60),HL ;
  $A468 LD B,$A0      ;
@@ -8601,7 +8630,7 @@ c$A426 LD HL,($DD1D) ; Get the co-ordinates.
 *$A46B LD (HL),A     ;
  $A46C INC HL        ;
  $A46D DJNZ $A46B    ;
- $A46F CALL $A7FC    ;
+ $A46F CALL $A7FC    ; Draw the current room.
  $A472 LD HL,$A390   ;
  $A475 CALL $A804    ;
  $A478 DEC A         ;
@@ -9111,7 +9140,7 @@ b$A7EC DEFB $0D,$20,$20,$20,$20,$20,$20,$20
 ; Attributes to use in room blocks
 b$A7F7 DEFB $20,$03,$02,$05,$06
 
-; Routine at A7FC
+; Draw the room (copy)
 ;
 ; Used by the routine at #R$A426.
 c$A7FC JR $A80A      ;
@@ -10003,6 +10032,8 @@ b$ADD4 DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $AFC4 DEFB $00,$00,$00,$00
 
 ; Hoverpad
+;
+; #GRAFIX(#PC)(hoverpad)
 b$AFC8 DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $AFD0 DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $AFD8 DEFB $00,$00,$00,$00,$00,$00,$00,$00
@@ -10029,6 +10060,8 @@ b$AFC8 DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $B080 DEFB $DB,$AC,$03,$D7,$BC,$00,$1F,$80
 
 ; Hoverpad firepower
+;
+; #GRAFIX(#PC)(hfirepower)
 b$B088 DEFB $00,$00,$00,$00,$80,$00,$01,$C0
  $B090 DEFB $00,$03,$E4,$00,$11,$C0,$00,$00
  $B098 DEFB $80,$00,$00,$10,$00,$10,$84,$00
@@ -10055,6 +10088,8 @@ b$B088 DEFB $00,$00,$00,$00,$80,$00,$01,$C0
  $B140 DEFB $80,$00,$07,$10,$00,$02,$00,$00
 
 ; Core pieces 1
+;
+; #GRAFIX(#PC)(corepieces1)
 b$B148 DEFB $04,$00,$00,$09,$80,$00,$4B,$60
  $B150 DEFB $00,$2A,$F0,$00,$02,$F0,$00,$C0
  $B158 DEFB $60,$00,$00,$04,$00,$00,$00,$00
@@ -10081,6 +10116,8 @@ b$B148 DEFB $04,$00,$00,$09,$80,$00,$4B,$60
  $B200 DEFB $03,$00,$00,$00,$00,$00,$00,$00
 
 ; Core pieces 2
+;
+; #GRAFIX(#PC)(corepieces2)
 b$B208 DEFB $05,$80,$00,$15,$88,$00,$00,$00
  $B210 DEFB $00,$40,$02,$00,$01,$E0,$00,$02
  $B218 DEFB $73,$00,$02,$F0,$00,$C2,$F3,$00
@@ -10107,6 +10144,8 @@ b$B208 DEFB $05,$80,$00,$15,$88,$00,$00,$00
  $B2C0 DEFB $C0,$D0,$00,$00,$C0,$00,$14,$00
 
 ; Deadly alien 1
+;
+; #GRAFIX(#PC)(badalien1)
 b$B2C8 DEFB $01,$10,$00,$1B,$B8,$00,$CE,$E3
  $B2D0 DEFB $00,$84,$41,$00,$60,$06,$00,$30
  $B2D8 DEFB $0C,$00,$1B,$D8,$00,$15,$E8,$00
@@ -10133,6 +10172,8 @@ b$B2C8 DEFB $01,$10,$00,$1B,$B8,$00,$CE,$E3
  $B380 DEFB $00,$08,$03,$FF,$FC,$00,$EE,$E8
 
 ; Deadly alien 2
+;
+; #GRAFIX(#PC)(badalien2)
 b$B388 DEFB $03,$C0,$00,$04,$E0,$00,$05,$E0
  $B390 DEFB $00,$00,$00,$00,$BB,$DD,$00,$BB
  $B398 DEFB $DD,$00,$BB,$DD,$00,$00,$00,$00
@@ -10158,7 +10199,9 @@ b$B388 DEFB $03,$C0,$00,$04,$E0,$00,$05,$E0
  $B438 DEFB $80,$00,$00,$00,$00,$6F,$E0,$00
  $B440 DEFB $00,$00,$00,$0B,$00,$00,$06,$00
 
-; Annoying aliens
+; Annoying alien 1
+;
+; #GRAFIX(#PC)(alien1)
 b$B448 DEFB $00,$00,$00,$00,$00,$00,$00,$70
  $B450 DEFB $00,$00,$D8,$00,$0A,$C8,$00,$6A
  $B458 DEFB $F8,$00,$35,$B0,$00,$DE,$C0,$00
@@ -10183,7 +10226,11 @@ b$B448 DEFB $00,$00,$00,$00,$00,$00,$00,$70
  $B4F0 DEFB $00,$ED,$E2,$03,$5F,$FF,$00,$F5
  $B4F8 DEFB $FD,$01,$DF,$7E,$03,$2B,$00,$00
  $B500 DEFB $D5,$00,$00,$94,$00,$00,$00,$00
- $B508 DEFB $07,$B6,$00,$0F,$6D,$00,$17,$6D
+
+; Annoying alien 2
+;
+; #GRAFIX(#PC)(alien2)
+b$B508 DEFB $07,$B6,$00,$0F,$6D,$00,$17,$6D
  $B510 DEFB $00,$3F,$7F,$00,$3F,$7F,$00,$1F
  $B518 DEFB $BA,$00,$7D,$C0,$00,$7E,$00,$00
  $B520 DEFB $7E,$00,$00,$18,$78,$00,$7E,$54
@@ -10207,7 +10254,11 @@ b$B448 DEFB $00,$00,$00,$00,$00,$00,$00,$70
  $B5B0 DEFB $03,$F0,$C0,$00,$C0,$60,$03,$F0
  $B5B8 DEFB $50,$03,$E8,$70,$01,$78,$E0,$00
  $B5C0 DEFB $FF,$A0,$00,$DD,$C0,$00,$1D,$80
- $B5C8 DEFB $1F,$E0,$00,$71,$F8,$00,$EC,$DC
+
+; Annoying alien 3
+;
+; #GRAFIX(#PC)(alien3)
+b$B5C8 DEFB $1F,$E0,$00,$71,$F8,$00,$EC,$DC
  $B5D0 DEFB $00,$E8,$FE,$00,$F1,$EA,$00,$FF
  $B5D8 DEFB $FF,$00,$6F,$85,$00,$7F,$7B,$00
  $B5E0 DEFB $3E,$FC,$00,$00,$1C,$00,$B0,$1C
@@ -10231,7 +10282,11 @@ b$B448 DEFB $00,$00,$00,$00,$00,$00,$00,$70
  $B670 DEFB $00,$7D,$F8,$00,$00,$70,$02,$C0
  $B678 DEFB $74,$00,$60,$F4,$01,$7F,$C0,$01
  $B680 DEFB $91,$18,$00,$AA,$B0,$00,$3B,$A0
- $B688 DEFB $0E,$F8,$00,$77,$5E,$00,$FB,$53
+
+; Annoying alien 4
+;
+; #GRAFIX(#PC)(alien4)
+b$B688 DEFB $0E,$F8,$00,$77,$5E,$00,$FB,$53
  $B690 DEFB $00,$F8,$7F,$00,$BB,$65,$80,$9B
  $B698 DEFB $77,$80,$73,$AE,$80,$0D,$BB,$80
  $B6A0 DEFB $7C,$4E,$80,$3E,$F3,$80,$7F,$34
@@ -10256,7 +10311,11 @@ b$B448 DEFB $00,$00,$00,$00,$00,$00,$00,$70
  $B738 DEFB $D1,$00,$7F,$1A,$00,$FF,$E0,$00
  $B740 DEFB $FF,$FC,$00,$3F,$FE,$00,$33,$33
  $B748 DEFB $00,$00,$00,$00,$EE,$00,$07,$DF
- $B750 DEFB $00,$1F,$5D,$00,$7D,$DD,$00,$FF
+
+; Annoying alien 5
+;
+; #GRAFIX(#PC)(alien5)
+b$B750 DEFB $00,$1F,$5D,$00,$7D,$DD,$00,$FF
  $B758 DEFB $6E,$00,$FB,$D1,$00,$FF,$7F,$00
  $B760 DEFB $7F,$FE,$00,$1F,$F0,$00,$07,$EC
  $B768 DEFB $00,$00,$0E,$00,$10,$86,$00,$A9
@@ -10280,7 +10339,11 @@ b$B448 DEFB $00,$00,$00,$00,$00,$00,$00,$70
  $B7F8 DEFB $38,$00,$00,$1C,$01,$10,$CC,$00
  $B800 DEFB $A9,$FC,$00,$47,$38,$00,$02,$00
  $B808 DEFB $0E,$70,$00,$1F,$F8,$00,$1D,$B8
- $B810 DEFB $00,$59,$9A,$00,$EE,$77,$00,$F1
+
+; Annoying alien 6
+;
+; #GRAFIX(#PC)(alien6)
+b$B810 DEFB $00,$59,$9A,$00,$EE,$77,$00,$F1
  $B818 DEFB $8F,$00,$7F,$FE,$00,$7F,$FF,$00
  $B820 DEFB $6F,$7A,$00,$06,$B0,$00,$09,$80
  $B828 DEFB $00,$1F,$1C,$00,$1E,$3E,$00,$1F
@@ -10303,7 +10366,11 @@ b$B448 DEFB $00,$00,$00,$00,$00,$00,$00,$70
  $B8B0 DEFB $00,$DE,$FC,$00,$0C,$60,$00,$12
  $B8B8 DEFB $00,$00,$3C,$38,$00,$3E,$7C,$00
  $B8C0 DEFB $3F,$EE,$00,$1F,$C2,$00,$07,$80
- $B8C8 DEFB $00,$00,$00,$04,$40,$00,$0A,$A4
+
+; Annoying alien 7
+;
+; #GRAFIX(#PC)(alien7)
+b$B8C8 DEFB $00,$00,$00,$04,$40,$00,$0A,$A4
  $B8D0 DEFB $00,$0A,$AA,$40,$11,$11,$80,$60
  $B8D8 DEFB $00,$00,$90,$00,$00,$B6,$B0,$00
  $B8E0 DEFB $F6,$DA,$00,$6E,$DB,$00,$1E,$DB
@@ -10327,7 +10394,11 @@ b$B448 DEFB $00,$00,$00,$00,$00,$00,$00,$70
  $B970 DEFB $02,$DB,$00,$03,$DB,$60,$01,$BB
  $B978 DEFB $68,$00,$62,$ED,$00,$1C,$1C,$01
  $B980 DEFB $DD,$C1,$01,$C1,$DD,$00,$00,$1C
- $B988 DEFB $00,$00,$00,$09,$80,$00,$6B,$40
+
+; Annoying alien 8
+;
+; #GRAFIX(#PC)(alien8)
+b$B988 DEFB $00,$00,$00,$09,$80,$00,$6B,$40
  $B990 DEFB $00,$7A,$40,$00,$2B,$DF,$00,$FD
  $B998 DEFB $BF,$80,$AE,$7E,$C0,$7F,$CF,$C0
  $B9A0 DEFB $2B,$70,$C0,$7F,$9F,$00,$6D,$80
@@ -10351,7 +10422,11 @@ b$B448 DEFB $00,$00,$00,$00,$00,$00,$00,$70
  $BA30 DEFB $07,$DF,$00,$01,$75,$C0,$03,$DE
  $BA38 DEFB $70,$03,$64,$1E,$00,$60,$00,$00
  $BA40 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $BA48 DEFB $00,$03,$80,$00,$07,$40,$00,$07
+
+; Annoying alien 9
+;
+; #GRAFIX(#PC)(alien9)
+b$BA48 DEFB $00,$03,$80,$00,$07,$40,$00,$07
  $BA50 DEFB $40,$01,$B6,$40,$07,$77,$C0,$2F
  $BA58 DEFB $53,$80,$6D,$74,$00,$6F,$57,$80
  $BA60 DEFB $EB,$76,$80,$EF,$BB,$80,$AE,$45
@@ -10375,7 +10450,11 @@ b$B448 DEFB $00,$00,$00,$00,$00,$00,$00,$70
  $BAF0 DEFB $03,$BD,$5E,$02,$BD,$CA,$03,$80
  $BAF8 DEFB $EE,$02,$7F,$14,$01,$FF,$F8,$03
  $BB00 DEFB $93,$F8,$01,$01,$38,$00,$00,$10
- $BB08 DEFB $03,$18,$00,$07,$3C,$00,$77,$FC
+
+; Annoying alien A
+;
+; #GRAFIX(#PC)(aliena)
+b$BB08 DEFB $03,$18,$00,$07,$3C,$00,$77,$FC
  $BB10 DEFB $00,$7F,$FC,$00,$7F,$FF,$00,$3C
  $BB18 DEFB $9F,$00,$FB,$6F,$00,$F6,$B6,$00
  $BB20 DEFB $F6,$B6,$00,$77,$F6,$00,$3B,$6F
@@ -10399,7 +10478,11 @@ b$B448 DEFB $00,$00,$00,$00,$00,$00,$00,$70
  $BBB0 DEFB $01,$DA,$DC,$00,$DF,$D8,$01,$ED
  $BBB8 DEFB $B0,$01,$F2,$78,$01,$FF,$F8,$00
  $BBC0 DEFB $3F,$F8,$00,$3B,$C0,$00,$39,$C0
- $BBC8 DEFB $00,$00,$00,$36,$00,$00,$6B,$04
+
+; Annoying alien B
+;
+; #GRAFIX(#PC)(alienb)
+b$BBC8 DEFB $00,$00,$00,$36,$00,$00,$6B,$04
  $BBD0 DEFB $00,$4B,$86,$00,$7B,$87,$00,$B7
  $BBD8 DEFB $84,$00,$CF,$82,$00,$FF,$03,$00
  $BBE0 DEFB $71,$01,$00,$2E,$07,$00,$1B,$DA
@@ -10423,7 +10506,11 @@ b$B448 DEFB $00,$00,$00,$00,$00,$00,$00,$70
  $BC70 DEFB $01,$C4,$02,$00,$BA,$C2,$00,$6F
  $BC78 DEFB $76,$00,$B1,$DC,$01,$0E,$18,$00
  $BC80 DEFB $EE,$E0,$02,$E0,$EC,$02,$00,$0C
- $BC88 DEFB $18,$C0,$00,$19,$C0,$00,$1D,$C0
+
+; Annoying alien C
+;
+; #GRAFIX(#PC)(alienc)
+b$BC88 DEFB $18,$C0,$00,$19,$C0,$00,$1D,$C0
  $BC90 DEFB $00,$0D,$C0,$00,$0D,$C0,$00,$05
  $BC98 DEFB $C0,$00,$01,$80,$00,$1D,$AF,$C0
  $BCA0 DEFB $6E,$7F,$00,$97,$E8,$00,$B7,$C0
@@ -10447,7 +10534,11 @@ b$B448 DEFB $00,$00,$00,$00,$00,$00,$00,$70
  $BD30 DEFB $02,$58,$A0,$02,$DF,$00,$03,$DC
  $BD38 DEFB $00,$01,$80,$00,$00,$00,$00,$00
  $BD40 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $BD48 DEFB $22,$11,$00,$55,$2A,$80,$09,$24
+
+; Annoying alien D
+;
+; #GRAFIX(#PC)(aliend)
+b$BD48 DEFB $22,$11,$00,$55,$2A,$80,$09,$24
  $BD50 DEFB $00,$00,$00,$00,$03,$30,$00,$06
  $BD58 DEFB $D8,$00,$16,$DA,$00,$37,$FB,$00
  $BD60 DEFB $7B,$37,$80,$7C,$CF,$C0,$FF,$FF
@@ -10471,7 +10562,11 @@ b$B448 DEFB $00,$00,$00,$00,$00,$00,$00,$70
  $BDF0 DEFB $00,$EC,$DC,$01,$F3,$3E,$01,$FF
  $BDF8 DEFB $FE,$03,$FF,$FF,$03,$FF,$FF,$03
  $BE00 DEFB $77,$7F,$00,$70,$77,$00,$00,$07
- $BE08 DEFB $60,$06,$00,$F0,$0F,$00,$7C,$1E
+
+; Annoying alien E
+;
+; #GRAFIX(#PC)(aliene)
+b$BE08 DEFB $60,$06,$00,$F0,$0F,$00,$7C,$1E
  $BE10 DEFB $00,$1E,$78,$00,$06,$60,$00,$01
  $BE18 DEFB $80,$00,$05,$A0,$00,$09,$90,$00
  $BE20 DEFB $0C,$30,$00,$1F,$F8,$00,$39,$9C
@@ -10497,6 +10592,8 @@ b$B448 DEFB $00,$00,$00,$00,$00,$00,$00,$70
  $BEC0 DEFB $FF,$FC,$00,$77,$70,$00,$00,$00
 
 ; Stars
+;
+; #GRAFIX(#PC)(stars)
 b$BEC8 DEFB $00,$00,$00,$00,$84,$00,$01,$CE
  $BED0 DEFB $00,$07,$E4,$00,$0D,$C0,$00,$04
  $BED8 DEFB $80,$00,$10,$10,$00,$38,$B9,$00
@@ -10794,10 +10891,10 @@ c$C35E LD HL,$D2C4                                               ;
  $C3D9 LD A,($DD1D)                                              ;
  $C3DC AND $F8                                                   ;
  $C3DE LD ($DD1D),A                                              ;
-*$C3E1 LD A,($D2CC)                                              ;
- $C3E4 AND A                                                     ;
- $C3E5 JR NZ,$C3EA                                               ;
- $C3E7 CALL $5E29                                                ;
+*$C3E1 LD A,($D2CC)                                              ; Set #REGa to the number of lives. (#R$D2CC)
+ $C3E4 AND A                                                     ; Are there any lives?
+ $C3E5 JR NZ,$C3EA                                               ; Jump forward if there are.
+ $C3E7 CALL $5E29                                                ; Otherwise call the "end of game" sequence.
 *$C3EA LD A,$13                                                  ;
  $C3EC CALL $D7C0                                                ;
  $C3EF LD HL,$DD3D                                               ;
@@ -10863,20 +10960,20 @@ c$C35E LD HL,$D2C4                                               ;
 *$C453 HALT                                                      ;
  $C454 DJNZ $C453                                                ;
  $C456 CALL $C546                                                ;
- $C459 LD HL,$D2CC                                               ;
- $C45C XOR A                                                     ;
- $C45D CP (HL)                                                   ;
- $C45E JR NZ,$C462                                               ;
- $C460 POP HL                                                    ;
- $C461 RET                                                       ;
-*$C462 DEC (HL)                                                  ;
- $C463 INC HL                                                    ;
- $C464 DEC A                                                     ;
- $C465 LD (HL),A                                                 ;
- $C466 LD A,$08                                                  ;
- $C468 INC HL                                                    ;
- $C469 OR (HL)                                                   ;
- $C46A LD (HL),A                                                 ;
+ $C459 LD HL,$D2CC                                               ; Point #REGhl towards the number of lives.
+ $C45C XOR A                                                     ; Set #REGa to 0.
+ $C45D CP (HL)                                                   ; Are there any lives?
+ $C45E JR NZ,$C462                                               ; Jump forward if there are.
+ $C460 POP HL                                                    ; { Otherwise tidy the stack and return.
+ $C461 RET                                                       ; }
+*$C462 DEC (HL)                                                  ; Lose 1 life.
+ $C463 INC HL                                                    ; { Subtract 1 from current energy.
+ $C464 DEC A                                                     ; 
+ $C465 LD (HL),A                                                 ; }
+ $C466 LD A,$08                                                  ; { Ensure bridge power is at least 8.
+ $C468 INC HL                                                    ; 
+ $C469 OR (HL)                                                   ; 
+ $C46A LD (HL),A                                                 ; }
  $C46B LD HL,$E074                                               ;
  $C46E LD ($DD1F),HL                                             ;
  $C471 POP HL                                                    ;
@@ -11046,7 +11143,7 @@ c$C54F CALL $D9C8    ;
  $C554 LD ($DDC1),A  ;
  $C557 JP $C5BD      ;
 
-; Routine at C55A
+; Read the control options
 ;
 ; Used by the routine at #R$C5BD.
 c$C55A LD BC,$7FFE   ; { Scan the keyboard for SPACE - B
@@ -11055,14 +11152,15 @@ c$C55A LD BC,$7FFE   ; { Scan the keyboard for SPACE - B
  $C561 JR NZ,$C566   ; Jump forward if not.
  $C563 CALL $C5AF    ;
 ; This entry point is used by the routine at #R$C5AF.
-*$C566 LD A,$00      ;
- $C568 CP $01        ;
- $C56A JR NZ,$C576   ;
- $C56C LD BC,$001F   ;
- $C56F IN A,(C)      ;
- $C571 CP $00        ;
- $C573 JR Z,$C576    ;
- $C575 RET           ;
+; This code is modified by the routine at #R$629D.
+*$C566 LD A,$00      ; Set #REGa to a flag indicating Kemptston. (0 or 1).
+ $C568 CP $01        ; Is it 1? 
+ $C56A JR NZ,$C576   ; Jump forward if not.
+ $C56C LD BC,$001F   ; { Read the Kempston joystick.
+ $C56F IN A,(C)      ; }
+ $C571 CP $00        ; Was anything pressed?
+ $C573 JR Z,$C576    ; Jump forward if not.
+ $C575 RET           ; Otherwise return.
 *$C576 LD A,$00      ;
  $C578 LD BC,$FBFE   ;
  $C57B IN D,(C)      ;
@@ -11087,9 +11185,7 @@ c$C55A LD BC,$7FFE   ; { Scan the keyboard for SPACE - B
 *$C5A4 LD BC,$DFFE   ;
  $C5A7 IN D,(C)      ;
  $C5A9 BIT 0,D       ;
-
-; Routine at C5AB
-c$C5AB RET NZ        ;
+ $C5AB RET NZ        ;
  $C5AC ADD A,$10     ;
  $C5AE RET           ;
 
@@ -12277,9 +12373,6 @@ c$CE77 CP $06        ;
  $CEC6 JP NZ,$D09F
 *$CEC9 LD A,($DD23)
  $CECC AND $03    
- $CECE JP Z,$D1A6
-*$CEC9 LD A,($DD23)
- $CECC AND $03    
  $CECE JP Z,$D1A6                           ; If it's not this, it must be a teleport, control continues to #R$CED1
 
 ; Teleport
@@ -12974,40 +13067,43 @@ c$D3C1 LD ($D3DD),HL ; Make a copy of the pointer to the string in #R$D3DD
 ; Used by the routine at #R$D3C1.
 g$D3DD DEFW $5E70
 
-; Routine at D3DF
+; Draw the top status area graphics
 ;
 ; Used by the routine at #R$A426.
-c$D3DF LD L,$91      ;
- $D3E1 CALL $EA65    ;
- $D3E4 LD A,C        ;
- $D3E5 ADD A,$03     ;
- $D3E7 LD C,A        ;
- $D3E8 LD E,$05      ;
-*$D3EA LD L,$93      ;
- $D3EC CALL $EA65    ;
- $D3EF PUSH BC       ;
- $D3F0 LD A,B        ;
+;
+; B Starting row
+; C Starting column
+c$D3DF LD L,$91      ; { Print the left banner (at 1,1).
+ $D3E1 CALL $EA65    ; }
+ $D3E4 LD A,C        ; { Move forward three columns.
+ $D3E5 ADD A,$03     ; 
+ $D3E7 LD C,A        ; }
+ $D3E8 LD E,$05      ; Loop 5 times.
+*$D3EA LD L,$93      ; { Print top middle banner 1.
+ $D3EC CALL $EA65    ; }
+ $D3EF PUSH BC       ; Store #REGbc.
+ $D3F0 LD A,B        ; { Move forward five rows.
  $D3F1 ADD A,$05     ;
- $D3F3 LD B,A        ;
- $D3F4 CALL $EA65    ;
- $D3F7 POP BC        ;
- $D3F8 LD A,C        ;
+ $D3F3 LD B,A        ; }
+ $D3F4 CALL $EA65    ; Print bottom middle banner 1.
+ $D3F7 POP BC        ; Restore #REGbc back to the top row.
+ $D3F8 LD A,C        ; { Move forward four columns.
  $D3F9 ADD A,$04     ;
- $D3FB LD C,A        ;
- $D3FC LD A,E        ;
+ $D3FB LD C,A        ; }
+ $D3FC LD A,E        ; 
  $D3FD CP $04        ;
  $D3FF JR Z,$D405    ;
  $D401 CP $03        ;
  $D403 JR NZ,$D406   ;
-*$D405 INC C         ;
-*$D406 DEC E         ;
- $D407 JR NZ,$D3EA   ;
- $D409 LD A,C        ;
- $D40A ADD A,$02     ;
- $D40C LD C,A        ;
- $D40D LD L,$92      ;
- $D40F CALL $EA65    ;
- $D412 RET           ;
+*$D405 INC C         ; Move to the next column.
+*$D406 DEC E         ; Decrement number of times left to draw.
+ $D407 JR NZ,$D3EA   ; Loop while there is still more to do.
+ $D409 LD A,C        ; { Move forward two columns.
+ $D40A ADD A,$02     ; 
+ $D40C LD C,A        ; }
+ $D40D LD L,$92      ; { Print the right hand banner.
+ $D40F CALL $EA65    ; }
+ $D412 RET           ; Return.
  
 ; Current score
 g$D413 DEFB $00,$00,$02,$09,$05,$00
@@ -14311,7 +14407,7 @@ b$DC43 DEFB $00,$00,$00,$00,$00,$00,$00,$00
 ; Pointer to screen table offset
 g$DD18 DEFW $DEEE
 
-; Pointer to graphic data
+; Pointer to current graphic data
 g$DD1A DEFW $E614
 
 ; X co-ordinate (index)
@@ -14323,12 +14419,21 @@ g$DD1D DEFB $24
 ; Y co-ordinate
 g$DD1E DEFB $27
 
-; Pointer to graphic data
+; Pointer to base graphic data
 g$DD1F DEFW $E5B4
 
 ; Flags
-g$DD21 DEFB $07,$00,$00,$02,$03,$04,$00,$02
- $DD29 DEFB $00,$00,$02,$00,$00,$00,$00
+g$DD21 DEFB $07
+
+; Jetpac flag
+;
+; 0 - not on a Jetpac
+; 2 - on a Jetpac
+g$DD22 DEFB $00
+
+; Flags
+g$DD23 DEFB $00,$02,$03,$04,$00,$02,$00
+ $DD2A DEFB $00,$02,$00,$00,$00,$00
 
 ; Game status buffer entry at DD30
 g$DD30 DEFB $51
@@ -14527,251 +14632,42 @@ w$DDDE DEFW $4040
  $DF3A DEFW $56E0
  $DF3C DEFW $57E0
 
-; Data block at DF3E
-b$DF3E DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $DF46 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $DF4E DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $DF56 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $DF5E DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $DF66 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $DF6E DEFB $00,$00,$00
+; Unused
+s$DF3E DEFS $33
  
-; Routine at DF71
-c$DF71 XOR A         ;
-*$DF72 PUSH AF       ;
- $DF73 RRCA          ;
- $DF74 RRCA          ;
- $DF75 RRCA          ;
- $DF76 ADD A,$18     ;
- $DF78 LD L,A        ;
- $DF79 LD H,$DD      ;
- $DF7B PUSH HL       ;
- $DF7C LD C,(HL)     ;
- $DF7D INC L         ;
- $DF7E LD B,(HL)     ;
- $DF7F INC L         ;
- $DF80 LD E,(HL)     ;
- $DF81 INC L         ;
- $DF82 LD D,(HL)     ;
- $DF83 INC L         ;
- $DF84 LD A,(HL)     ;
- $DF85 INC L         ;
- $DF86 PUSH HL       ;
- $DF87 LD ($E071),SP ;
- $DF8B LD H,B        ;
- $DF8C LD L,C        ;
- $DF8D LD SP,HL      ;
- $DF8E LD B,$04      ;
- $DF90 LD C,A        ;
-*$DF91 POP HL        ;
- $DF92 LD A,C        ;
- $DF93 ADD A,L       ;
- $DF94 LD L,A        ;
- $DF95 LD A,(DE)     ;
- $DF96 XOR (HL)      ;
- $DF97 LD (HL),A     ;
- $DF98 INC L         ;
- $DF99 INC DE        ;
- $DF9A LD A,(DE)     ;
- $DF9B XOR (HL)      ;
- $DF9C LD (HL),A     ;
- $DF9D INC L         ;
- $DF9E INC DE        ;
- $DF9F LD A,(DE)     ;
- $DFA0 XOR (HL)      ;
- $DFA1 LD (HL),A     ;
- $DFA2 INC DE        ;
- $DFA3 POP HL        ;
- $DFA4 LD A,C        ;
- $DFA5 ADD A,L       ;
- $DFA6 LD L,A        ;
- $DFA7 LD A,(DE)     ;
- $DFA8 XOR (HL)      ;
- $DFA9 LD (HL),A     ;
- $DFAA INC L         ;
- $DFAB INC DE        ;
- $DFAC LD A,(DE)     ;
- $DFAD XOR (HL)      ;
- $DFAE LD (HL),A     ;
- $DFAF INC L         ;
- $DFB0 INC DE        ;
- $DFB1 LD A,(DE)     ;
- $DFB2 XOR (HL)      ;
- $DFB3 LD (HL),A     ;
- $DFB4 INC DE        ;
- $DFB5 POP HL        ;
- $DFB6 LD A,C        ;
- $DFB7 ADD A,L       ;
- $DFB8 LD L,A        ;
- $DFB9 LD A,(DE)     ;
- $DFBA XOR (HL)      ;
- $DFBB LD (HL),A     ;
- $DFBC INC L         ;
- $DFBD INC DE        ;
- $DFBE LD A,(DE)     ;
- $DFBF XOR (HL)      ;
- $DFC0 LD (HL),A     ;
- $DFC1 INC L         ;
- $DFC2 INC DE        ;
- $DFC3 LD A,(DE)     ;
- $DFC4 XOR (HL)      ;
- $DFC5 LD (HL),A     ;
- $DFC6 INC DE        ;
- $DFC7 POP HL        ;
- $DFC8 LD A,C        ;
- $DFC9 ADD A,L       ;
- $DFCA LD L,A        ;
- $DFCB LD A,(DE)     ;
- $DFCC XOR (HL)      ;
- $DFCD LD (HL),A     ;
- $DFCE INC L         ;
- $DFCF INC DE        ;
- $DFD0 LD A,(DE)     ;
- $DFD1 XOR (HL)      ;
- $DFD2 LD (HL),A     ;
- $DFD3 INC L         ;
- $DFD4 INC DE        ;
- $DFD5 LD A,(DE)     ;
- $DFD6 XOR (HL)      ;
- $DFD7 LD (HL),A     ;
- $DFD8 INC DE        ;
- $DFD9 DJNZ $DF91    ;
- $DFDB LD SP,($E071) ;
- $DFDF POP HL        ;
- $DFE0 LD A,(HL)     ;
- $DFE1 EX AF,AF'     ;
- $DFE2 LD A,(HL)     ;
- $DFE3 EX AF,AF'     ;
- $DFE4 INC L         ;
- $DFE5 LD D,$00      ;
- $DFE7 LD E,(HL)     ;
- $DFE8 INC L         ;
- $DFE9 LD C,(HL)     ;
- $DFEA INC L         ;
- $DFEB LD B,(HL)     ;
- $DFEC AND $06       ;
- $DFEE RLCA          ;
- $DFEF RLCA          ;
- $DFF0 RLCA          ;
- $DFF1 LD L,A        ;
- $DFF2 RLCA          ;
- $DFF3 ADD A,L       ;
- $DFF4 LD L,A        ;
- $DFF5 LD H,D        ;
- $DFF6 ADD HL,BC     ;
- $DFF7 EX DE,HL      ;
- $DFF8 LD A,$AF      ;
- $DFFA SUB L         ;
- $DFFB LD L,A        ;
- $DFFC ADD HL,HL     ;
- $DFFD LD BC,$DDDE   ;
- $E000 ADD HL,BC     ;
- $E001 LD B,H        ;
- $E002 LD C,L        ;
- $E003 EX AF,AF'     ;
- $E004 AND $F8       ;
- $E006 RRCA          ;
- $E007 RRCA          ;
- $E008 RRCA          ;
- $E009 POP HL        ;
- $E00A LD (HL),C     ;
- $E00B INC L         ;
- $E00C LD (HL),B     ;
- $E00D INC L         ;
- $E00E LD (HL),E     ;
- $E00F INC L         ;
- $E010 LD (HL),D     ;
- $E011 INC L         ;
- $E012 LD (HL),A     ;
- $E013 LD H,B        ;
- $E014 LD L,C        ;
- $E015 LD SP,HL      ;
- $E016 LD B,$04      ;
- $E018 LD C,A        ;
-*$E019 POP HL        ;
- $E01A LD A,C        ;
- $E01B ADD A,L       ;
- $E01C LD L,A        ;
- $E01D LD A,(DE)     ;
- $E01E XOR (HL)      ;
- $E01F LD (HL),A     ;
- $E020 INC L         ;
- $E021 INC DE        ;
- $E022 LD A,(DE)     ;
- $E023 XOR (HL)      ;
- $E024 LD (HL),A     ;
- $E025 INC L         ;
- $E026 INC DE        ;
- $E027 LD A,(DE)     ;
- $E028 XOR (HL)      ;
- $E029 LD (HL),A     ;
- $E02A INC DE        ;
- $E02B POP HL        ;
- $E02C LD A,C        ;
- $E02D ADD A,L       ;
- $E02E LD L,A        ;
- $E02F LD A,(DE)     ;
- $E030 XOR (HL)      ;
- $E031 LD (HL),A     ;
- $E032 INC L         ;
- $E033 INC DE        ;
- $E034 LD A,(DE)     ;
- $E035 XOR (HL)      ;
- $E036 LD (HL),A     ;
- $E037 INC L         ;
- $E038 INC DE        ;
- $E039 LD A,(DE)     ;
- $E03A XOR (HL)      ;
- $E03B LD (HL),A     ;
- $E03C INC DE        ;
- $E03D POP HL        ;
- $E03E LD A,C        ;
- $E03F ADD A,L       ;
- $E040 LD L,A        ;
- $E041 LD A,(DE)     ;
- $E042 XOR (HL)      ;
- $E043 LD (HL),A     ;
- $E044 INC L         ;
- $E045 INC DE        ;
- $E046 LD A,(DE)     ;
- $E047 XOR (HL)      ;
- $E048 LD (HL),A     ;
- $E049 INC L         ;
- $E04A INC DE        ;
- $E04B LD A,(DE)     ;
- $E04C XOR (HL)      ;
- $E04D LD (HL),A     ;
- $E04E INC DE        ;
- $E04F POP HL        ;
- $E050 LD A,C        ;
- $E051 ADD A,L       ;
- $E052 LD L,A        ;
- $E053 LD A,(DE)     ;
- $E054 XOR (HL)      ;
- $E055 LD (HL),A     ;
- $E056 INC L         ;
- $E057 INC DE        ;
- $E058 LD A,(DE)     ;
- $E059 XOR (HL)      ;
- $E05A LD (HL),A     ;
- $E05B INC L         ;
- $E05C INC DE        ;
- $E05D LD A,(DE)     ;
- $E05E XOR (HL)      ;
- $E05F LD (HL),A     ;
- $E060 INC DE        ;
- $E061 DJNZ $E019    ;
- $E063 LD SP,($E071) ;
- $E067 POP HL        ;
- $E068 POP HL        ;
- $E069 POP AF        ;
- $E06A INC A         ;
- $E06B CP $06        ;
- $E06D JP NZ,$DF72   ;
- $E070 RET           ;
- $E071 RST $38       ;
- $E072 LD E,L        ;
- $E073 RET           ;
+b$DF71 DEFB $AF,$F5,$0F,$0F,$0F,$C6,$18,$6F
+ $DF79 DEFB $26,$DD,$E5,$4E,$2C,$46,$2C,$5E
+ $DF81 DEFB $2C,$56,$2C,$7E,$2C,$E5,$ED,$73
+ $DF89 DEFB $71,$E0,$60,$69,$F9,$06,$04,$4F
+ $DF91 DEFB $E1,$79,$85,$6F,$1A,$AE,$77,$2C
+ $DF99 DEFB $13,$1A,$AE,$77,$2C,$13,$1A,$AE
+ $DFA1 DEFB $77,$13,$E1,$79,$85,$6F,$1A,$AE
+ $DFA9 DEFB $77,$2C,$13,$1A,$AE,$77,$2C,$13
+ $DFB1 DEFB $1A,$AE,$77,$13,$E1,$79,$85,$6F
+ $DFB9 DEFB $1A,$AE,$77,$2C,$13,$1A,$AE,$77
+ $DFC1 DEFB $2C,$13,$1A,$AE,$77,$13,$E1,$79
+ $DFC9 DEFB $85,$6F,$1A,$AE,$77,$2C,$13,$1A
+ $DFD1 DEFB $AE,$77,$2C,$13,$1A,$AE,$77,$13
+ $DFD9 DEFB $10,$B6,$ED,$7B,$71,$E0,$E1,$7E
+ $DFE1 DEFB $08,$7E,$08,$2C,$16,$00,$5E,$2C
+ $DFE9 DEFB $4E,$2C,$46,$E6,$06,$07,$07,$07
+ $DFF1 DEFB $6F,$07,$85,$6F,$62,$09,$EB,$3E
+ $DFF9 DEFB $AF,$95,$6F,$29,$01,$DE,$DD,$09
+ $E001 DEFB $44,$4D,$08,$E6,$F8,$0F,$0F,$0F
+ $E009 DEFB $E1,$71,$2C,$70,$2C,$73,$2C,$72
+ $E011 DEFB $2C,$77,$60,$69,$F9,$06,$04,$4F
+ $E019 DEFB $E1,$79,$85,$6F,$1A,$AE,$77,$2C
+ $E021 DEFB $13,$1A,$AE,$77,$2C,$13,$1A,$AE
+ $E029 DEFB $77,$13,$E1,$79,$85,$6F,$1A,$AE
+ $E031 DEFB $77,$2C,$13,$1A,$AE,$77,$2C,$13
+ $E039 DEFB $1A,$AE,$77,$13,$E1,$79,$85,$6F
+ $E041 DEFB $1A,$AE,$77,$2C,$13,$1A,$AE,$77
+ $E049 DEFB $2C,$13,$1A,$AE,$77,$13,$E1,$79
+ $E051 DEFB $85,$6F,$1A,$AE,$77,$2C,$13,$1A
+ $E059 DEFB $AE,$77,$2C,$13,$1A,$AE,$77,$13
+ $E061 DEFB $10,$B6,$ED,$7B,$71,$E0,$E1,$E1
+ $E069 DEFB $F1,$3C,$FE,$06,$C2,$72,$DF,$C9
+ $E071 DEFB $FF,$5D,$C9
 
 ; Blob walking right
 ;
